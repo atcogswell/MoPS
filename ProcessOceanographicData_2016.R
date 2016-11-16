@@ -2,6 +2,7 @@
 #install.packages("ocedata")
 library(oce)
 library(ocedata)
+#test
 setwd("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/2016")
 out=c("//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP/2016/","R:/Shared/Cogswell/_BIOWeb/BBMP/2016/")
 outroot=c("//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP/","R:/Shared/Cogswell/_BIOWeb/BBMP/") 

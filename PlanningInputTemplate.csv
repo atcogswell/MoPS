@@ -1,0 +1,116 @@
+lon_dd,lat_dd,station,operation,core,optime,type,comments,owner,loc1,kts
+-63.6141,44.6811, ,BIO,0,0,Transit, , ,1,5
+-63.611,44.676, ,Transit,0,0,Transit, , ,1,5
+-63.599,44.674, ,Transit,0,0,Transit, , ,1,5
+-63.584,44.663, ,Transit,0,0,Transit, , ,1,5
+-63.5687,44.6545, ,Transit,0,0,Transit, , ,1,10
+-63.5632,44.6397, ,Transit,0,0,Transit, , ,1,10
+-63.5225,44.5717, ,Transit,0,0,Transit, , ,1,12.5
+-63.1698,44.2484,M1996,Recover Mooring,0,2,Operations,Nova Scotia Current,Hebert,1,12.5
+-63.1698,44.2484,Temp_01,Deploy Mooring,0,2,Operations,Nova Scotia Current,Hebert,1,12.5
+-62.8759,43.6095,M1949,Recover Mooring,0,2,Operations,Acoustic,Moors-Murphy,1,12.5
+-62.8759,43.6095,Temp_02,Deploy Mooring,0,2,Operations,Acoustic,Moors-Murphy,1,12.5
+-58.9124,43.8617,M1948,Recover Mooring,0,2,Operations,Acoustic,Moors-Murphy,1,12.5
+-58.9124,43.8617,Temp_03,Deploy Mooring,0,2,Operations,Acoustic,Moors-Murphy,1,12.5
+-57.17,44.4562,M1950,Recover Mooring,0,2,Operations,Acoustic,Moors-Murphy,1,12.5
+-57.17,44.4562,Temp_04,Deploy Mooring,0,2,Operations,Acoustic,Moors-Murphy,1,12.5
+-52.8094444,46.51431389,,Transit,0,0,Transit,,,1,12.5
+-52.353333,47.493425,,Transit,0,0,Transit,,,1,12.5
+-52.102457,52.664488,C1,Recover Mooring,0,5,Operations,,OSNAP,1,10
+-51.85437,52.761735,C2,Recover Mooring,0,5,Operations,,OSNAP,1,10
+-51.85437,52.761735,C2,Net_CTD,0,2,Operations,,OSNAP,1,10
+-52.102457,52.664488,C1,Net_CTD,0,2,Operations,,OSNAP,1,10
+-51.68558,52.801842,C3,Net_CTD,0,2,Operations,,OSNAP,1,10
+-51.68558,52.801842,C3,Recover Mooring,0,3,Operations,,OSNAP,1,10
+-51.68558,52.801842,C3,Deploy Mooring,0,3,Operations,,OSNAP,1,10
+-51.85437,52.761735,C2,Deploy Mooring,0,3,Operations,,OSNAP,1,10
+-52.102457,52.664488,C1,Deploy Mooring,0,3,Operations,,OSNAP,1,12.5
+-54.11086,55.121965,M1640,Recover Mooring/deployement,0,2,Operations,,,1,10
+-54.11086,55.121965,Temp_05,Deploy Mooring,0,2,Operations,,,1,10
+-53.9933333,55.2633333,L3_09,Net_CTD,0,2.5,Operations,,,1,10
+-53.905,55.3416667,L3_09.5,CTD,0,2,Operations,,,1,10
+-53.8266667,55.42,L3_10,Net_CTD,0,2,Operations,,,1,10
+-53.7291667,55.5158333,L3_10.5,CTD,0,2,Operations,,,1,10
+-53.6316667,55.6116667,L3_11,Net_CTD,0,2.5,Operations,,,1,10
+-53.5133333,55.7283333,L3_11.5,CTD,0,2,Operations,,,1,10
+-53.3933333,55.845,L3_12,Net_CTD,0,2.5,Operations,,,1,10
+-53.2558333,55.9791667,L3_12.5,CTD,0,2,Operations,,,1,10
+-53.1166667,56.1133333,L3_13,Net_CTD,0,3.5,Operations,,,1,10
+-52.8975,56.325,L3_13.5,CTD,0,2,Operations,,,1,10
+-52.6783333,56.5366667,L3_14,Net_CTD,0,2.5,Operations,,,1,10
+-52.4575,56.7466667,L3_14.5,CTD,0,3,Operations,,,1,10
+-52.2366667,56.9566667,L3_15,Net_CTD,0,3.5,Operations,,,1,10
+-52.0141667,57.1666667,L3_15.5,CTD,0,2,Operations,,,1,10
+-51.7916667,57.3766667,L3_16,Net_CTD,0,2.5,Operations,,,1,10
+-51.5658333,57.5883333,L3_16.5,CTD,0,3,Operations,,,1,10
+-51.34,57.8,L3_17,Net_CTD,0,3.5,Operations,,,1,10
+-51.1116667,58.0083333,L3_17.5,CTD,0,2,Operations,,,1,10
+-50.8833333,58.2166667,L3_18,Net_CTD,0,3.5,Operations,,,1,10
+-50.65,58.4283333,L3_18.5,CTD,0,3,Operations,,,1,10
+-50.4166667,58.64,L3_19,Net_CTD,0,2.5,Operations,,,1,10
+-50.1833333,58.8533333,L3_19.5,CTD,0,2,Operations,,,1,10
+-49.95,59.0666667,L3_20,Net_CTD,0,3.5,Operations,,,1,10
+-49.475,59.4833333,L3_21,Net_CTD,0,2.5,Operations,,,1,10
+-49.1666667,59.75,L3_22,Net_CTD,0,2.5,Operations,,,1,10
+-49.0333333,59.8666667,L3_22.5,CTD,0,2,Operations,,,1,10
+-48.7875,60.0791667,L3_23.5,CTD,0,2,Operations,,,1,10
+-48.675,60.175,L3_24,Net_CTD,0,2.5,Operations,,,1,10
+-48.4975,60.3291667,L3_25.5,CTD,0,2,Operations,,,1,10
+-48.4533333,60.3666667,L3_26,Net_CTD,0,1.5,Operations,,,1,10
+-48.4075,60.4066667,L3_26.5,CTD,0,0.5,Operations,,,1,10
+-48.2283333,60.5666667,L3_28,Net_CTD,0,0.75,Operations,,,1,10
+-48.1395333,60.6465867,L3_28.5,Net_CTD,0,0.75,Operations,,,1,10
+-48.295,60.5066667,L3_27.5,CTD,0,0.75,Operations,,,1,10
+-48.3616667,60.4466667,L3_27,Net_CTD,0,0.75,Operations,,,1,10
+-48.5416667,60.2916667,L3_25,Net_CTD,0,2,Operations,,,1,10
+-48.6083333,60.2333333,L3_24.5,CTD,0,2,Operations,,,1,10
+-48.9,59.9833333,L3_23 ,Net_CTD,0,2.5,Operations,,,1,12.5
+-54.47533333,67.26305,WG4,Recover Mooring,0,2,Operations,,C_Lee,1,10
+-55.31,67.1925,WG2,Recover Mooring,0,2,Operations,,C_Lee,1,10
+-55.87901667,67.14463333,WG1.5,Recover Mooring,0,2,Operations,,C_Lee,1,10
+-56.32861667,67.10621667,WG1,Recover Mooring,0,2,Operations,,C_Lee,1,10
+-56.68236667,67.07046667,C6,Recover Mooring,0,2,Operations,,C_Lee,1,10
+-57.03675,67.03796667,C5,Recover Mooring,0,2,Operations,,C_Lee,1,10
+-57.69083333,66.97918333,C4,Recover Mooring,0,2,Operations,,C_Lee,1,10
+-58.81203333,67.24318333,NE,Recover Mooring,0,2,Operations,,C_Lee,1,10
+-59.05493333,66.8541,C3,Recover Mooring,0,2,Operations,,C_Lee,1,10
+-60.07795,66.76346667,C2,Recover Mooring,0,2,Operations,,C_Lee,1,10
+-60.77513333,66.6413,C1,Recover Mooring,0,2,Operations,,C_Lee,1,10
+-61.16921667,66.6588,BI4,Recover Mooring,0,2,Operations,,C_Lee,1,10
+-61.2231,66.64706667,BI2,Recover Mooring,0,2,Operations,,C_Lee,1,10
+-59.89775,66.49911667,CW,Recover Mooring,0,2,Operations,,C_Lee,1,10
+-59.09143333,66.3166,SW,Recover Mooring,0,2,Operations,,C_Lee,1,12.5
+-54.06,55.19,L3_08.5,CTD,0,1,Operations,,,1,10
+-54.1383333,55.1116667,L3_08,Net_CTD,0,1.5,Operations,,,1,10
+-54.2166667,55.0333333,L3_07.5,Net_CTD,0,1,Operations,,,1,10
+-54.295,54.955,L3_07,Net_CTD,0,1,Operations,,,1,10
+-54.4866667,54.7616667,L3_06,Net_CTD,0,1,Operations,,,1,10
+-54.7566667,54.4916667,L3_05,Net_CTD,0,1,Operations,,,1,10
+-55.0233333,54.22,L3_04,Net_CTD,0,1,Operations,,,1,10
+-55.25,53.9883333,L3_03,Net_CTD,0,1,Operations,,,1,10
+-55.4366667,53.7966667,L3_02,Net_CTD,0,1,Operations,,,1,10
+-55.55,53.68,L3_01,Net_CTD,0,1,Operations,,,1,12.5
+-55.26722222,52.22291111,,Transit,0,0,Transit,,,1,12.5
+-56.01472222,51.73123333,,Transit,0,0,Transit,,,1,12.5
+-56.9997222,51.26877417,,Transit,0,0,Transit,,,1,12.5
+-57.57861111,50.73263889,,Transit,0,0,Transit,,,1,12.5
+-59.96222222,48.08960556,,Transit,0,0,Transit,,,1,12.5
+-59.742,45.7414,M2000,Recover Mooring,0,1.5,Operations,National Conservation Plan,Hebert,1,10
+-59.1417,45.8996,M2001,Recover Mooring,0,1.5,Operations,National Conservation Plan,Hebert,1,10
+-59.0259,46.3265,M2002,Recover Mooring,0,1.5,Operations,National Conservation Plan,Hebert,1,10
+-59.3315,46.1294,M1999,Recover Mooring,0,1.5,Operations,National Conservation Plan,Hebert,1,10
+-59.1381,46.249,M1998,Recover Mooring,0,1.5,Operations,National Conservation Plan,Hebert,1,10
+-59.1392,46.2535,M1997,Recover Mooring,0,1.5,Operations,National Conservation Plan,Hebert,1,10
+-58.7268,46.3556,M1947,Recover Mooring,0,1.5,Operations,Acoustic,Moors-Murphy,1,10
+-58.7268,46.3556,Temp_05,Deploy Mooring,0,1.5,Operations,Acoustic,Moors-Murphy,1,10
+-59.1415,46.1685,M1946,Recover Mooring,0,1.5,Operations,Acoustic,Moors-Murphy,1,10
+-59.1415,46.1685,Temp_06,Deploy Mooring,0,1.5,Operations,Acoustic,Moors-Murphy,1,12.5
+-61.2245,45.0627,,Transit,0,0,Transit,,,1,12.5
+-63.316495,44.266668,,Transit,0,0,Transit,HL_02,,1,12.5
+-63.5225,44.5717, ,Transit,0,0,Transit, , ,1,12.5
+-63.5632,44.6397, ,Transit,0,0,Transit, , ,1,10
+-63.5687,44.6545, ,Transit,0,0,Transit, , ,1,10
+-63.584,44.663, ,Transit,0,0,Transit, , ,1,5
+-63.599,44.674, ,Transit,0,0,Transit, , ,1,5
+-63.611,44.676, ,Transit,0,0,Transit, , ,1,5
+-63.6141,44.6811, ,BIO,0,0,Transit, , ,1,5

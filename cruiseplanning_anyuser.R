@@ -39,18 +39,23 @@ setwd(wd) #set your working directory
 
 ##or set directory for ascii bathymetry manually.
   
+# AZOMP depth raster - GEBCO 1/4 degree (2014)
+#rwd="C:/Users/CogswellA/Documents/AZMP/Requests/Ringuette/azomp_depth.asc"
+
+# AZMP depth raster CHS baythymetry
 rwd="C:/Users/cogswella/Documents/AZMP/Missions/ArcGIS Projects/BaseLayers/Baythymetry/CHS_AtlanticBathymetricCompilation/chs15sec1.asc"
+
 
 # run sections 4-8 with section 7 off when 
 # sections 2-8 have been run once with section 7 turned on.
 
-#### 4. Enter Vessel Speed and Start Date ----
-nm=11 # Enter your transit speed in kts
-s=ISOdate(2017, 09, 15, 08) #start date and time for mission (Year, month, day, 24hr time)
+#### 4. Enter Start Date ----
+
+s=ISOdate(2017, 09, 01, 08) #start date and time for mission (Year, month, day, 24hr time)
 
 #### 5. Choose your input file ----
 #file=file.choose()
-file="LABSEA2017_FALL.csv"
+file="LABSEA2017_FALL_test.csv"
 data=read.csv(file, stringsAsFactors=F)
 file2=basename(file)
 
@@ -131,7 +136,7 @@ lonmin2=ifelse(lonmin<10,(lonmin2=paste("0",lonmin,sep="")),(lonmin2=as.characte
 data$lon_dm=as.numeric(paste(lonDeg,lonmin2,sep=""))
 
 ##This formula calculates your transit time using your distance in nautical miles/vessel transit speed
-data$trans_hr=round(data$dist_nm/nm,2)
+data$trans_hr=round(data$dist_nm/data$kts,2)
 data$arrival[1]="start"
 data$departure[1]=as.character(s)
 
@@ -163,7 +168,7 @@ for (n in 2:l){
 #This is where to ask the user to enter a shapefile output name
 
 #### 7. Extract depth from ASCII - turn on and off ----
-# depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
+depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
 data1=data[,1:2]
 data2=data[,3:length(data)]
 data3=SpatialPointsDataFrame(data1, data2, coords.nrs = numeric(0),proj4string = CRS("+proj=longlat +datum=WGS84"), match.ID = TRUE, bbox = NULL)
@@ -224,15 +229,15 @@ write.csv(data4, file4, row.names=F)
 ### 9. AZMP specific formats required for reporting and planning purposes ----
 
 ##Organize and sort data for form b - uses degree minutes
-formb=as.data.frame(data4[,c("station", "lon_dm", "lat_dm", "depth_m", "operation", "optime", "dist_nm", "trans_hr", "loc1")])
-formb=formb[,c("station", "lon_dm", "lat_dm", "depth_m", "operation", "optime", "dist_nm", "trans_hr", "loc1")]
+formb=as.data.frame(data4[,c("station", "lon_dm", "lat_dm", "depth_m", "operation", "optime", "dist_nm", "trans_hr", "loc1", "kts")])
+formb=formb[,c("station", "lon_dm", "lat_dm", "depth_m", "operation", "optime", "dist_nm", "trans_hr", "loc1", "kts")]
 file5=paste(file2,"formb",date,time,sep="_")
 file5=paste(file5,".csv", sep="")
 write.csv(formb, file5, row.names=F)
 
 ##Organize and sort data for mission plan - uses decimal degrees
 mplan=as.data.frame(data4)
-mplan=mplan[,c("station", "lon_dd", "lat_dd", "depth_m", "operation", "optime", "dist_nm", "trans_hr", "loc1")]
+mplan=mplan[,c("station", "lon_dd", "lat_dd", "depth_m", "operation", "optime", "dist_nm", "trans_hr", "loc1", "kts")]
 file6=paste(file2,"mplan",date,time,sep="_")
 file6=paste(file6,".csv", sep="")
 write.csv(mplan, file6, row.names=F)

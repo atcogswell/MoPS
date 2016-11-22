@@ -3,3 +3,4 @@
 .RData
 .Ruserdata
 cruiseplanning_anyuser_working.R 
+*.Rout

@@ -5,21 +5,22 @@ library(oce)
 library(ocedata)
 #test
 setwd("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/2016")
-out=c("//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP/2016/","R:/Shared/Cogswell/_BIOWeb/BBMP/2016/")
-outroot=c("//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP/","R:/Shared/Cogswell/_BIOWeb/BBMP/") 
+out=c("//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP/2016/")
+outroot=c("//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP/") 
 
 
 list=list.files(pattern="*^.*D.*.ODF$")
 l=length(list)
 
-for (i in 1:2){    
+  
   for (n in 1:l) {
-    ctd=read.oce(list[n])
-    png(paste(out[i],"BBMP",substr(ctd@metadata$date,1,11),'.png',sep=""),height=800,width=800)
+    od=read.odf(list[n])
+    ctd<-read.ctd.odf(list[n])
+    png(paste(out,"BBMP",substr(od@metadata$date,1,10),'.png',sep=""),height=800,width=800)
     plot.new()
     par(oma=c(0,0,2,0))
     par(mfrow=c(2,2)) # four panels, filled in reading order
-    plot(ctd,which=1, keepNA=T)
+    plot(ctd,which=1,keepNA=T)
     plot(ctd,which=2)
     plot(ctd,which=3)
     par(mar=c(3.6,3.4,3.5,2))
@@ -33,14 +34,15 @@ for (i in 1:2){
     title("Oxygen [ml/l]", line=2, font.main=1, cex.main=1)
     Axis(side=3, x=ctd@data$oxygen, at=c(1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10))
     #plot(ctd,which=0)
-    title(paste("Compass Buoy Station CTD Profile",  ctd@metadata$date,sep=": "),outer=TRUE,cex=1.4) # title for overall plot (filename, here)
+    title(paste("Compass Buoy Station CTD Profile",  od@metadata$date,sep=": "),outer=TRUE,cex=1.4) # title for overall plot (filename, here)
     dev.off()
   }
-}
 
-for (i in 1:2){
-  ctd=read.oce(list[l])
-  png(paste(outroot[i],"Recent_Profile.png",sep=""),height=800,width=800)
+
+
+  d=read.odf(list[l])
+  ctd<-read.ctd.odf(list[l])
+  png(paste(outroot,"Recent_Profile.png",sep=""),height=800,width=800)
   plot.new()
   par(oma=c(0,0,2,0))
   par(mfrow=c(2,2)) # four panels, filled in reading order
@@ -58,21 +60,22 @@ for (i in 1:2){
   title("Oxygen [ml/l]", line=2, font.main=1, cex.main=1)
   Axis(side=3, x=ctd@data$oxygen, at=c(1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10))
   #plot(ctd,which=0)
-  title(paste("Compass Buoy Station CTD Profile",  ctd@metadata$date,sep=": "),outer=TRUE,cex=1.4) # title for overall plot (filename, here)
+  title(paste("Compass Buoy Station CTD Profile",  od@metadata$date,sep=": "),outer=TRUE,cex=1.4) # title for overall plot (filename, here)
   dev.off()
-  
-}
+
 
 #### Copy Recent ODF files to directory for website ########
 
 setwd("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/2016")
 out1="//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP/ODF/2016"
-out2="R:/Shared/Cogswell/_BIOWeb/BBMP/ODF/2016"
 
 for (n in 1:l) {
-  file.copy(from=list[n],to=out1, overwrite=T,recursive=F)
-  file.copy(from=list[n],to=out2, overwrite=T,recursive=F)
+
+  file.copy(from=list[n],to=out1, overwrite=T,recursive=F)  
+  
 }
+  
+  
 
 ##This section creates the weekly anomaly plots by depth and uses the anomaly file from BBMP_TS_2000_####.csv
 ##\\dcnsbiona01a\BIODataSvcIn\_BIOWeb\BBMP
@@ -98,21 +101,23 @@ setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.
 list=list.files(pattern="*^.*D.*.ODF$")
 l=length(list)
 
-ctd=read.ctd.odf(paste(getwd(),"/",list[1],sep=""))
-d<-ctd@metadata$date
-ctd<-as.data.frame(ctd@data)
-datain<-subset(ctd,ctd$pressure==2|ctd$pressure==5|ctd$pressure==10|ctd$pressure==60)
-datain$date<-as.Date(substr(d,1,10))
+od<-read.odf(paste(getwd(),"/",list[1],sep=""))
+dates<-od@metadata$date
+od<-as.data.frame(od@data)
+datain<-subset(od,od$pressure==2|od$pressure==5|od$pressure==10|od$pressure==60)
+test<-as.Date(substr(dates,1,10))
+datain$date<-as.Date(substr(dates,1,10))
 datain<-dplyr::select(datain,date,pressure,temperature,salinity,sigmaTheta)
 dataout<-tidyr::gather(datain,parameter,value,3:5)
 
 for (n in 2:l){
-  ctd=read.oce(paste(getwd(),"/",list[n],sep=""))
-  dates<-ctd@metadata$date
-  ctd<-as.data.frame(ctd@data)
-  datain<-subset(ctd,ctd$pressure==2|ctd$pressure==5|ctd$pressure==10|ctd$pressure==60)
+  od<-read.odf(paste(getwd(),"/",list[n],sep=""))
+  dates<-od@metadata$date
+  od<-as.data.frame(od@data)
+  datain<-subset(od,od$pressure==2|od$pressure==5|od$pressure==10|od$pressure==60)
+  test<-as.Date(substr(dates,1,10))
   datain$date<-as.Date(substr(dates,1,10))
-  datain<-select(datain,date,pressure,temperature,salinity,sigmaTheta)
+  datain<-dplyr::select(datain,date,pressure,temperature,salinity,sigmaTheta)
   datagather<-tidyr::gather(datain,parameter,value,3:5)
   dataout<-rbind(dataout,datagather)
 }
@@ -120,7 +125,7 @@ for (n in 2:l){
 dataout$woy<-as.numeric(strftime(as.POSIXlt(dataout$date),format="%W"))
 datacurr<-dataout
 
-setwd("C:/Users/cogswella/Documents/AZMP/CTD_archive/BBMP/supporting files")
+setwd("//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP")
 datasum<-read.csv("BBMP_TS_2000_2015.csv")
 datasum$woy<-as.numeric(strftime(as.POSIXlt(datasum$date),format="%W"))
 
@@ -140,15 +145,15 @@ y=x/2
 gp<-NULL
 gp$depth<-c(2,2,2,5,5,5,10,10,10,60,60,60)
 gp$var<-c("temperature","salinity","sigmaTheta","temperature","salinity","sigmaTheta","temperature","salinity","sigmaTheta","temperature","salinity","sigmaTheta")
-gp$min<-c(0,26.5,20.5,0,28,21.5,0,29,22,0,30.5,24.25)
-gp$max<-c(20,31,25,18,31,25,16,31.5,25,7,31.75,25.25)
+gp$min<-c(0,26.5,20.5,0,28,21.5,0,29,21.5,0,30.5,24.25)
+gp$max<-c(20,31,25,18,31,25,18,31.5,25,7,31.75,25.25)
 gp$int<-c(2,0.5,0.5,2,0.5,0.5,2,0.5,0.5,0.5,0.25,0.125)
 gp<-as.data.frame(gp)
 gp$var<-as.character(gp$var)
 
 
-
 setwd("//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP")
+
 for (d in c(2,5,10,60)){
   
   data_sub<-subset(datasum,datasum$pressure==d)
@@ -177,6 +182,7 @@ for (d in c(2,5,10,60)){
     ## initialize plot
     p <- ggplot() +
       ggtitle(t)+
+      theme(plot.title=element_text(hjust=100))+
       coord_cartesian(xlim=x.limits, ylim=y.limits) +
       scale_x_continuous(name="Month", breaks=x.breaks, labels=x.labels) +
       scale_y_continuous(name=cap[i], breaks=y.breaks, labels=y.labels) +
@@ -263,7 +269,7 @@ for (d in c(2,5,10,60)){
     p <- p +
       theme_bw() +
       theme(
-        plot.title = element_text(face="bold",size=30),
+        plot.title = element_text(face="bold",size=30,hjust=0.5),
         panel.grid.major = element_line(colour = "grey90"),
         panel.grid.minor = element_line(colour = "grey97"),
         panel.border = element_rect(colour = "black", fill=NA, size=1),
@@ -320,9 +326,7 @@ for (d in c(2,5,10,60)){
   
 }
 
-list=list.files()
-file.copy(from=list, to=outroot[2],overwrite=T,recursive=F,copy.mode=T)
-proc.time()
+
 
 
 ##### Sections run at year end:
@@ -334,7 +338,7 @@ setwd("//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP")
 #install.packages("png")
 library(png)
 library(grid)
-img <- readPNG("AnomLegHor.png")
+img <- readPNG("C:/Users/cogswella/Documents/AZMP/R Code/MoPSAnomLegHor.png")
 logo <- rasterGrob(img,x=0.51,y=0.06,width=0.25)
 
 
@@ -392,7 +396,7 @@ for (d in c(2,5,10,60)){
       theme_bw() +
       theme(
         plot.margin=unit(c(1,0.5,4,1),"cm"),
-        plot.title = element_text(face="bold",size=25,vjust=20),
+        plot.title = element_text(face="bold",size=25,hjust=0.5),
         panel.grid.major = element_line(colour = "grey90"),
         panel.grid.minor = element_line(colour = "grey97"),
         panel.border = element_rect(colour = "black", fill=NA, size=1),

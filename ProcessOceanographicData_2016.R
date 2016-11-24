@@ -338,7 +338,7 @@ setwd("//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP")
 #install.packages("png")
 library(png)
 library(grid)
-img <- readPNG("C:/Users/cogswella/Documents/AZMP/R Code/MoPSAnomLegHor.png")
+img <- readPNG("C:/Users/cogswella/Documents/AZMP/R Code/MoPS/AnomLegHor.png")
 logo <- rasterGrob(img,x=0.51,y=0.06,width=0.25)
 
 

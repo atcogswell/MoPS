@@ -15,7 +15,7 @@ library(ocedata)
 ?oce::`plot,ctd-method`
 
 #### 3. Read file and plot ####
-#choose ODF file and read it using read.oce
+#choose ODF file and read it using read.odf and read.ctd.odf
 df<-file.choose()
 odf_r<-read.odf(df)
 ctd_r<-read.ctd.odf(df)

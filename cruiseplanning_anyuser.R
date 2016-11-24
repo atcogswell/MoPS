@@ -10,7 +10,7 @@
 install.packages("rgdal")
 install.packages("dismo")
 install.packages("raster")
-install.packages ("maptools") 
+install.packages ("maptools")
 install.packages ("rgeos")
 
 ### 2. Loading libraries ---- 

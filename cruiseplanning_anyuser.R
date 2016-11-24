@@ -40,22 +40,22 @@ setwd(wd) #set your working directory
 ##or set directory for ascii bathymetry manually.
   
 # AZOMP depth raster - GEBCO 1/4 degree (2014)
-#rwd="C:/Users/CogswellA/Documents/AZMP/Requests/Ringuette/azomp_depth.asc"
+rwd="C:/Users/CogswellA/Documents/AZMP/Requests/Ringuette/azomp_depth.asc"
 
 # AZMP depth raster CHS baythymetry
-rwd="C:/Users/cogswella/Documents/AZMP/Missions/ArcGIS Projects/BaseLayers/Baythymetry/CHS_AtlanticBathymetricCompilation/chs15sec1.asc"
+#rwd="C:/Users/cogswella/Documents/AZMP/Missions/ArcGIS Projects/BaseLayers/Baythymetry/CHS_AtlanticBathymetricCompilation/chs15sec1.asc"
 
 
 # run sections 4-8 with section 7 off when 
 # sections 2-8 have been run once with section 7 turned on.
 
 #### 4. Enter Start Date ----
-
-s=ISOdate(2017, 09, 01, 08) #start date and time for mission (Year, month, day, 24hr time)
+#kt=11 # Enter your transit speed in kts
+s=ISOdate(2017, 09, 15, 08) #start date and time for mission (Year, month, day, 24hr time)
 
 #### 5. Choose your input file ----
 #file=file.choose()
-file="LABSEA2017_FALL_test.csv"
+file="LABSEA2017_FALL_3.csv"
 data=read.csv(file, stringsAsFactors=F)
 file2=basename(file)
 
@@ -167,7 +167,7 @@ for (n in 2:l){
 
 #This is where to ask the user to enter a shapefile output name
 
-#### 7. Extract depth from ASCII - turn on and off ----
+## 7. Extract depth from ASCII - turn on and off ----
 depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
 data1=data[,1:2]
 data2=data[,3:length(data)]
@@ -226,7 +226,13 @@ data4=data4[,1:(nc-2)]
 ##write summary csv that has same order of variables as shapefile
 write.csv(data4, file4, row.names=F)
 
-### 9. AZMP specific formats required for reporting and planning purposes ----
+## 9. Calculate the total days for the mission ####
+et<-nrow(data4) #et=end time
+t1<-as.Date(data4$arrival[1])
+t<-data4$arrival[et]-data4$arrival[1]
+print(paste("The mission",file,"is",round(as.numeric(difftime(strptime(data4$arrival[et],"%Y-%m-%d %H:%M:%S"),strptime(data4$departure[1],"%Y-%m-%d %H:%M:%S"))),1), "days long.",sep=" "))
+
+### 10. AZMP specific formats required for reporting and planning purposes ----
 
 ##Organize and sort data for form b - uses degree minutes
 formb=as.data.frame(data4[,c("station", "lon_dm", "lat_dm", "depth_m", "operation", "optime", "dist_nm", "trans_hr", "loc1", "kts")])
@@ -242,7 +248,7 @@ file6=paste(file2,"mplan",date,time,sep="_")
 file6=paste(file6,".csv", sep="")
 write.csv(mplan, file6, row.names=F)
 
-### 10. This section saves you a little time when putting together reports by determining the total operational time at each location and the transit time to the next----
+### 11. This section saves you a little time when putting together reports by determining the total operational time at each location and the transit time to the next----
 ## You will need to organize 1 column in your input csv file - loc1 with "factors" as location numbers in rows that apply to what is being summed.
 ## Remember not to skip any cells, but if you do please fill the cell with "NA"
 

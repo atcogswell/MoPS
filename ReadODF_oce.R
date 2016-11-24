@@ -17,7 +17,7 @@ library(ocedata)
 #### 3. Read file and plot ####
 #choose ODF file and read it using read.oce
 df<-file.choose()
-odf_r=read.odf(df)
+odf_r<-read.odf(df)
 ctd_r<-read.ctd.odf(df)
 oce::plot(ctd_r)
 

@@ -5,8 +5,8 @@ library(oce)
 library(ocedata)
 #test
 setwd("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/2016")
-out=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP")
-outroot=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP") 
+out=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/2016/")
+outroot=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/") 
 
 
 list=list.files(pattern="*^.*D.*.ODF$")

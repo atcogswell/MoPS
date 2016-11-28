@@ -5,8 +5,8 @@ library(oce)
 library(ocedata)
 #test
 setwd("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/2016")
-out=c("//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP/2016/")
-outroot=c("//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP/") 
+out=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP")
+outroot=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP") 
 
 
 list=list.files(pattern="*^.*D.*.ODF$")
@@ -67,7 +67,7 @@ l=length(list)
 #### Copy Recent ODF files to directory for website ########
 
 setwd("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/2016")
-out1="//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP/ODF/2016"
+out1="//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/2016"
 
 for (n in 1:l) {
 
@@ -125,7 +125,7 @@ for (n in 2:l){
 dataout$woy<-as.numeric(strftime(as.POSIXlt(dataout$date),format="%W"))
 datacurr<-dataout
 
-setwd("//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP")
+setwd("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP")
 datasum<-read.csv("BBMP_TS_2000_2015.csv")
 datasum$woy<-as.numeric(strftime(as.POSIXlt(datasum$date),format="%W"))
 
@@ -152,7 +152,7 @@ gp<-as.data.frame(gp)
 gp$var<-as.character(gp$var)
 
 
-setwd("//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP")
+setwd("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP")
 
 for (d in c(2,5,10,60)){
   
@@ -334,7 +334,7 @@ for (d in c(2,5,10,60)){
 
 ##### Weekly anomaly bar chart ---- 
 
-setwd("//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP")
+setwd("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP")
 #install.packages("png")
 library(png)
 library(grid)

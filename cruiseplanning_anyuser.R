@@ -55,7 +55,7 @@ s=ISOdate(2017, 09, 15, 08) #start date and time for mission (Year, month, day, 
 
 #### 5. Choose your input file ----
 #file=file.choose()
-file="LABSEA2017_FALL_3.csv"
+file="LABSEA2017_FALL_5.csv"
 data=read.csv(file, stringsAsFactors=F)
 file2=basename(file)
 
@@ -228,8 +228,6 @@ write.csv(data4, file4, row.names=F)
 
 ## 9. Calculate the total days for the mission ####
 et<-nrow(data4) #et=end time
-t1<-as.Date(data4$arrival[1])
-t<-data4$arrival[et]-data4$arrival[1]
 print(paste("The mission",file,"is",round(as.numeric(difftime(strptime(data4$arrival[et],"%Y-%m-%d %H:%M:%S"),strptime(data4$departure[1],"%Y-%m-%d %H:%M:%S"))),1), "days long.",sep=" "))
 
 ### 10. AZMP specific formats required for reporting and planning purposes ----

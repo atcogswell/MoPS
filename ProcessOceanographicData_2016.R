@@ -10,6 +10,7 @@ outroot=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/")
 
 
 list=list.files(pattern="*^.*D.*.ODF$")
+
 l=length(list)
 
   

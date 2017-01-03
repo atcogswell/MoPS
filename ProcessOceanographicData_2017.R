@@ -4,8 +4,8 @@
 library(oce)
 library(ocedata)
 #test
-setwd("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/2016")
-out=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/2016/")
+setwd("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/2017")
+out=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/2017/")
 outroot=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/") 
 
 
@@ -67,8 +67,8 @@ l=length(list)
 
 #### Copy Recent ODF files to directory for website ########
 
-setwd("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/2016")
-out1="//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/2016"
+setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
+out1="//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/2017"
 
 for (n in 1:l) {
 

@@ -4,8 +4,8 @@
 library(oce)
 library(ocedata)
 #test
-setwd("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/2017")
-out=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/2017/")
+setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
+out=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
 outroot=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/") 
 
 
@@ -68,7 +68,7 @@ l=length(list)
 #### Copy Recent ODF files to directory for website ########
 
 setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
-out1="//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/2017"
+out1=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
 
 for (n in 1:l) {
 
@@ -432,10 +432,10 @@ for (d in c(2,5,10,60)){
 
 ##### Copy Archived ODF files to directory for website - run at end of year ########
 
-#setwd("//dcnsbiona01a/BIODataSvcArc/Archive/ctd/2016")
-#out="//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP/ODF/2016"
+#setwd(paste("//dcnsbiona01a/BIODataSvcArc/Archive/ctd/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
+#out=paste("//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP/ODF/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
 
-#list2=list.files(pattern="*CTD_BCD2016667.*DN.*.ODF$")
+#list2=list.files(pattern="*CTD_BCD2017667.*DN.*.ODF$")
 
 #l=length(list2)
 #for (n in 1:l) {

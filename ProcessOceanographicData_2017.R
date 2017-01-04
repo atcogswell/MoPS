@@ -111,7 +111,7 @@ datain$date<-as.Date(substr(dates,1,10))
 datain<-dplyr::select(datain,date,pressure,temperature,salinity,sigmaTheta)
 dataout<-tidyr::gather(datain,parameter,value,3:5)
 
-for (n in 2:l){
+if(l>1) (for (n in 2:l){
   od<-read.odf(paste(getwd(),"/",list[n],sep=""))
   dates<-od@metadata$date
   od<-as.data.frame(od@data)
@@ -121,7 +121,7 @@ for (n in 2:l){
   datain<-dplyr::select(datain,date,pressure,temperature,salinity,sigmaTheta)
   datagather<-tidyr::gather(datain,parameter,value,3:5)
   dataout<-rbind(dataout,datagather)
-}
+})
 
 dataout$woy<-as.numeric(strftime(as.POSIXlt(dataout$date),format="%W"))
 datacurr<-dataout

@@ -428,9 +428,9 @@ for (d in c(2,5,10,60)){
 ##### Copy Archived ODF files to directory for website - run at end of year ########
 
 #setwd(paste("//dcnsbiona01a/BIODataSvcArc/Archive/ctd/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
-#out=paste("//dcnsbiona01a/BIODataSvcIn/_BIOWeb/BBMP/ODF/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
+#out=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF",(as.numeric(format(Sys.Date(), "%Y"))),"/", sep=""))
 
-#list2=list.files(pattern="*CTD_BCD2017667.*DN.*.ODF$")
+#list2=list.files(pattern=paste("*CTD_BCD",(as.numeric(format(Sys.Date(), "%Y"))),"667.",sep=""),*DN.*.ODF$")
 
 #l=length(list2)
 #for (n in 1:l) {

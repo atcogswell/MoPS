@@ -5,7 +5,7 @@ library(oce)
 library(ocedata)
 #test
 setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
-out=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
+out=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/",(as.numeric(format(Sys.Date(), "%Y"))),"/", sep=""))
 outroot=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/") 
 
 
@@ -68,7 +68,7 @@ l=length(list)
 #### Copy Recent ODF files to directory for website ########
 
 setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
-out1=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
+out1=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",(as.numeric(format(Sys.Date(), "%Y"))),"/", sep=""))
 
 for (n in 1:l) {
 
@@ -326,11 +326,6 @@ for (d in c(2,5,10,60)){
   dev.off()
   
 }
-
-
-
-
-##### Sections run at year end:
 
 
 ##### Weekly anomaly bar chart ---- 

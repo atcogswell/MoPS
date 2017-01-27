@@ -457,7 +457,7 @@ for (d in c(2,5,10,60)){
                    
                  )+
                  annotate("text",x=c(6,18,32,44,57,70,83,96),y=5, label=c("Winter","Spring","Summer","Fall","Winter","Spring","Summer","Fall"), alpha=0.3, size=12)+
-                 annotate("text",x=c(27,80),y=-5, label=c(as.numeric(format(Sys.Date(), "%Y"))-1,as.numeric(format(Sys.Date(), "%Y"))), alpha=0.3, size=)+
+                 annotate("text",x=c(27,80),y=-5, label=c(as.numeric(format(Sys.Date(), "%Y"))-1,as.numeric(format(Sys.Date(), "%Y"))), alpha=0.3, size=12)+
                  geom_vline(xintercept = 53.5, linetype="dotted")) else (p <- p +
                                                                            theme_bw() +
                                                                            theme(

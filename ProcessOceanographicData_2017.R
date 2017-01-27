@@ -116,13 +116,17 @@ datain<-NULL
 dataout<-NULL
 arec<-NULL
 tmp<-NULL
+ind<-NULL
 
 
-for (i in 1:length(wds)) {
+for (i in 1:length(years)) {
   
   for (n in 1:length(list[[i]])){
     od<-read.odf(paste(wds[i],"/",list[[i]][n],sep=""))
     dates<-od@metadata$date
+    odname<-as.data.frame(list[[i]][n])
+    tmp3<-cbind(odname,as.data.frame(dates))
+    ind<-rbind(ind,tmp3)
     od<-as.data.frame(od@data)
     datain<-subset(od,od$pressure==2|od$pressure==5|od$pressure==10|od$pressure==60)
     test<-as.Date(substr(dates,1,10))
@@ -133,6 +137,9 @@ for (i in 1:length(wds)) {
     
   }
   
+  names(ind)<-c("FILE","START_DATE_TIME")
+  write.table(ind, paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",years[i],"/",years[i],"667ODFSUMMARY.tab",sep=""),row.names=F,sep="\t")
+  ind<-NULL
   ifelse (i==1,dataout$woy<-as.numeric(strftime(as.POSIXlt(dataout$date),format="%W")),dataout$woy<-as.numeric(strftime(as.POSIXlt(dataout$date),format="%W"))+52)
   arec<-rbind(dataout,arec) #all records from previous and current year
   dataout<-NULL

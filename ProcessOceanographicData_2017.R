@@ -138,7 +138,7 @@ for (i in 1:length(years)) {
   }
   
   names(ind)<-c("FILE","START_DATE_TIME")
-  write.table(ind, paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",years[i],"/",years[i],"667ODFSUMMARY.tab",sep=""),row.names=F,sep="\t")
+  write.table(ind, paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",years[i],"/",years[i],"667ODFSUMMARY.tsv",sep=""),row.names=F,sep="\t")
   ind<-NULL
   ifelse (i==1,dataout$woy<-as.numeric(strftime(as.POSIXlt(dataout$date),format="%W")),dataout$woy<-as.numeric(strftime(as.POSIXlt(dataout$date),format="%W"))+52)
   arec<-rbind(dataout,arec) #all records from previous and current year

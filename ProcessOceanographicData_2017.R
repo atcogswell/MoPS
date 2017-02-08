@@ -138,7 +138,11 @@ for (i in 1:length(years)) {
   }
   
   names(ind)<-c("FILE","START_DATE_TIME")
-  write.table(ind, paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",years[i],"/",years[i],"667ODFSUMMARY.tsv",sep=""),row.names=F,sep="\t")
+  ofile <-paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",years[i],"/",years[i],"667ODFSUMMARY.tsv",sep="")
+  cat(paste("Folder consists of ",nrow(ind)," ODF files from ",years[i]," Bedford Basin Compass Station occupations.",sep=""), file=ofile, sep="\n", append=FALSE)
+  cat("", file=ofile, sep="\n", append=TRUE)
+  write.table(ind, file=ofile, append=TRUE, quote=TRUE, sep=",",
+              eol="\n", na="NA", dec=".", row.names=FALSE, col.names=TRUE)
   ind<-NULL
   ifelse (i==1,dataout$woy<-as.numeric(strftime(as.POSIXlt(dataout$date),format="%W")),dataout$woy<-as.numeric(strftime(as.POSIXlt(dataout$date),format="%W"))+52)
   arec<-rbind(dataout,arec) #all records from previous and current year

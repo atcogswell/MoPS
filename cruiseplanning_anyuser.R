@@ -171,7 +171,7 @@ for (n in 2:l){
 #This is where to ask the user to enter a shapefile output name
 
 ## 7. Extract depth from ASCII - turn on and off ----
-#depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
+depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
 data1=data[,1:2]
 data2=data[,3:length(data)]
 data3=SpatialPointsDataFrame(data1, data2, coords.nrs = numeric(0),proj4string = CRS("+proj=longlat +datum=WGS84"), match.ID = TRUE, bbox = NULL)
@@ -245,9 +245,9 @@ route<-leaflet(data4) %>%
            attribution = 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC')%>%  # Add awesome tiles
   addPolylines(data=data4ln,color="blue",weight=1,popup=paste(file,"Route",sep=" "),group="Route")%>%
   addCircles(lng=tpts$lon_dd,lat=tpts$lat_dd, weight = 2, radius=10, color="black", stroke = TRUE,opacity=0.5,group="Transit Locations",
-             fillOpacity = 1,popup=paste ("ID:",tpts$ID,"|", "Station:", tpts$type,"|","Lon:", round(tpts$lon_dd,4), "|","Lat:",round(tpts$lat_dd,4),sep=" "))%>%
+             fillOpacity = 1,popup=paste ("ID:",tpts$ID,"|", "Station:", tpts$type,"|","Lon:", round(tpts$lon_dd,4), "|","Lat:",round(tpts$lat_dd,4),"|","Arrival:",tpts$arrival,"|","Departure:",tpts$departure, sep=" "))%>%
   addCircles(lng=opts$lon_dd, lat=opts$lat_dd, weight = 5, radius=10, color="yellow",stroke = TRUE, opacity=0.5,group="Operations Locations",
-             fillOpacity = 1, popup=paste ("ID:",opts$ID,"|", "Station:", opts$station,"|","Lon:", round(opts$lon_dd,4), "|","Lat:",round(opts$lat_dd,4),sep=" "))%>% 
+             fillOpacity = 1, popup=paste ("ID:",opts$ID,"|", "Station:", opts$station,"|","Lon:", round(opts$lon_dd,4), "|","Lat:",round(opts$lat_dd,4), "|","Arrival:",opts$arrival,"|","Departure:",opts$departure, sep=" "))%>% 
   addLegend("bottomright", colors= c("yellow", "black","blue"), labels=c("Operations","Transit","Route"), title=file)%>% 
   addLayersControl(
   overlayGroups = c("Operations Locations","Transit Locations","Route"),

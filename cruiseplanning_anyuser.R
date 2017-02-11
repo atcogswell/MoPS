@@ -12,6 +12,7 @@ install.packages("dismo")
 install.packages("raster")
 install.packages ("maptools")
 install.packages ("rgeos")
+install.packages ("mapview")
 
 ### 2. Loading libraries ---- 
 
@@ -20,6 +21,8 @@ library(dismo)
 library(raster)
 library(maptools) 
 library(rgeos)
+library(mapview)
+library(leaflet)
 
 ### 3. set working directories is only necessary on the first run.----  
 ##Save history so these don't need to be run again.
@@ -225,6 +228,36 @@ data4=as.data.frame(data3)
 data4=data4[,1:(nc-2)]
 ##write summary csv that has same order of variables as shapefile
 write.csv(data4, file4, row.names=F)
+
+library(htmlwidgets)
+#position of transit points
+tpts<-subset(data4,data4$type=="Transit")
+#position of operations points
+opts<-subset(data4,data4$type=="Operations")
+data4sel<-as.matrix(data4[,c(1:2)])
+#converts data4 points to lines for inclusion in output map
+data4ln<-coords2Lines(data4sel, ID=paste(file,"Route",sep=" "))
+
+
+route<-leaflet(data4) %>%
+  fitBounds(min(data4$lon_dd),min(data4$lat_dd),max(data4$lon_dd),max(data4$lat_dd)) %>%
+  addTiles(urlTemplate = 'http://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', 
+           attribution = 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC')%>%  # Add awesome tiles
+  addPolylines(data=data4ln,color="blue",weight=1,popup=paste(file,"Route",sep=" "),group="Route")%>%
+  addCircles(lng=tpts$lon_dd,lat=tpts$lat_dd, weight = 2, radius=10, color="black", stroke = TRUE,opacity=0.5,group="Transit Locations",
+             fillOpacity = 1,popup=paste ("ID:",tpts$ID,"|", "Station:", tpts$type,"|","Lon:", round(tpts$lon_dd,4), "|","Lat:",round(tpts$lat_dd,4),sep=" "))%>%
+  addCircles(lng=opts$lon_dd, lat=opts$lat_dd, weight = 5, radius=10, color="yellow",stroke = TRUE, opacity=0.5,group="Operations Locations",
+             fillOpacity = 1, popup=paste ("ID:",opts$ID,"|", "Station:", opts$station,"|","Lon:", round(opts$lon_dd,4), "|","Lat:",round(opts$lat_dd,4),sep=" "))%>% 
+  addLegend("bottomright", colors= c("yellow", "black","blue"), labels=c("Operations","Transit","Route"), title=file)%>% 
+  addLayersControl(
+  overlayGroups = c("Operations Locations","Transit Locations","Route"),
+  options = layersControlOptions(collapsed = TRUE)
+  )
+
+library(tools)   # unless already loaded, comes with base R
+route_html<-paste(file_path_sans_ext(file),"_",as.numeric(format(Sys.Date(), "%Y%m%d")),".html",sep="")
+
+saveWidget(route,route_html)
 
 ## 9. Calculate the total days for the mission ####
 et<-nrow(data4) #et=end time

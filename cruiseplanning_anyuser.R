@@ -33,7 +33,7 @@ library(leaflet)
 
 ##or set directory of your choice manually.  Data input and output folder.
 
-wd="C:/Users/cogswella/Documents/AZMP/Missions/2017/AZOMP"
+wd="C:/Users/cogswella/Documents/AZMP/Missions/2017/2017 Spring"
 
 setwd(wd) #set your working directory
 
@@ -43,10 +43,10 @@ setwd(wd) #set your working directory
 ##or set directory for ascii bathymetry manually.
   
 # AZOMP depth raster - GEBCO 1/4 degree (2014)
-rwd="C:/Users/CogswellA/Documents/AZMP/Requests/Ringuette/azomp_depth.asc"
+#rwd="C:/Users/CogswellA/Documents/AZMP/Requests/Ringuette/azomp_depth.asc"
 
 # AZMP depth raster CHS baythymetry
-#rwd="C:/Users/cogswella/Documents/AZMP/Missions/ArcGIS Projects/BaseLayers/Baythymetry/CHS_AtlanticBathymetricCompilation/chs15sec1.asc"
+rwd="C:/Users/cogswella/Documents/AZMP/Missions/ArcGIS Projects/BaseLayers/Baythymetry/CHS_AtlanticBathymetricCompilation/chs15sec1.asc"
 
 
 # run sections 4-8 with section 7 off when 
@@ -54,11 +54,11 @@ rwd="C:/Users/CogswellA/Documents/AZMP/Requests/Ringuette/azomp_depth.asc"
 
 #### 4. Enter Start Date ----
 #kt=11 # Enter your transit speed in kts
-s=ISOdate(2017, 09, 15, 08) #start date and time for mission (Year, month, day, 24hr time)
+s=ISOdate(2017, 04, 03, 08) #start date and time for mission (Year, month, day, 24hr time)
 
 #### 5. Choose your input file ----
 #file=file.choose()
-file="LABSEA2017_FALL_5.csv"
+file="HUD2017000_config3.csv"
 data=read.csv(file, stringsAsFactors=F)
 file2=basename(file)
 
@@ -171,7 +171,7 @@ for (n in 2:l){
 #This is where to ask the user to enter a shapefile output name
 
 ## 7. Extract depth from ASCII - turn on and off ----
-depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
+#depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
 data1=data[,1:2]
 data2=data[,3:length(data)]
 data3=SpatialPointsDataFrame(data1, data2, coords.nrs = numeric(0),proj4string = CRS("+proj=longlat +datum=WGS84"), match.ID = TRUE, bbox = NULL)
@@ -182,7 +182,7 @@ nc=ncol(data)
 data[,nc]=data[,nc]*-1
 colnames(data)[nc]="depth_m"
 
-## 8. Prepare data for export as a shape file and .csv and remove depth from type "Transit".----
+## 8. Prepare data for export as a shape file and .csv and remove depth from type "Transit". and create a html plot for export ----
 data1=data[,1:2]
 data2=data[,1:length(data)]
 
@@ -253,6 +253,8 @@ route<-leaflet(data4) %>%
   overlayGroups = c("Operations Locations","Transit Locations","Route"),
   options = layersControlOptions(collapsed = TRUE)
   )
+
+route
 
 library(tools)   # unless already loaded, comes with base R
 route_html<-paste(file_path_sans_ext(file),"_",as.numeric(format(Sys.Date(), "%Y%m%d")),".html",sep="")

@@ -247,7 +247,7 @@ route<-leaflet(data4) %>%
   addCircles(lng=tpts$lon_dd,lat=tpts$lat_dd, weight = 2, radius=10, color="black", stroke = TRUE,opacity=0.5,group="Transit Locations",
              fillOpacity = 1,popup=paste ("ID:",tpts$ID,"|", "Station:", tpts$type,"|","Lon:", round(tpts$lon_dd,4), "|","Lat:",round(tpts$lat_dd,4),"|","Arrival:",tpts$arrival,"|","Departure:",tpts$departure, sep=" "))%>%
   addCircles(lng=opts$lon_dd, lat=opts$lat_dd, weight = 5, radius=10, color="yellow",stroke = TRUE, opacity=0.5,group="Operations Locations",
-             fillOpacity = 1, popup=paste ("ID:",opts$ID,"|", "Station:", opts$station,"|","Lon:", round(opts$lon_dd,4), "|","Lat:",round(opts$lat_dd,4), "|","Depth(m):",round(opts$depth_m,1),"|", "Arrival:",opts$arrival,"|","Departure:",opts$departure, sep=" "))%>% 
+             fillOpacity = 1, popup=paste ("ID:",opts$ID,"|", "Station:", opts$station,"|","Lon:", round(opts$lon_dd,4), "|","Lat:",round(opts$lat_dd,4), "|","Depth(m):",round(opts$depth_m,1),"|", "Arrival:",opts$arrival,"|","Departure:",opts$departure, "|","Op Time:",opts$optime,"hrs", sep=" "))%>% 
   addLegend("bottomright", colors= c("yellow", "black","blue"), labels=c("Operations","Transit","Route"), title=file)%>% 
   addLayersControl(
   overlayGroups = c("Operations Locations","Transit Locations","Route"),

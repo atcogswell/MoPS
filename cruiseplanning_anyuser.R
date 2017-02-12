@@ -244,11 +244,11 @@ route<-leaflet(data4) %>%
   addTiles(urlTemplate = 'http://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', 
            attribution = 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC')%>%  # Add awesome tiles
   addPolylines(data=data4ln,color="blue",weight=1,popup=paste(file,"Route",sep=" "),group="Route")%>%
-  addCircles(lng=tpts$lon_dd,lat=tpts$lat_dd, weight = 2, radius=10, color="black", stroke = TRUE,opacity=0.5,group="Transit Locations",
+  addCircles(lng=tpts$lon_dd,lat=tpts$lat_dd, weight = 2, radius=10, color="red", stroke = TRUE,opacity=0.5,group="Transit Locations",
              fillOpacity = 1,popup=paste ("ID:",tpts$ID,"|", "Station:", tpts$type,"|","Lon:", round(tpts$lon_dd,4), "|","Lat:",round(tpts$lat_dd,4),"|","Arrival:",tpts$arrival,"|","Departure:",tpts$departure, sep=" "))%>%
-  addCircles(lng=opts$lon_dd, lat=opts$lat_dd, weight = 5, radius=10, color="yellow",stroke = TRUE, opacity=0.5,group="Operations Locations",
+  addCircles(lng=opts$lon_dd, lat=opts$lat_dd, weight = 5, radius=10, color="yellow",stroke = TRUE, opacity=1,group="Operations Locations",
              fillOpacity = 1, popup=paste ("ID:",opts$ID,"|", "Station:", opts$station,"|","Lon:", round(opts$lon_dd,4), "|","Lat:",round(opts$lat_dd,4), "|","Depth(m):",round(opts$depth_m,1),"|", "Arrival:",opts$arrival,"|","Departure:",opts$departure, "|","Op Time:",opts$optime,"hrs", sep=" "))%>% 
-  addLegend("bottomright", colors= c("yellow", "black","blue"), labels=c("Operations","Transit","Route"), title=file,opacity=1)%>% 
+  addLegend("bottomright", colors= c("yellow", "red","blue"), labels=c("Operations","Transit","Route"), title=file,opacity=1)%>% 
   addLayersControl(
   overlayGroups = c("Operations Locations","Transit Locations","Route"),
   options = layersControlOptions(collapsed = TRUE)

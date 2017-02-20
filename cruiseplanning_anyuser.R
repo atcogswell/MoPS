@@ -3,6 +3,8 @@
 ### - Section that may have to be run
 #### - Parameter that will be necessary to change
 
+#Scott Rocks
+
 # Sections must be run in the order presented:
 
 ### 1. Load Packages only if they are not already installed----
@@ -33,7 +35,7 @@ library(leaflet)
 
 ##or set directory of your choice manually.  Data input and output folder.
 
-wd="C:/Users/cogswella/Documents/AZMP/Missions/2017/2017 Spring"
+wd="C:/Users/cogswella/Documents/AZMP/Missions/2017/2017 Fall/Route Planning"
 
 setwd(wd) #set your working directory
 
@@ -54,11 +56,11 @@ rwd="C:/Users/cogswella/Documents/AZMP/Missions/ArcGIS Projects/BaseLayers/Bayth
 
 #### 4. Enter Start Date ----
 #kt=11 # Enter your transit speed in kts
-s=ISOdate(2017, 04, 03, 08) #start date and time for mission (Year, month, day, 24hr time)
+s=ISOdate(2017, 09, 15, 08) #start date and time for mission (Year, month, day, 24hr time)
 
 #### 5. Choose your input file ----
 #file=file.choose()
-file="HUD2017000_config3.csv"
+file="Endeavor_config5.csv"
 data=read.csv(file, stringsAsFactors=F)
 file2=basename(file)
 
@@ -171,7 +173,7 @@ for (n in 2:l){
 #This is where to ask the user to enter a shapefile output name
 
 ## 7. Extract depth from ASCII - turn on and off ----
-depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
+#depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
 data1=data[,1:2]
 data2=data[,3:length(data)]
 data3=SpatialPointsDataFrame(data1, data2, coords.nrs = numeric(0),proj4string = CRS("+proj=longlat +datum=WGS84"), match.ID = TRUE, bbox = NULL)

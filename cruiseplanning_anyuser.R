@@ -3,7 +3,11 @@
 ### - Section that may have to be run
 #### - Parameter that will be necessary to change
 
+<<<<<<< HEAD
 #Scott Rocks!
+=======
+#No he does not!
+>>>>>>> 273d9ab7cb5b0af8d37705248308c4e37334e1cd
 
 # Sections must be run in the order presented:
 

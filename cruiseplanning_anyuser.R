@@ -37,7 +37,8 @@ library(leaflet)
 
 ##or set directory of your choice manually.  Data input and output folder.
 
-wd="C:/Users/cogswella/Documents/AZMP/Missions/2017/2017 Fall/Route Planning"
+#wd="C:/Users/cogswella/Documents/AZMP/Missions/2017/2017 Fall/Route Planning"
+wd="C:/Users/cogswella/Documents/AZMP/Missions/2017/2017 Spring"
 
 setwd(wd) #set your working directory
 
@@ -58,11 +59,11 @@ rwd="C:/Users/cogswella/Documents/AZMP/Missions/ArcGIS Projects/BaseLayers/Bayth
 
 #### 4. Enter Start Date ----
 #kt=11 # Enter your transit speed in kts
-s=ISOdate(2017, 09, 15, 08) #start date and time for mission (Year, month, day, 24hr time)
+s=ISOdate(2017, 04, 01, 08) #start date and time for mission (Year, month, day, 24hr time)
 
 #### 5. Choose your input file ----
 #file=file.choose()
-file="Endeavor_config5.csv"
+file="HUD2017000_config5.csv"
 data=read.csv(file, stringsAsFactors=F)
 file2=basename(file)
 

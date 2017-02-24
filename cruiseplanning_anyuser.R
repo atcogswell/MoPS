@@ -37,8 +37,8 @@ library(leaflet)
 
 ##or set directory of your choice manually.  Data input and output folder.
 
-#wd="C:/Users/cogswella/Documents/AZMP/Missions/2017/2017 Fall/Route Planning"
-wd="C:/Users/cogswella/Documents/AZMP/Missions/2017/2017 Spring"
+wd="C:/Users/cogswella/Documents/AZMP/Missions/2017/2017 Fall/Route Planning"
+#wd="C:/Users/cogswella/Documents/AZMP/Missions/2017/2017 Spring"
 
 setwd(wd) #set your working directory
 
@@ -59,11 +59,12 @@ rwd="C:/Users/cogswella/Documents/AZMP/Missions/ArcGIS Projects/BaseLayers/Bayth
 
 #### 4. Enter Start Date ----
 #kt=11 # Enter your transit speed in kts
-s=ISOdate(2017, 04, 01, 08) #start date and time for mission (Year, month, day, 24hr time)
+s=ISOdate(2017, 09, 15, 08) #start date and time for mission (Year, month, day, 24hr time)
 
 #### 5. Choose your input file ----
 #file=file.choose()
-file="HUD2017000_config5.csv"
+file="Fall2017_config5.csv"
+#file="HUD2017000_config5.csv"
 data=read.csv(file, stringsAsFactors=F)
 file2=basename(file)
 
@@ -176,7 +177,7 @@ for (n in 2:l){
 #This is where to ask the user to enter a shapefile output name
 
 ## 7. Extract depth from ASCII - turn on and off ----
-depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
+#depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
 data1=data[,1:2]
 data2=data[,3:length(data)]
 data3=SpatialPointsDataFrame(data1, data2, coords.nrs = numeric(0),proj4string = CRS("+proj=longlat +datum=WGS84"), match.ID = TRUE, bbox = NULL)
@@ -261,11 +262,11 @@ route<-leaflet(data4) %>%
              fillOpacity = 1,popup=paste ("ID:",tpts$ID,"|", "Station:", tpts$type,"|","Lon:", round(tpts$lon_dd,3), "|","Lat:",round(tpts$lat_dd,3),"|","Arrival:",substrLeft(tpts$arrival,16),"|","Departure:",substrLeft(tpts$departure,16), "Next Stn:",round(tpts$dist_nm,1),"nm","&",round(tpts$trans_hr,1),"hr(s)",sep=" "))%>%
   addCircles(lng=opts$lon_dd, lat=opts$lat_dd, weight = 5, radius=10, color="yellow",stroke = TRUE, opacity=.5,group="Operations Locations",
              fillOpacity = 1, popup=paste ("ID:",opts$ID,"|", "Station:", opts$station,"|","Lon:", round(opts$lon_dd,3), "|","Lat:",round(opts$lat_dd,3), "|","Depth:",round(opts$depth_m,1),"m","|", "Arrival:",substrLeft(opts$arrival,16),"|","Departure:",substrLeft(opts$departure,16), "|","Op Time:",opts$optime,"hr(s)","|","Operation(s):",opts$operation, "|","Next Stn:",round(opts$dist_nm,1),"nm","&",round(opts$trans_hr,1),"hr(s)",sep=" "))%>% 
-  addLabelOnlyMarkers(lng=opts$lon_dd, lat=opts$lat_dd,label =  as.character(opts$station), 
+  addLabelOnlyMarkers(lng=opts$lon_dd, lat=opts$lat_dd,label =  as.character(opts$station),group="Labels", 
                       labelOptions = labelOptions(noHide = T, direction = 'top', textOnly = T))%>%
   addLegend("bottomright", colors= c("yellow", "red","blue"), labels=c("Operations","Transit","Route"), title=paste("Map created on ",Sys.Date(),": ",file),opacity=1)%>% 
   addLayersControl(
-  overlayGroups = c("Operations Locations","Transit Locations","Route"),
+  overlayGroups = c("Operations Locations","Transit Locations","Route","Labels"),
   options = layersControlOptions(collapsed = TRUE)
   )
 

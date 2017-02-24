@@ -172,7 +172,7 @@ for (n in 2:l){
 #This is where to ask the user to enter a shapefile output name
 
 ## 7. Extract depth from ASCII - turn on and off ----
-#depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
+depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
 data1=data[,1:2]
 data2=data[,3:length(data)]
 data3=SpatialPointsDataFrame(data1, data2, coords.nrs = numeric(0),proj4string = CRS("+proj=longlat +datum=WGS84"), match.ID = TRUE, bbox = NULL)
@@ -215,6 +215,11 @@ date
 substrRight <- function(x, n){
   substr(x, nchar(x)-n+1, nchar(x))
 }
+
+substrLeft <- function(x, n){
+  substr(x, 1, n)
+}
+
 date=substrRight(gsub("-","", date),6)
 time=format(Sys.time(),"%H%M")#The 3600 value might be necessary to account for daylight savings.
 time=as.character(time)
@@ -246,10 +251,10 @@ route<-leaflet(data4) %>%
            attribution = 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC')%>%  # Add awesome tiles
   addPolylines(data=data4ln,color="blue",weight=1,popup=paste(file,"Route",sep=" "),group="Route")%>%
   addCircles(lng=tpts$lon_dd,lat=tpts$lat_dd, weight = 5, radius=10, color="red", stroke = TRUE,opacity=0.5,group="Transit Locations",
-             fillOpacity = 1,popup=paste ("ID:",tpts$ID,"|", "Station:", tpts$type,"|","Lon:", round(tpts$lon_dd,4), "|","Lat:",round(tpts$lat_dd,4),"|","Arrival:",tpts$arrival,"|","Departure:",tpts$departure, sep=" "))%>%
+             fillOpacity = 1,popup=paste ("ID:",tpts$ID,"|", "Station:", tpts$type,"|","Lon:", round(tpts$lon_dd,3), "|","Lat:",round(tpts$lat_dd,3),"|","Arrival:",substrLeft(tpts$arrival,16),"|","Departure:",substrLeft(tpts$departure,16), sep=" "))%>%
   addCircles(lng=opts$lon_dd, lat=opts$lat_dd, weight = 5, radius=10, color="yellow",stroke = TRUE, opacity=.5,group="Operations Locations",
-             fillOpacity = 1, popup=paste ("ID:",opts$ID,"|", "Station:", opts$station,"|","Lon:", round(opts$lon_dd,4), "|","Lat:",round(opts$lat_dd,4), "|","Depth(m):",round(opts$depth_m,1),"|", "Arrival:",opts$arrival,"|","Departure:",opts$departure, "|","Op Time:",opts$optime,"hrs","|","Operation:",opts$operation, sep=" "))%>% 
-  addLegend("bottomright", colors= c("yellow", "red","blue"), labels=c("Operations","Transit","Route"), title=file,opacity=1)%>% 
+             fillOpacity = 1, popup=paste ("ID:",opts$ID,"|", "Station:", opts$station,"|","Lon:", round(opts$lon_dd,3), "|","Lat:",round(opts$lat_dd,3), "|","Depth:",round(opts$depth_m,1),"m","|", "Arrival:",substrLeft(opts$arrival,16),"|","Departure:",substrLeft(opts$departure,16), "|","Op Time:",opts$optime,"hr(s)","|","Operation(s):",opts$operation, "|","Next Stn:",round(opts$dist_nm,1),"nm","&",round(opts$trans_hr,1),"hr(s)",sep=" "))%>% 
+  addLegend("bottomright", colors= c("yellow", "red","blue"), labels=c("Operations","Transit","Route"), title=paste("Map created on ",Sys.Date(),": ",file),opacity=1)%>% 
   addLayersControl(
   overlayGroups = c("Operations Locations","Transit Locations","Route"),
   options = layersControlOptions(collapsed = TRUE)

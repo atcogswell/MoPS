@@ -265,7 +265,7 @@ route<-leaflet(data4) %>%
   addLabelOnlyMarkers(lng=opts$lon_dd, lat=opts$lat_dd,label =  as.character(opts$station),group="Labels", 
                       labelOptions = labelOptions(noHide = T, direction = 'top', textOnly = T))%>%
   addLegend("bottomright", colors= c("yellow", "red","blue"), labels=c("Operations","Transit","Route"), title=paste("Map created on ",Sys.Date(),": ",file),opacity=1)%>% 
-  addScaleBar("bottomleft",options=scaleBarOptions(maxWidth=100,imperial=T,metric=T,updateWhenIdle=T))%>%
+  addScaleBar("bottomleft",options=scaleBarOptions(maxWidth=150,imperial=T,metric=T,updateWhenIdle=T))%>%
   addLayersControl(
   overlayGroups = c("Operations Locations","Transit Locations","Route","Labels"),
   options = layersControlOptions(collapsed = TRUE)

@@ -39,7 +39,7 @@ par(mfrow=c(1, 1))
 d <- read.csv("http://dd.weather.gc.ca/hydrometric/csv/NS/daily/NS_01EJ004_daily_hydrometric.csv")
 t <- as.POSIXct(d$Date)
 eta <- d$Water.Level...Niveau.d.eau..m.
-oce.plot.ts(t, eta, type='p', drawTimeRange=FALSE)
+oce.plot.ts(t, eta, type='p', drawTimeRange=FALSE, ylab="Water Level (m)", xlab="Date")
 for (ctd in ctds) {
     ctdTime <- ctd[["startTime"]]
     abline(v=ctdTime, col="darkgray")

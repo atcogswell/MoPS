@@ -3,6 +3,7 @@
 ### - Section that may have to be run
 #### - Parameter that will be necessary to change
 
+
 # Sections must be run in the order presented:
 
 ### 1. Load Packages only if they are not already installed----
@@ -12,6 +13,10 @@ install.packages("dismo")
 install.packages("raster")
 install.packages ("maptools")
 install.packages ("rgeos")
+install.packages ("mapview")
+install.packages("shiny")
+if (!require('devtools')) install.packages('devtools')
+devtools::install_github('rstudio/leaflet')
 
 ### 2. Loading libraries ---- 
 
@@ -20,6 +25,8 @@ library(dismo)
 library(raster)
 library(maptools) 
 library(rgeos)
+library(mapview)
+library(leaflet)
 
 ### 3. set working directories is only necessary on the first run.----  
 ##Save history so these don't need to be run again.
@@ -30,7 +37,8 @@ library(rgeos)
 
 ##or set directory of your choice manually.  Data input and output folder.
 
-wd="C:/Users/cogswella/Documents/AZMP/Missions/2017/AZOMP"
+wd="C:/Users/cogswella/Documents/AZMP/Missions/2017/2017 Fall/Route Planning"
+#wd="C:/Users/cogswella/Documents/AZMP/Missions/2017/2017 Spring"
 
 setwd(wd) #set your working directory
 
@@ -40,10 +48,10 @@ setwd(wd) #set your working directory
 ##or set directory for ascii bathymetry manually.
   
 # AZOMP depth raster - GEBCO 1/4 degree (2014)
-rwd="C:/Users/CogswellA/Documents/AZMP/Requests/Ringuette/azomp_depth.asc"
+#rwd="C:/Users/CogswellA/Documents/AZMP/Requests/Ringuette/azomp_depth.asc"
 
 # AZMP depth raster CHS baythymetry
-#rwd="C:/Users/cogswella/Documents/AZMP/Missions/ArcGIS Projects/BaseLayers/Baythymetry/CHS_AtlanticBathymetricCompilation/chs15sec1.asc"
+rwd="C:/Users/cogswella/Documents/AZMP/Missions/ArcGIS Projects/BaseLayers/Baythymetry/CHS_AtlanticBathymetricCompilation/chs15sec1.asc"
 
 
 # run sections 4-8 with section 7 off when 
@@ -55,7 +63,8 @@ s=ISOdate(2017, 09, 15, 08) #start date and time for mission (Year, month, day, 
 
 #### 5. Choose your input file ----
 #file=file.choose()
-file="LABSEA2017_FALL_5.csv"
+file="Fall2017_config5.csv"
+#file="HUD2017000_config5.csv"
 data=read.csv(file, stringsAsFactors=F)
 file2=basename(file)
 
@@ -168,7 +177,7 @@ for (n in 2:l){
 #This is where to ask the user to enter a shapefile output name
 
 ## 7. Extract depth from ASCII - turn on and off ----
-depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
+#depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
 data1=data[,1:2]
 data2=data[,3:length(data)]
 data3=SpatialPointsDataFrame(data1, data2, coords.nrs = numeric(0),proj4string = CRS("+proj=longlat +datum=WGS84"), match.ID = TRUE, bbox = NULL)
@@ -179,7 +188,7 @@ nc=ncol(data)
 data[,nc]=data[,nc]*-1
 colnames(data)[nc]="depth_m"
 
-## 8. Prepare data for export as a shape file and .csv and remove depth from type "Transit".----
+## 8. Prepare data for export as a shape file and .csv and remove depth from type "Transit". and create a html plot for export ----
 data1=data[,1:2]
 data2=data[,1:length(data)]
 
@@ -211,6 +220,11 @@ date
 substrRight <- function(x, n){
   substr(x, nchar(x)-n+1, nchar(x))
 }
+
+substrLeft <- function(x, n){
+  substr(x, 1, n)
+}
+
 date=substrRight(gsub("-","", date),6)
 time=format(Sys.time(),"%H%M")#The 3600 value might be necessary to account for daylight savings.
 time=as.character(time)
@@ -225,6 +239,44 @@ data4=as.data.frame(data3)
 data4=data4[,1:(nc-2)]
 ##write summary csv that has same order of variables as shapefile
 write.csv(data4, file4, row.names=F)
+
+library(htmlwidgets)
+#position of transit points
+tpts<-subset(data4,data4$type=="Transit")
+#position of operations points
+opts<-subset(data4,data4$type=="Operations")
+data4sel<-as.matrix(data4[,c(1:2)])
+#converts data4 points to lines for inclusion in output map
+data4ln<-coords2Lines(data4sel, ID=paste(file,"Route",sep=" "))
+
+et<-nrow(data4) #et=end time
+dur<-print(paste("The mission is",round(as.numeric(difftime(strptime(data4$arrival[et],"%Y-%m-%d %H:%M:%S"),strptime(data4$departure[1],"%Y-%m-%d %H:%M:%S"))),0), "days long.",sep=" "))
+
+
+route<-leaflet(data4) %>%
+  fitBounds(min(data4$lon_dd),min(data4$lat_dd),max(data4$lon_dd),max(data4$lat_dd)) %>%
+  addTiles(urlTemplate = 'http://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', 
+           attribution = 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC')%>%  # Add awesome tiles
+  addPolylines(data=data4ln,color="blue",weight=1,popup=paste(file,"Route","|",dur,sep=" "),group="Route")%>%
+  addCircles(lng=tpts$lon_dd,lat=tpts$lat_dd, weight = 5, radius=10, color="red", stroke = TRUE,opacity=0.5,group="Transit Locations",
+             fillOpacity = 1,popup=paste ("ID:",tpts$ID,"|", "Station:", tpts$type,"|","Lon:", round(tpts$lon_dd,3), "|","Lat:",round(tpts$lat_dd,3),"|","Arrival:",substrLeft(tpts$arrival,16),"|","Departure:",substrLeft(tpts$departure,16), "Next Stn:",round(tpts$dist_nm,1),"nm","&",round(tpts$trans_hr,1),"hr(s)",sep=" "))%>%
+  addCircles(lng=opts$lon_dd, lat=opts$lat_dd, weight = 5, radius=10, color="yellow",stroke = TRUE, opacity=.5,group="Operations Locations",
+             fillOpacity = 1, popup=paste ("ID:",opts$ID,"|", "Station:", opts$station,"|","Lon:", round(opts$lon_dd,3), "|","Lat:",round(opts$lat_dd,3), "|","Depth:",round(opts$depth_m,1),"m","|", "Arrival:",substrLeft(opts$arrival,16),"|","Departure:",substrLeft(opts$departure,16), "|","Op Time:",opts$optime,"hr(s)","|","Operation(s):",opts$operation, "|","Next Stn:",round(opts$dist_nm,1),"nm","&",round(opts$trans_hr,1),"hr(s)",sep=" "))%>% 
+  addLabelOnlyMarkers(lng=opts$lon_dd, lat=opts$lat_dd,label =  as.character(opts$station),group="Labels", 
+                      labelOptions = labelOptions(noHide = T, direction = 'top', textOnly = T))%>%
+  addLegend("bottomright", colors= c("yellow", "red","blue"), labels=c("Operations","Transit","Route"), title=paste("Map created on ",Sys.Date(),": ",file),opacity=1)%>% 
+  addScaleBar("bottomleft",options=scaleBarOptions(maxWidth=150,imperial=T,metric=T,updateWhenIdle=T))%>%
+  addLayersControl(
+  overlayGroups = c("Operations Locations","Transit Locations","Route","Labels"),
+  options = layersControlOptions(collapsed = TRUE)
+  )
+
+route
+
+library(tools)   # unless already loaded, comes with base R
+route_html<-paste(file_path_sans_ext(file),"_",as.numeric(format(Sys.Date(), "%Y%m%d")),".html",sep="")
+
+saveWidget(route,route_html)
 
 ## 9. Calculate the total days for the mission ####
 et<-nrow(data4) #et=end time

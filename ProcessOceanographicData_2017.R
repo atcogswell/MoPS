@@ -5,9 +5,8 @@ library(oce)
 library(ocedata)
 #test
 setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
-out=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/",(as.numeric(format(Sys.Date(), "%Y"))),"/", sep=""))
-outroot=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/") 
-
+out=c(paste("//dcnsbiona01b/EDC_V1_SHR2/Shared/Cogswell/_BIOWeb/BBMP/",(as.numeric(format(Sys.Date(), "%Y"))),"/", sep=""))
+outroot=c("//dcnsbiona01b/EDC_V1_SHR2/Shared/Cogswell/_BIOWeb/BBMP/") 
 
 list=list.files(pattern="*^.*D.*.ODF$")
 

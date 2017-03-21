@@ -67,7 +67,7 @@ dev.off()
 #### Copy Recent ODF files to directory for website ########
 
 setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
-out1=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",(as.numeric(format(Sys.Date(), "%Y"))),"/", sep=""))
+out1=c(paste("//dcnsbiona01b/EDC_V1_SHR2/Shared/Cogswell/_BIOWeb/BBMP/ODF/",(as.numeric(format(Sys.Date(), "%Y"))),"/", sep=""))
 
 for (n in 1:l) {
   
@@ -137,7 +137,7 @@ for (i in 1:length(years)) {
   }
   
   names(ind)<-c("FILE","START_DATE_TIME")
-  ofile <-paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",years[i],"/",years[i],"667ODFSUMMARY.tsv",sep="")
+  ofile <-paste("//dcnsbiona01b/EDC_V1_SHR2/Shared/Cogswell/_BIOWeb/BBMP/ODF/",years[i],"/",years[i],"667ODFSUMMARY.tsv",sep="")
   cat(paste("Folder consists of ",nrow(ind)," ODF files from ",years[i]," Bedford Basin Compass Station occupations.",sep=""), file=ofile, sep="\n", append=FALSE)
   cat("", file=ofile, sep="\n", append=TRUE)
   write.table(ind, file=ofile, append=TRUE, quote=TRUE, sep=",",
@@ -155,7 +155,7 @@ arec<-arrange(arec,date)
 #compile ODF data for current year
 
 
-setwd("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP")
+setwd("//dcnsbiona01b/EDC_V1_SHR2/Shared/Cogswell/_BIOWeb/BBMP")
 datasum<-read.csv("BBMP_TS_2000_2015.csv")
 datasum$woy<-as.numeric(strftime(as.POSIXlt(datasum$date),format="%W"))
 
@@ -182,7 +182,7 @@ gp<-as.data.frame(gp)
 gp$var<-as.character(gp$var)
 
 
-setwd("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP")
+setwd("//dcnsbiona01b/EDC_V1_SHR2/Shared/Cogswell/_BIOWeb/BBMP")
 #setwd("//Svnsbiofs02/MARSHARED/Shared/Cogswell/test")
 
 
@@ -376,7 +376,7 @@ p<-NULL
 
 ##### Weekly anomaly bar chart ---- 
 
-setwd("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP")
+setwd("//dcnsbiona01b/EDC_V1_SHR2/Shared/Cogswell/_BIOWeb/BBMP")
 #setwd("//Svnsbiofs02/MARSHARED/Shared/Cogswell/test")
 #install.packages("png")
 library(png)

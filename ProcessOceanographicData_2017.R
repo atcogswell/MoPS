@@ -4,7 +4,7 @@
 library(oce)
 library(ocedata)
 #test
-setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
+#setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
 out=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/",(as.numeric(format(Sys.Date(), "%Y"))),"/", sep=""))
 outroot=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/") 
 

@@ -90,3 +90,43 @@ library(tools)   # unless already loaded, comes with base R
 route_html<-"BBCTD_99_16.html"
 
 saveWidget(route,route_html)
+
+
+bbo<-read.csv("BedfordBasinOccupations.csv")
+bbo<-subset(bbo,bbo$depth>=50)
+write.csv(bbo,"BedfordBasinOccupations_gt50m.csv",row.names=F)
+
+library(RColorBrewer)
+
+pal <- brewer.pal(11, "Spectral")
+
+#now make it more continuous 
+#as a colorRamp
+pal <- colorRampPalette(pal)
+
+#now, map it to your values
+library(classInt)
+
+palData <- classIntervals(bbo$year, n=17,style="fixed", fixedBreaks=c(1999:2017))
+
+#note, we use pal(100) for a smooth palette here
+#but you can play with this
+bbo$colors <- findColours(palData, pal(100))
+bbo$freq<-1
+bboyc<-aggregate(bbo$freq, by=list(Category=bbo$year), FUN=sum)
+bboyc<-dplyr::arrange(bboyc,desc(Category))
+
+route<-leaflet(loc) %>%
+  fitBounds(-63.6776,44.6637,-63.6042,44.7292) %>%
+  addTiles(urlTemplate = 'http://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', 
+           attribution = 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC')%>%  # Add awesome tiles
+  addCircles(lng=bbo$lon, lat=bbo$lat, weight = 5, radius=10, color=bbo$colors,stroke = TRUE, opacity=.5,group="CTD Bedford Basin",
+             fillOpacity = 1, popup=paste ("File Name:",bbo$fname,"|","Date:",bbo$datetime,"|","Latitude:",bbo$lat,"|","Longitude:",bbo$lon,"|","Depth:",bbo$depth,"m", "|","Directory:",bbo$dir, "|", bn, "CTD(s) in Bedford Basin 1999 - 2009 in ODF archives", sep=" "))%>%
+  addLegend("bottomright", colors= unique(bbo$colors), labels=paste(unique(bbo$year),bboyc$x,sep=": "), title=paste("1999 - 2016 CTDs ",Sys.Date(),".",sep=""),opacity=1)%>% 
+  addScaleBar("bottomleft",options=scaleBarOptions(maxWidth=150,imperial=T,metric=T,updateWhenIdle=T))%>%
+  addLayersControl(
+    overlayGroups = c("CTD Bedford Basin"),
+    options = layersControlOptions(collapsed = TRUE)
+  )
+
+route

@@ -93,6 +93,8 @@ saveWidget(route,route_html)
 
 
 bbo<-read.csv("BedfordBasinOccupations.csv")
+bbo$datetime<-as.POSIXct(bbo$datetime, format="%d/%m/%Y %H:%M")
+bbo<-dplyr::arrange(bbo,datetime)
 bbo<-subset(bbo,bbo$depth>=50)
 write.csv(bbo,"BedfordBasinOccupations_gt50m.csv",row.names=F)
 
@@ -130,3 +132,29 @@ route<-leaflet(loc) %>%
   )
 
 route
+
+
+
+#plot seciton of desired time
+#ctds<-vector("list",nrow(bbo))
+s<-861
+f<-nrow(bbo)
+t<-f-s
+ctds<-vector("list",t)
+
+
+
+
+
+#for (r in 1:nrow(bbo)){
+  for (r in (s:f)){
+  
+  fn<-paste(bbo$dir[r],bbo$fname[r],sep="/")
+  ctd<-read.ctd.odf(fn)
+  for (i in (1:t))
+  ctds[[i]]<-ctd
+  
+}
+
+sec<-as.section(ctds)
+plot(sec,which='temperature',xtype="time",ztype="image")

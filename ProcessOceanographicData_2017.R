@@ -4,7 +4,7 @@
 library(oce)
 library(ocedata)
 #test
-setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
+setwd(paste("R:/Science/BIODataSvc/SRC/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
 out=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/",(as.numeric(format(Sys.Date(), "%Y"))),"/", sep=""))
 outroot=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/") 
 
@@ -67,7 +67,7 @@ dev.off()
 
 #### Copy Recent ODF files to directory for website ########
 
-setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
+setwd(paste("R:/Science/BIODataSvc/SRC/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
 out1=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",(as.numeric(format(Sys.Date(), "%Y"))),"/", sep=""))
 
 for (n in 1:l) {
@@ -99,11 +99,11 @@ library(gridExtra)
 library(Rmisc)
 
 #Create data and plot for previous year####
-setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
+setwd(paste("R:/Science/BIODataSvc/SRC/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
 
 #list of files and counts in current and previous year
 years<-c(as.numeric(format(Sys.Date(), "%Y"))-1,as.numeric(format(Sys.Date(), "%Y"))) #current and previous years to name the ODF summaries in the list "frec"
-wds<-c((paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y")))-1,sep="")),(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep="")))
+wds<-c((paste("R:/Science/BIODataSvc/SRC/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y")))-1,sep="")),(paste("R:/Science/BIODataSvc/SRC/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep="")))
 listp=list.files(wds[1],pattern="*^.*D.*.ODF$")
 listc=list.files(wds[2],pattern="*^.*D.*.ODF$")
 list=list(listp,listc)

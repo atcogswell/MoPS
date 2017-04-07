@@ -1,3 +1,4 @@
+##Libraries to load ####
 library(oce)
 library(ocedata)
 library(rgdal)
@@ -9,8 +10,7 @@ library(mapview)
 library(leaflet)
 library(dplyr)
 
-
-
+## Section that compiles all CTDs from the ODF archive and separates out Bedford Basin profiles and maps them  ####
 loc<-data.frame(fname= character(0), dir=character(0),date= character(),lon= numeric(0), lat = numeric(0),depth=numeric(0))
 
 
@@ -91,11 +91,13 @@ route_html<-"BBCTD_99_16.html"
 
 saveWidget(route,route_html)
 
-
+## This section allows us the read in the Bedford Basin profiles from 1999 to 2016 (filterted by locaiton and depth) and maps them color coded by year####
+setwd("C:/Users/CogswellA/Documents/AZMP/Bedford Basin Monitoring Program/2017/Website")
 bbo<-read.csv("BedfordBasinOccupations.csv")
 bbo$datetime<-as.POSIXct(bbo$datetime, format="%d/%m/%Y %H:%M")
 bbo<-dplyr::arrange(bbo,datetime)
 bbo<-subset(bbo,bbo$depth>=50)
+bn<-nrow(bbo)
 write.csv(bbo,"BedfordBasinOccupations_gt50m.csv",row.names=F)
 
 library(RColorBrewer)
@@ -118,7 +120,7 @@ bbo$freq<-1
 bboyc<-aggregate(bbo$freq, by=list(Category=bbo$year), FUN=sum)
 bboyc<-dplyr::arrange(bboyc,desc(Category))
 
-route<-leaflet(loc) %>%
+route<-leaflet(bbo) %>%
   fitBounds(-63.6776,44.6637,-63.6042,44.7292) %>%
   addTiles(urlTemplate = 'http://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', 
            attribution = 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC')%>%  # Add awesome tiles
@@ -135,26 +137,25 @@ route
 
 
 
-#plot seciton of desired time
-#ctds<-vector("list",nrow(bbo))
-s<-861
-f<-nrow(bbo)
-t<-f-s
+# plot seciton of desired time and variable for Bedford Basin from profiles ####
+# Ask question to Clark about how to adjust x axis and plot anomalies
+
+#bbos<-subset(bbo,bbo$year==2015|bbo$year==2016)
+bbos<-subset(bbo,bbo$year==2012|bbo$year==2013|bbo$year==2014|bbo$year==2015|bbo$year==2016)
+t<-nrow(bbos)
 ctds<-vector("list",t)
 
 
-
-
-
 #for (r in 1:nrow(bbo)){
-  for (r in (s:f)){
+  for (r in (1:t)){
   
-  fn<-paste(bbo$dir[r],bbo$fname[r],sep="/")
+  fn<-paste(bbos$dir[r],bbos$fname[r],sep="/")
   ctd<-read.ctd.odf(fn)
-  for (i in (1:t))
-  ctds[[i]]<-ctd
+  ctds[[r]]<-ctd
   
 }
 
 sec<-as.section(ctds)
-plot(sec,which='temperature',xtype="time",ztype="image")
+plot(sec,which=c(1,2,3,6),xtype="time",ztype="image",ylim=c(0,60),showBottom=F)
+
+

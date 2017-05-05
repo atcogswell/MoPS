@@ -1,3 +1,5 @@
+
+rm(list=ls())
 ##Libraries to load ####
 library(oce)
 library(ocedata)
@@ -15,7 +17,7 @@ loc<-data.frame(fname= character(0), dir=character(0),date= character(),lon= num
 
 
 for (n in 1999:2016){
-setwd(paste("//dcnsbiona01a/BIODataSvcArc/Archive/ctd/",n,"/",sep=""))
+setwd(paste("R:/Science/BIODataSvc/ARC/Archive/ctd/",n,"/",sep=""))
 lst1<-list.files(pattern="*^.*DN.*.ODF$")
 lst2<-list.files(pattern="*^.*dn.*.odf$")
 
@@ -135,12 +137,9 @@ route<-leaflet(bbo) %>%
 
 route
 
-
-
 # plot seciton of desired time and variable for Bedford Basin from profiles ####
 # Ask question to Clark about how to adjust x axis and plot anomalies
 
-#bbos<-subset(bbo,bbo$year==2015|bbo$year==2016)
 bbos<-subset(bbo,bbo$year==2012|bbo$year==2013|bbo$year==2014|bbo$year==2015|bbo$year==2016)
 t<-nrow(bbos)
 ctds<-vector("list",t)
@@ -156,6 +155,7 @@ ctds<-vector("list",t)
 }
 
 sec<-as.section(ctds)
-plot(sec,which=c(1,2,3,6),xtype="time",ztype="image",ylim=c(0,60),showBottom=F)
-
+plot(sec,which="temperature",xtype="time",ztype="image",showBottom=F,axes=F)
+axis.POSIXct(1, at=timeat, format='%d-%b')
+axis(2, at=pretty(sdepth))
 

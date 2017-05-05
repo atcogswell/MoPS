@@ -135,7 +135,7 @@ latsec<-floor((latmin-latmin3)*60)
 latmin4<-1:l
 latmin4<-as.character(latmin3)
 latmin4<-ifelse(latmin<10,(latmin4=paste("0",latmin3,sep="")),(latmin4=as.character(latmin3)))
-latdms<-paste(latDeg,"°",latmin4,",",latsec,"'N",sep="")
+latdms<-paste(latDeg,"Â°",latmin4,",",latsec,"'N",sep="")
 
 
 ##Conver Longitude (Lon) from DD to DM
@@ -157,7 +157,7 @@ lonsec<-floor((lonmin-lonmin3)*60)
 lonmin4<-1:l
 lonmin4<-as.character(lonmin3)
 lonmin4<-ifelse(lonmin<10,(lonmin4=paste("0",lonmin3,sep="")),(lonmin4=as.character(lonmin3)))
-londms<-paste(lonDeg,"°",lonmin4,",",lonsec,"'W",sep="")
+londms<-paste(lonDeg,"?",lonmin4,",",lonsec,"'W",sep="")
 
 data$lat_dms<-latdms
 data$lon_dms<-londms

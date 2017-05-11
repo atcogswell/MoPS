@@ -3,6 +3,7 @@
 #install.packages("ocedata")
 library(oce)
 library(dplyr)
+library(magrittr)
 library(ocedata)
 #test
 setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))

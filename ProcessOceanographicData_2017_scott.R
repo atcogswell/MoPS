@@ -9,7 +9,7 @@ out=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/",(as.numeric(
 outroot=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/") 
 
 
-lst=list.files(pattern="*^.*D.*.ODF$")
+odf_file_list=list.files(pattern="*^.*D.*.ODF$")
 
 l=length(list)
 

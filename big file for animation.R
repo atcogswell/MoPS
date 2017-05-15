@@ -14,26 +14,32 @@ setwd("R:\\Science\\BIODataSvc\\SRC\\BBMP\\COMPASS\\2013")
 total_df <- data.frame(pressure = numeric(),
                        temperature = numeric(),
                        conductivity = numeric(),
-                       # oxygenCurrent = numeric(),
-                       # oxygenTemperature = numeric(),
+                       oxygenCurrent = numeric(),
+                       oxygenTemperature = numeric(),
                        # unknown = numeric(),
                        fluorometer = numeric(),
                        par = numeric(),
-                       # salinity = numeric(),
-                       # oxygen = numeric(),
+                       salinity = numeric(),
+                       oxygen = numeric(),
                        sigmaTheta = numeric(),
                        # flagArchaic = numeric(),
                        start_time = as.POSIXct(character()))
 
-for(year in 2010:2011){
+column_names <- Cs(pressure, temperature, conductivity, oxygenCurrent, oxygenTemperature, fluorometer, par, salinity, oxygen, sigmaTheta, start_time)
+
+odf_column_blanker <- function(odf_df){
   
-  # year <- 2010
+}
+
+for(year in 2000:2016){
+  
+  # year <- 2000
   temp_wd <- paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year, sep = "")
   setwd(temp_wd)
   odf_files <- list.files(pattern="*^.*D.*.ODF$")
   
   #there is one weird file in 2002, this line takes that file out
-  odf_files <- odf_files[odf_files != "02667011.ODF"]
+  # odf_files <- odf_files[odf_files != "02667011.ODF"]
   #Only files that have 667 in the subject line (666 not accepted)
   only_667 <- grepl(pattern = "667", x = odf_files)
   only_bcd <- grepl(pattern = "BCD", x = odf_files)
@@ -52,7 +58,17 @@ for(year in 2010:2011){
     start_time <- rep(opened_ctd_odf[["startTime"]], nrow(odf_df))
     
     odf_df1 <- data.frame(odf_df, start_time)
-    odf_df2 <- odf_df1 %>% dplyr::select(pressure, temperature, conductivity, fluorometer, par, sigmaTheta, start_time)
+    odf_df2 <- odf_df1 %>% dplyr::select(pressure,
+                                         temperature,
+                                         conductivity,
+                                         oxygenCurrent,
+                                         oxygenTemperature,
+                                         fluorometer,
+                                         par, 
+                                         salinity,
+                                         oxygen,
+                                         sigmaTheta,
+                                         start_time)
     
     total_df <- rbind(odf_df2, total_df)
   }

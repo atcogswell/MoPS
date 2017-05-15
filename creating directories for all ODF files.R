@@ -52,7 +52,7 @@ transfer_files_odf <- function(year){
   #This function copies files from the Arc, to the BBMP website FTP. 
   #Input is just one year.
   ###
-  # year <- 1999
+  year <- 2016
   temp_wd <- paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year, sep = "")
   setwd(temp_wd)
   odf_files <- list.files(pattern="*^.*D.*.ODF$")
@@ -63,9 +63,10 @@ transfer_files_odf <- function(year){
   # odf_files <- odf_files[odf_files != "02667011.ODF"]
   #Only files that have 667 in the subject line (666 not accepted)
   only_667 <- grepl(pattern = "667_", x = odf_files)
+  only_DN <- grepl(pattern = "_DN", x = odf_files)
   if(year > 1999){
     only_bcd <- grepl(pattern = "BCD", x = odf_files)
-    odf_files <- odf_files[only_667 & only_bcd]
+    odf_files <- odf_files[only_667 & only_bcd & only_DN]
   } else if (year == 1999){
     only_99667 <- grepl(pattern = "99667", x = odf_files)
     odf_files <- odf_files[only_99667]
@@ -87,7 +88,7 @@ transfer_files_odf <- function(year){
   }
 }
 
-# transfer_files(year = 2003)
+# transfer_files_odf(year = 2017)
 
 substr_right <- function(x, n){
   ###
@@ -104,7 +105,7 @@ transfer_files_csv <- function(year){
   #ODF File is converted to a .csv
   #Input is just one year.
   ### 
-  # year <- 
+  # year <- 1999
   temp_wd <- paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year, sep = "")
   setwd(temp_wd)
   odf_files <- list.files(pattern="*^.*D.*.ODF$")
@@ -112,13 +113,18 @@ transfer_files_csv <- function(year){
     odf_files <- list.files(pattern = ".ODF$")
   }
   #there is one weird file in 2002, this line takes that file out
-  odf_files <- odf_files[odf_files != "02667011.ODF"]
+  # odf_files <- odf_files[odf_files != "02667011.ODF"]
   #Only files that have 667 in the subject line (666 not accepted)
   only_667 <- grepl(pattern = "667", x = odf_files)
   only_bcd <- grepl(pattern = "BCD", x = odf_files)
   only_dn <- grepl(pattern = "DN", x = odf_files
                    )
-  odf_files <- odf_files[only_667 & only_bcd & only_dn]
+  if(year > 1999){
+    odf_files <- odf_files[only_667 & only_bcd & only_DN]
+  } else if (year == 1999){
+    only_99667 <- grepl(pattern = "99667", x = odf_files)
+    odf_files <- odf_files[only_99667]
+  }
   
   no_odf_files <- length(odf_files)
   out_file_dir <- paste("R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\CSV\\",
@@ -137,7 +143,7 @@ transfer_files_csv <- function(year){
   }
 }
 
-# transfer_files_odf(2000)
+transfer_files_csv(1999)
 
 # 
 # for(i in 2010:2017){

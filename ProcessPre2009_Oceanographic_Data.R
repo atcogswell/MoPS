@@ -117,12 +117,12 @@ odf_plot_function <- function(odf_file, year, odf_file_list = odf_files){
     setwd(paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year, sep = ""))
 }
 
-odf_year_plots(year = 2001)
+# odf_year_plots(year = 2001)
 
 
 setwd("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\2001")
 
-tester <- read.odf("CTD_BCD2001667_058_1_DN.ODF")
+# tester <- read.odf("CTD_BCD2001667_058_1_DN.ODF")
 
 
 

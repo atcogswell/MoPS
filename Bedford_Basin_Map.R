@@ -42,7 +42,7 @@ plot.window(xlim = c(-110, -50),
             ylim = c(40, 70))#NECESSARY OR ELSE THE INSET DOESNT SHOW
 ##map to inset
 map(xlim = c(-110, -50), ylim = c(40, 70), interior = FALSE,
-    add = TRUE, fill = TRUE, col = "darkseagreen2", border = "gray35", lwd = 0.1)
+    add = TRUE, fill = TRUE, col = "darkseagreen2", border = "gray40", lwd = 0.1)
 polygon(x = c(-67, -62, -62, -67, -67),
         y = c(43, 43, 47, 47, 43), lwd = 2, border = "gray30")
 box(col = "gray30")

@@ -7,9 +7,8 @@ library(gganimate)
 library(dplyr)
 library(oce)
 library(ocedata)
+library(Hmisc)
 library(RColorBrewer)
-
-setwd("R:\\Science\\BIODataSvc\\SRC\\BBMP\\COMPASS\\2013")
 
 total_df <- data.frame(pressure = numeric(),
                        temperature = numeric(),
@@ -24,16 +23,11 @@ total_df <- data.frame(pressure = numeric(),
                        sigmaTheta = numeric(),
                        # flagArchaic = numeric(),
                        start_time = as.POSIXct(character()))
+year_available <- c(2000:2006, 2009:2016)
 
-column_names <- Cs(pressure, temperature, conductivity, oxygenCurrent, oxygenTemperature, fluorometer, par, salinity, oxygen, sigmaTheta, start_time)
-
-odf_column_blanker <- function(odf_df){
+for(j in 1:length(year_available)){
   
-}
-
-for(year in 2000:2016){
-  
-  # year <- 2000
+  year <- year_available[j]
   temp_wd <- paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year, sep = "")
   setwd(temp_wd)
   odf_files <- list.files(pattern="*^.*D.*.ODF$")
@@ -58,19 +52,7 @@ for(year in 2000:2016){
     start_time <- rep(opened_ctd_odf[["startTime"]], nrow(odf_df))
     
     odf_df1 <- data.frame(odf_df, start_time)
-    odf_df2 <- odf_df1 %>% dplyr::select(pressure,
-                                         temperature,
-                                         conductivity,
-                                         oxygenCurrent,
-                                         oxygenTemperature,
-                                         fluorometer,
-                                         par, 
-                                         salinity,
-                                         oxygen,
-                                         sigmaTheta,
-                                         start_time)
-    
-    total_df <- rbind(odf_df2, total_df)
+    total_df <- bind_rows(odf_df1, total_df)
   }
 }
 

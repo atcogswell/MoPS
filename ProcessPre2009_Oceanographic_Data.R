@@ -13,17 +13,18 @@ odf_year_plots <- function(year){
       odf_files <- list.files(pattern = ".ODF$")
     }
     #there is one weird file in 2002, this line takes that file out
-    odf_files <- odf_files[odf_files != "02667011.ODF"]
-    only_667 <- grepl(pattern = "667", x = odf_files)
-    only_bcd <- grepl(pattern = "BCD", x = odf_files)
-    
-    bcd_and_667 <- only_667 & only_bcd
-    
-    odf_files <- odf_files[bcd_and_667]
-    # odf_small_files <- list.files(pattern = ".odf$")
-    
-    # odf_files <- c(odf_files, odf_small_files)
-    
+    # odf_files <- odf_files[odf_files != "02667011.ODF"]
+    #Only files that have 667 in the subject line (666 not accepted)
+    only_667 <- grepl(pattern = "667_", x = odf_files)
+    only_DN <- grepl(pattern = "_DN", x = odf_files)
+    if(year > 1999){
+      only_bcd <- grepl(pattern = "BCD", x = odf_files)
+      odf_files <- odf_files[only_667 & only_bcd & only_DN]
+    } else if (year == 1999){
+      only_99667 <- grepl(pattern = "99667", x = odf_files)
+      odf_files <- odf_files[only_99667]
+    }
+  
     no_odf_files <- length(odf_files)
     
     #From the index above, plots all ODFs within a year.
@@ -117,7 +118,7 @@ odf_plot_function <- function(odf_file, year, odf_file_list = odf_files){
     setwd(paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year, sep = ""))
 }
 
-# odf_year_plots(year = 2001)
+odf_year_plots(year = 1999)
 
 
 setwd("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\2001")

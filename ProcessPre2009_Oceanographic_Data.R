@@ -34,12 +34,15 @@ directory_lister_wrapper <- function(year_x = year){
   
   odf_files <- odf_file_lister(working_directory = arc_wd, year_i = year)
   no_odf_files <- length(odf_files)
-  use_src <- FALSE
+  use_src <<- FALSE
+  used_directory <<- arc_wd
   
   #conditional if the ODFs are not in the Arc, the ODFs from the Src are taken.
+  #use_src is a global variable used to inform functions later in the pipeline.
   if(no_odf_files == 0){
     odf_files <- odf_file_lister(working_directory = src_wd, year_i = year)
-    use_src <- TRUE
+    use_src <<- TRUE
+    used_directory <<- src_wd
   } 
   return(odf_files)
 }
@@ -136,7 +139,9 @@ odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing
     
     fluorescence_oxygen_plot(od_i = od, ctd_i = ctd)
     
-    title(paste("Compass Buoy Station CTD Profile",  od[["date"]], sep=": "), outer = TRUE, cex = 1.4)# title for overall plot (filename, here)
+    title(paste("Compass Buoy Station CTD Profile",  od[["date"]], sep=": "), 
+          outer = TRUE, 
+          cex = 1.4)# title for overall plot (filename, here)
     
     dev.off()
     setwd(paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year, sep = ""))

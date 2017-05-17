@@ -38,10 +38,13 @@ odf_file_renamer <- function(odf_file_i, file_extension = "ODF", src_format = TR
                              file_extension,
                              sep = "")
   } else {
-    final_file_nam <- 
-  }
+    final_file_name <- odf_file_i
+    }
   return(final_file_name)
 }
+
+# odf_file_renamer("D11667042.ODF")
+# odf_file_renamer("CTD_BCD2011667_042_01_DN.ODF", src_format = FALSE)
 
 #function for transferring and renaming files from the COMPASS shared files, to the BBMP website folder
 transfer_files_odf <- function(year){
@@ -52,15 +55,17 @@ transfer_files_odf <- function(year){
   # year <- 
   odf_files <- directory_lister_wrapper(year_x = year)
   no_odf_files <- length(odf_files)
+
+  out_file_dir_base <- paste("R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\ODF\\",
+          year, "\\",
+          sep="")
   
   for(i in 1:no_odf_files){
     start_file <- paste(temp_wd, "\\", odf_files[i], sep = "")
     
-    out_file_dir_base <- paste("R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\ODF\\",
-          year, "\\",
-          # odf_files[i],
-          sep="")
-    new_file_name <- odf_file_renamer()
+    new_file_name <- odf_file_renamer(odf_file_i = odf_files[i], 
+                                      src_format = use_src, 
+                                      file_extension = "ODF")
     
     out_file <- paste(out_file_dir_base)
     
@@ -87,36 +92,23 @@ transfer_files_csv <- function(year){
   #Input is just one year.
   ### 
   # year <- 
-  temp_wd <- paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year, sep = "")
-  setwd(temp_wd)
-  odf_files <- list.files(pattern="*^.*D.*.ODF$")
-  if(length(odf_files) == 0){
-    odf_files <- list.files(pattern = ".ODF$")
-  }
-  #there is one weird file in 2002, this line takes that file out
-  # odf_files <- odf_files[odf_files != "02667011.ODF"]
-  #Only files that have 667 in the subject line (666 not accepted)
-  only_667 <- grepl(pattern = "667", x = odf_files)
-  only_bcd <- grepl(pattern = "BCD", x = odf_files)
-  only_dn <- grepl(pattern = "DN", x = odf_files)
-  if(year > 1999){
-    odf_files <- odf_files[only_667 & only_bcd & only_dn]
-  } else if (year == 1999){
-    only_99667 <- grepl(pattern = "99667", x = odf_files)
-    odf_files <- odf_files[only_99667]
-  }
-  
+  odf_files <- directory_lister_wrapper(year_x = year)
   no_odf_files <- length(odf_files)
+  
   out_file_dir <- paste("R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\CSV\\",
           year, "\\",
           sep="")
+  
   expect_true(no_odf_files > 0, info = "No files found.")
+  
   for(i in 1:no_odf_files){
     start_file <- paste(temp_wd, "\\", odf_files[i], sep = "")
     
-    setwd(temp_wd)
-    # new_odf_file_name <- odf_file_renamer(odf_file_i = odf_files[i], file_extension = "csv")
-    new_odf_file_name <- paste(str_sub(odf_files[i], start = 1, end = -4), "csv", sep = "")
+    setwd(used_directory)
+    new_odf_file_name <- odf_file_renamer(odf_file_i = odf_files[i], 
+                                          src_format = use_src,
+                                          file_extension = "csv")
+    # new_odf_file_name <- paste(str_sub(odf_files[i], start = 1, end = -4), "csv", sep = "")
     opened_ctd_odf <- read.ctd.odf(odf_files[i])
     setwd(out_file_dir)
     write.ctd(opened_ctd_odf, file = new_odf_file_name)

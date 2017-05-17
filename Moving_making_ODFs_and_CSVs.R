@@ -8,35 +8,40 @@ library(stringr)
 
 setwd("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\2000")
 
+'%!in%' <- function(x,y)!('%in%'(x,y))
+
 #function to rename the files to a standard format.
 #deprecated since transferring to reading files from Arc instead of Src.
-# odf_file_renamer <- function(odf_file_i, file_extension = "ODF"){
-#   
-#   # odf_file_i <- "CTD_BCD2000667_75_1_DN.ODF"
-#   #ensuring that the function argument is a character object (the file name)
-#   expect_that(odf_file_i, is_a("character"))
-#   
-#   '%!in%' <- function(x,y)!('%in%'(x,y))
-#   if(file_extension %!in% c("ODF", "csv")){
-#     stop("File extension is not available.")
-#   }
-# 
-#   #read in the file as an odf to extract the year
-#   odf_read_in <- read.odf(odf_file_i)
-#   year_date <- format(odf_read_in[["date"]], "%Y")
-#   front_string <- "CTD_BCD"
-#   #get the number associated with the file (e.g. 001)
-#   cast_number <- substr(odf_file_i, nchar(odf_file_i) - 6, nchar(odf_file_i) - 4)
-#   #put the total file name together
-#   final_file_name <- paste(front_string, 
-#                            year_date, 
-#                            "667_",
-#                            cast_number,
-#                            "_01_DN.",
-#                            file_extension,
-#                            sep = "")
-#   return(final_file_name)
-# }
+odf_file_renamer <- function(odf_file_i, file_extension = "ODF", src_format = TRUE){
+
+  # odf_file_i <- "CTD_BCD2000667_75_1_DN.ODF"
+  #ensuring that the function argument is a character object (the file name)
+  expect_that(odf_file_i, is_a("character"))
+
+  if(file_extension %!in% c("ODF", "csv")){
+    stop("File extension is not available.")
+  }
+
+  if(src_format){
+    #read in the file as an odf to extract the year
+    odf_read_in <- read.odf(odf_file_i)
+    year_date <- format(odf_read_in[["date"]], "%Y")
+    front_string <- "CTD_BCD"
+    #get the number associated with the file (e.g. 001)
+    cast_number <- substr(odf_file_i, nchar(odf_file_i) - 6, nchar(odf_file_i) - 4)
+    #put the total file name together
+    final_file_name <- paste(front_string,
+                             year_date,
+                             "667_",
+                             cast_number,
+                             "_01_DN.",
+                             file_extension,
+                             sep = "")
+  } else {
+    final_file_nam <- 
+  }
+  return(final_file_name)
+}
 
 #function for transferring and renaming files from the COMPASS shared files, to the BBMP website folder
 transfer_files_odf <- function(year){
@@ -45,33 +50,19 @@ transfer_files_odf <- function(year){
   #Input is just one year.
   ###
   # year <- 
-  temp_wd <- paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year, sep = "")
-  setwd(temp_wd)
-  odf_files <- list.files(pattern="*^.*D.*.ODF$")
-  if(length(odf_files) == 0){
-    odf_files <- list.files(pattern = ".ODF$")
-  }
-  #there is one weird file in 2002, this line takes that file out
-  # odf_files <- odf_files[odf_files != "02667011.ODF"]
-  #Only files that have 667 in the subject line (666 not accepted)
-  only_667 <- grepl(pattern = "667_", x = odf_files)
-  only_DN <- grepl(pattern = "_DN", x = odf_files)
-  if(year > 1999){
-    only_bcd <- grepl(pattern = "BCD", x = odf_files)
-    odf_files <- odf_files[only_667 & only_bcd & only_DN]
-  } else if (year == 1999){
-    only_99667 <- grepl(pattern = "99667", x = odf_files)
-    odf_files <- odf_files[only_99667]
-  }
-  
+  odf_files <- directory_lister_wrapper(year_x = year)
   no_odf_files <- length(odf_files)
+  
   for(i in 1:no_odf_files){
     start_file <- paste(temp_wd, "\\", odf_files[i], sep = "")
     
-    out_file <- paste("R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\ODF\\",
+    out_file_dir_base <- paste("R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\ODF\\",
           year, "\\",
-          odf_files[i],
+          # odf_files[i],
           sep="")
+    new_file_name <- odf_file_renamer()
+    
+    out_file <- paste(out_file_dir_base)
     
     file.copy(from = start_file, to = out_file)
     

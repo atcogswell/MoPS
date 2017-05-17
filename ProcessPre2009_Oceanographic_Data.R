@@ -3,35 +3,57 @@
 library(oce)
 library(ocedata)
 library(magrittr)
+library(testthat)
+
+# test_wd <- paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", "2011", sep = "")
+
+#goes to a working directory, and finds all appropriate ODF files (searched by code), and returns a list of file names.
+odf_file_lister <- function(working_directory, year_i = year, site_code = "667"){
+  expect_true(dir.exists(working_directory), "File folder does not exist in the FTP.")  
+  setwd(working_directory)
+  odf_file_list_i <- list.files(pattern="*^.*D.*.ODF$")
+  if(length(odf_file_list_i) == 0){
+    odf_file_list_i <- list.files(pattern = ".ODF$")
+  }
+  only_667 <- grepl(pattern = paste(site_code, "_", sep = ""), x = odf_file_list_i)
+  only_DN <- grepl(pattern = "_DN", x = odf_file_list_i)
+  if(year_i > 1999){
+    only_bcd <- grepl(pattern = "BCD", x = odf_file_list_i)
+    odf_file_list_i <- odf_file_list_i[only_667 & only_bcd & only_DN]
+  } else if (year_i == 1999){
+    only_99667 <- grepl(pattern = "99667", x = odf_file_list_i)
+    odf_file_list_i <- odf_file_list_i[only_99667]
+  }
+  return(odf_file_list_i)
+}
+
+directory_lister_wrapper <- function(year_x = year){
+  
+  arc_wd <- paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year, sep = "")
+  src_wd <- paste("R:\\Science\\BIODataSvc\\SRC\\BBMP\\COMPASS\\", year, sep = "")
+  
+  odf_files <- odf_file_lister(working_directory = arc_wd, year_i = year)
+  no_odf_files <- length(odf_files)
+  use_src <- FALSE
+  
+  #conditional if the ODFs are not in the Arc, the ODFs from the Src are taken.
+  if(no_odf_files == 0){
+    odf_files <- odf_file_lister(working_directory = src_wd, year_i = year)
+    use_src <- TRUE
+  } 
+  return(odf_files)
+}
 
 odf_year_plots <- function(year){
     # Within a certain year directory, determines all the ODF Files there.
     # year <- 1999
-    setwd(paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year, sep = ""))
-    odf_files <- list.files(pattern="*^.*D.*.ODF$")
-    if(length(odf_files) == 0){
-      odf_files <- list.files(pattern = ".ODF$")
-    }
-    #there is one weird file in 2002, this line takes that file out
-    # odf_files <- odf_files[odf_files != "02667011.ODF"]
-    #Only files that have 667 in the subject line (666 not accepted)
-    only_667 <- grepl(pattern = "667_", x = odf_files)
-    only_DN <- grepl(pattern = "_DN", x = odf_files)
-    if(year > 1999){
-      only_bcd <- grepl(pattern = "BCD", x = odf_files)
-      odf_files <- odf_files[only_667 & only_bcd & only_DN]
-    } else if (year == 1999){
-      only_99667 <- grepl(pattern = "99667", x = odf_files)
-      odf_files <- odf_files[only_99667]
-    }
-  
+    odf_files <- directory_lister_wrapper(year_x = year)
     no_odf_files <- length(odf_files)
-    
     #From the index above, plots all ODFs within a year.
     lapply(1:no_odf_files, odf_plot_function, year, odf_files)
 }
 
-#function for doing the last plot in the four-panels. 
+#function for doing the last plot in the four-panels of plots. 
 fluorescence_oxygen_plot <- function(od_i = od, ctd_i = ctd){
   
       fluorescence <- ctd_i[["fluorometer"]] %>% is.numeric()
@@ -88,7 +110,7 @@ fluorescence_oxygen_plot <- function(od_i = od, ctd_i = ctd){
       rm(ctd_i)
 }
 
-odf_plot_function <- function(odf_file, year, odf_file_list = odf_files){
+odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing_plots = TRUE){
   # odf_file <- 10
   # odf_file_list <- odf_files
     print(odf_file_list[odf_file])
@@ -97,6 +119,9 @@ odf_plot_function <- function(odf_file, year, odf_file_list = odf_files){
     out_dir <- paste("R:\\Shared\\Cogswell\\_BIOWeb\\BBMP",
                      "\\", year, "\\",
                      sep="")
+    if(testing_plots){
+      out_dir <- c("C:\\Users\\McCainS\\Documents\\Test plots\\")
+    }
     setwd(out_dir)
     png(paste(out_dir,"BBMP",substr(od[["date"]], 1, 10),'.png',sep=""),
         height = 800,
@@ -111,19 +136,13 @@ odf_plot_function <- function(odf_file, year, odf_file_list = odf_files){
     
     fluorescence_oxygen_plot(od_i = od, ctd_i = ctd)
     
-    print(od[["date"]])
-
     title(paste("Compass Buoy Station CTD Profile",  od[["date"]], sep=": "), outer = TRUE, cex = 1.4)# title for overall plot (filename, here)
+    
     dev.off()
     setwd(paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year, sep = ""))
 }
 
-odf_year_plots(year = 1999)
-
-
-setwd("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\2001")
-
-# tester <- read.odf("CTD_BCD2001667_058_1_DN.ODF")
+# odf_year_plots(year = 1999)
 
 
 

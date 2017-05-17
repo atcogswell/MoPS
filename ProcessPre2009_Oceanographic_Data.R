@@ -9,8 +9,10 @@ library(testthat)
 
 #goes to a working directory, and finds all appropriate ODF files (searched by code), and returns a list of file names.
 odf_file_lister <- function(working_directory, year_i = year, site_code = "667"){
-  expect_true(dir.exists(working_directory), "File folder does not exist in the FTP.")  
+  expect_true(dir.exists(working_directory), 
+              "File folder does not exist in the FTP.")  
   setwd(working_directory)
+  
   odf_file_list_i <- list.files(pattern="*^.*D.*.ODF$")
   if(length(odf_file_list_i) == 0){
     odf_file_list_i <- list.files(pattern = ".ODF$")
@@ -27,12 +29,13 @@ odf_file_lister <- function(working_directory, year_i = year, site_code = "667")
   return(odf_file_list_i)
 }
 
+#getting odfs from Arc (preferrably) or Src.
 directory_lister_wrapper <- function(year_x = year){
   
-  arc_wd <- paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year, sep = "")
-  src_wd <- paste("R:\\Science\\BIODataSvc\\SRC\\BBMP\\COMPASS\\", year, sep = "")
+  arc_wd <- paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year_x, sep = "")
+  src_wd <- paste("R:\\Science\\BIODataSvc\\SRC\\BBMP\\COMPASS\\", year_x, sep = "")
   
-  odf_files <- odf_file_lister(working_directory = arc_wd, year_i = year)
+  odf_files <- odf_file_lister(working_directory = arc_wd, year_i = year_x)
   no_odf_files <- length(odf_files)
   use_src <<- FALSE
   used_directory <<- arc_wd
@@ -40,13 +43,14 @@ directory_lister_wrapper <- function(year_x = year){
   #conditional if the ODFs are not in the Arc, the ODFs from the Src are taken.
   #use_src is a global variable used to inform functions later in the pipeline.
   if(no_odf_files == 0){
-    odf_files <- odf_file_lister(working_directory = src_wd, year_i = year)
+    odf_files <- odf_file_lister(working_directory = src_wd, year_i = year_x)
     use_src <<- TRUE
     used_directory <<- src_wd
   } 
   return(odf_files)
 }
 
+#wrapper for doing a whole year of plots
 odf_year_plots <- function(year){
     # Within a certain year directory, determines all the ODF Files there.
     # year <- 1999
@@ -113,6 +117,7 @@ fluorescence_oxygen_plot <- function(od_i = od, ctd_i = ctd){
       rm(ctd_i)
 }
 
+#four plot function
 odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing_plots = TRUE){
   # odf_file <- 10
   # odf_file_list <- odf_files
@@ -147,7 +152,6 @@ odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing
     setwd(paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year, sep = ""))
 }
 
-# odf_year_plots(year = 1999)
 
 
 

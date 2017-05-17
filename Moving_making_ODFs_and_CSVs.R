@@ -5,13 +5,11 @@ library(dplyr)
 library(testthat)
 library(stringr)
 
-
-setwd("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\2000")
+# setwd("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\2000")
 
 '%!in%' <- function(x,y)!('%in%'(x,y))
 
 #function to rename the files to a standard format.
-#deprecated since transferring to reading files from Arc instead of Src.
 odf_file_renamer <- function(odf_file_i, file_extension = "ODF", src_format = TRUE){
 
   # odf_file_i <- "CTD_BCD2000667_75_1_DN.ODF"
@@ -38,7 +36,7 @@ odf_file_renamer <- function(odf_file_i, file_extension = "ODF", src_format = TR
                              file_extension,
                              sep = "")
   } else {
-    final_file_name <- odf_file_i
+    final_file_name <- paste(str_sub(odf_file_i, start = 1, end = -4), file_extension, sep = "")
     }
   return(final_file_name)
 }
@@ -61,13 +59,14 @@ transfer_files_odf <- function(year){
           sep="")
   
   for(i in 1:no_odf_files){
-    start_file <- paste(temp_wd, "\\", odf_files[i], sep = "")
     
     new_file_name <- odf_file_renamer(odf_file_i = odf_files[i], 
                                       src_format = use_src, 
                                       file_extension = "ODF")
     
-    out_file <- paste(out_file_dir_base)
+    start_file <- paste(used_directory, "\\", odf_files[i], sep = "")
+    
+    out_file <- paste(out_file_dir_base, new_file_name)
     
     file.copy(from = start_file, to = out_file)
     
@@ -91,7 +90,7 @@ transfer_files_csv <- function(year){
   #ODF File is converted to a .csv
   #Input is just one year.
   ### 
-  # year <- 
+  # year <- 1999
   odf_files <- directory_lister_wrapper(year_x = year)
   no_odf_files <- length(odf_files)
   
@@ -102,7 +101,7 @@ transfer_files_csv <- function(year){
   expect_true(no_odf_files > 0, info = "No files found.")
   
   for(i in 1:no_odf_files){
-    start_file <- paste(temp_wd, "\\", odf_files[i], sep = "")
+    # start_file <- paste(temp_wd, "\\", odf_files[i], sep = "")
     
     setwd(used_directory)
     new_odf_file_name <- odf_file_renamer(odf_file_i = odf_files[i], 
@@ -116,7 +115,7 @@ transfer_files_csv <- function(year){
   }
 }
 
-# transfer_files_csv(2017)
+transfer_files_csv(year = 2017)
 # transfer_files_odf(1999)
 
 

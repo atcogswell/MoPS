@@ -13,7 +13,7 @@ library(mapproj)
 
 dev.off()
 
-# png("BBMP_Map.png", width=170, height=150, units="mm", res=2800)
+png("BBMP_Map.png", width=170, height=150, units="mm", res=1200)
 map('worldHires', c('Canada', 'USA'), 
     xlim = c(-67, -62), 
     ylim = c(43, 47), 
@@ -27,10 +27,13 @@ text(-64.5, 43.1,
      col = "darkslategrey", 
      cex = 1.2)
 
-rect(xleft = -63.75, 
-     ybottom = 44.5, 
-     xright = -63.4, 
-     ytop = 44.8, lwd = 2, border = "gray40")
+# rect(xleft = -63.75, 
+#      ybottom = 44.5, 
+#      xright = -63.4, 
+#      ytop = 44.8, lwd = 2, border = "gray40")
+
+points(x = -63.640278, y = 44.693611, cex = 3, lwd = 2.5, col = "gray35")
+points(x = -63.640278, y = 44.693611, cex = 2, lwd = 2.5, col = "gray35")
 
 # axis(1);axis(2)
 box(col = "gray30")

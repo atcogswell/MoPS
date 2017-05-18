@@ -1,4 +1,10 @@
-#create directories for all the old ODF Files
+#functions to move odf files to BBMP FTP, and convert to .csv files as well.
+
+###
+#odf_file_renamer: converts to new file name, also tolerant of naming convention in Src.
+#transfer_files_odf: transfers files from the arc or src (depending which is available) in odf.
+#transfer_files_csv: transfers files from arc or src in csv.
+###
 
 library(magrittr)
 library(dplyr)
@@ -90,7 +96,7 @@ transfer_files_csv <- function(year){
   #ODF File is converted to a .csv
   #Input is just one year.
   ### 
-  year <- 2017
+  # year <- 2017
   odf_files <- directory_lister_wrapper(year_x = year)
   no_odf_files <- length(odf_files)
   
@@ -110,7 +116,7 @@ transfer_files_csv <- function(year){
     # new_odf_file_name <- paste(str_sub(odf_files[i], start = 1, end = -4), "csv", sep = "")
     opened_ctd_odf <- read.ctd.odf(odf_files[i])
     setwd(out_file_dir)
-    write.ctd(opened_ctd_odf, file = new_odf_file_name)
+    write.ctd(opened_ctd_odf, file = paste(out_file_dir, new_odf_file_name, sep = ""))
     print(new_odf_file_name)
   }
 }
@@ -125,8 +131,10 @@ transfer_files_csv <- function(year){
 
 # test@metadata$units
 
+# transfer_files_csv(2017)
 
 
+#testing the writing of a readme file
 
 
 

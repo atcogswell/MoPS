@@ -38,7 +38,7 @@ odf_file_lister <- function(working_directory, year_i = year, site_code = "667")
 }
 
 #getting odfs from Arc (preferrably) or Src.
-directory_lister_wrapper <- function(year_x = year){
+directory_lister_wrapper <- function(year_x = year, site_code_i = "667"){
   
   arc_wd <- paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year_x, sep = "")
   src_wd <- paste("R:\\Science\\BIODataSvc\\SRC\\BBMP\\COMPASS\\", year_x, sep = "")
@@ -47,7 +47,7 @@ directory_lister_wrapper <- function(year_x = year){
     setwd(arc_wd)
     use_src <<- FALSE
     used_directory <<- arc_wd
-    odf_files <- odf_file_lister(working_directory = arc_wd, year_i = year_x)
+    odf_files <- odf_file_lister(working_directory = arc_wd, year_i = year_x, site_code = site_code_i)
     no_odf_files <- length(odf_files)
   }
   

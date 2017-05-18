@@ -27,7 +27,7 @@ total_df <- data.frame(pressure = numeric(),
                        month_time = character(),
                        julian_day = numeric())
 
-year_available <- c(1999:2006, 2009:2016)
+year_available <- c(1999:2016)
 
 for(j in 1:length(year_available)){
   
@@ -48,7 +48,7 @@ for(j in 1:length(year_available)){
       julian_day <- rep(yday(opened_ctd_odf[["startTime"]]), nrow(odf_df))
       
       odf_df1 <- data.frame(odf_df, time_string, year_time, month_time, julian_day)
-      # total_df <- bind_rows(odf_df1, total_df)
+      total_df <- bind_rows(odf_df1, total_df)
   }
 }
 

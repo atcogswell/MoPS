@@ -131,7 +131,7 @@ transfer_files_csv <- function(year){
 
 # test@metadata$units
 
-# transfer_files_csv(2017)
+transfer_files_odf(2007)
 
 
 #testing the writing of a readme file

@@ -50,7 +50,7 @@ transfer_files_odf <- function(year){
   #This function copies files from the Arc, to the BBMP website FTP. 
   #Input is just one year.
   ###
-  # year <- 
+  # year <-2007
   odf_files <- directory_lister_wrapper(year_x = year)
   no_odf_files <- length(odf_files)
 
@@ -90,7 +90,7 @@ transfer_files_csv <- function(year){
   #ODF File is converted to a .csv
   #Input is just one year.
   ### 
-  # year <- 1999
+  year <- 2017
   odf_files <- directory_lister_wrapper(year_x = year)
   no_odf_files <- length(odf_files)
   
@@ -115,8 +115,27 @@ transfer_files_csv <- function(year){
   }
 }
 
-transfer_files_csv(year = 2017)
+# transfer_files_csv(year = 2017)
 # transfer_files_odf(1999)
+
+##testing opening some ODF files
+# setwd("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\2008")
+# read.odf("CTD_BCD2007667_001_01_DN.ODF")
+# test <- read.ctd.odf("CTD_BCD2008667_001_01_DN.ODF")
+
+# test@metadata$units
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

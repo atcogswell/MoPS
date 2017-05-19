@@ -83,7 +83,7 @@ odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing
                      "\\", year, "\\",
                      sep="")
     if(testing_plots){
-      out_dir <- paste("C:\\Users\\McCainS\\Documents\\HL2_FTP\\Profile Images\\", year, "\\", sep = "")
+      out_dir <- c("C:\\Users\\McCainS\\Documents\\Test plots\\")
     }
     setwd(out_dir)
     png(paste(out_dir,"BBMP",substr(od[["date"]], 1, 10),'.png',sep=""),

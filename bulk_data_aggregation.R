@@ -2,6 +2,7 @@
 
 library(ggplot2)
 library(magrittr)
+library(testthat)
 library(animate)
 library(gganimate)
 library(dplyr)

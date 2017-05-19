@@ -4,10 +4,12 @@ library(ggplot2)
 library(magrittr)
 library(animate)
 library(gganimate)
+library(stringr)
 library(dplyr)
 library(oce)
 library(ocedata)
 library(Hmisc)
+library(lubridate)
 library(RColorBrewer)
 
 total_df <- data.frame(pressure = numeric(),
@@ -51,6 +53,11 @@ for(j in 1:length(year_available)){
       total_df <- bind_rows(odf_df1, total_df)
   }
 }
+
+
+total_df["time"] <- NULL
+total_df2 <- total_df[order(total_df$time_string),]
+
 
 # colz <- colorRampPalette(c("blue", "red"))(51)
 # ani.options(convert = "C:\\Program Files\\ImageMagick-7.0.5-Q16\\convert.exe")

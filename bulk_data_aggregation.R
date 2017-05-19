@@ -2,17 +2,19 @@
 
 library(ggplot2)
 library(magrittr)
+<<<<<<< HEAD
 
 library(testthat)
 
+=======
+library(testthat)
+>>>>>>> proposed-changes
 library(animate)
 library(gganimate)
-library(stringr)
 library(dplyr)
 library(oce)
 library(ocedata)
 library(Hmisc)
-library(lubridate)
 library(RColorBrewer)
 
 total_df <- data.frame(pressure = numeric(),
@@ -48,10 +50,21 @@ for(j in 1:length(year_available)){
       odf_df <- as.data.frame(opened_ctd_odf@data)
       
       time_string <- rep(opened_ctd_odf[["startTime"]], nrow(odf_df))
+<<<<<<< HEAD
 
       year_time <- rep(format(opened_ctd_odf[["startTime"]], "%Y") %>% as.numeric(), nrow(odf_df))
       month_time <- rep(format(opened_ctd_odf[["startTime"]], "%m") %>% as.numeric(), nrow(odf_df))
       day_time <- rep(format(opened_ctd_odf[["startTime"]], "%d") %>% as.numeric(), nrow(odf_df))
+=======
+      year_time <- rep(format(opened_ctd_odf[["startTime"]], "%Y") %>% as.numeric(), nrow(odf_df))
+      month_time <- rep(format(opened_ctd_odf[["startTime"]], "%m") %>% as.numeric(), nrow(odf_df))
+      day_time <- rep(format(opened_ctd_odf[["startTime"]], "%d") %>% as.numeric(), nrow(odf_df))
+      julian_day <- rep(yday(opened_ctd_odf[["startTime"]]), nrow(odf_df))
+      
+      odf_df1 <- data.frame(time_string, year_time, month_time, day_time, julian_day, odf_df)
+      year_time <- rep(format(opened_ctd_odf[["startTime"]], "%Y"), nrow(odf_df))
+      month_time <- rep(format(opened_ctd_odf[["startTime"]], "%m"), nrow(odf_df))
+>>>>>>> proposed-changes
       julian_day <- rep(yday(opened_ctd_odf[["startTime"]]), nrow(odf_df))
       
       odf_df1 <- data.frame(time_string, year_time, month_time, day_time, julian_day, odf_df)
@@ -62,4 +75,7 @@ for(j in 1:length(year_available)){
 
 
 total_df["time"] <- NULL
+<<<<<<< HEAD
 total_df2 <- total_df[order(total_df$time_string),]
+=======
+>>>>>>> proposed-changes

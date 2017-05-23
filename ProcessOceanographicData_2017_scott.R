@@ -81,6 +81,27 @@ for (n in 1:no_odf_files) {
   
 }
 
+##stocking plots, csv's and odf's. 
+
+source("MoPS/odf_file_finder_lister.R")
+source("MoPS/odf_plot_functions.R")
+source("MoPS/transfer_functions_ODF_and_CSV.R")
+
+current_year <- format(Sys.Date(), "%Y") %>% as.numeric()
+
+odf_year_plots(current_year)
+transfer_files_csv(current_year)
+transfer_files_odf(current_year)
+
+###updating most recent cast plots
+
+odf_file_list_current_year <- directory_lister_wrapper(year_x = current_year, site_code_i = "667")
+odf_file_number <- directory_lister_wrapper(year_x = current_year, site_code_i = "667")
+odf_plot_function(odf_file = current_year, 
+                  odf_file_list = odf_file_list_current_year, 
+                  testing_plots = FALSE, 
+                  recent_plot = TRUE)
+###
 
 
 ##This section creates the weekly anomaly plots by depth and uses the anomaly file from BBMP_TS_2000_####.csv####

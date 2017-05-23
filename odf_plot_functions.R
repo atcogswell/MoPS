@@ -73,7 +73,7 @@ fluorescence_oxygen_plot <- function(od_i = od, ctd_i = ctd){
 }
 
 #four plot function
-odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing_plots = TRUE){
+odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing_plots = TRUE, recent_plot = FALSE){
   # odf_file <- 10
   # odf_file_list <- odf_files
     print(odf_file_list[odf_file])
@@ -86,9 +86,15 @@ odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing
       out_dir <- c("C:\\Users\\McCainS\\Documents\\Test plots\\")
     }
     setwd(out_dir)
-    png(paste(out_dir,"BBMP",substr(od[["date"]], 1, 10),'.png',sep=""),
-        height = 800,
-        width = 800)
+    if(!recent_plot){
+      png(paste(out_dir,"BBMP",substr(od[["date"]], 1, 10),'.png',sep=""),
+          height = 800,
+          width = 800)
+    } else (recent_plot){
+      png(paste(out_dir, "Recent_Profile.png", sep = ""),
+          height = 800,
+          width = 800)
+    }
     plot.new()
     par(oma = c(0,0,2,0))
     par(mfrow = c(2, 2)) # four panels, filled in reading order

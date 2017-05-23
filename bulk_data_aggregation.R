@@ -5,13 +5,13 @@
 library(ggplot2)
 library(magrittr)
 library(testthat)
-library(animate)
-library(gganimate)
 library(dplyr)
 library(oce)
 library(ocedata)
 library(Hmisc)
 library(RColorBrewer)
+library(lubridate)
+library(stringr)
 
 total_df <- data.frame(pressure = numeric(),
                        temperature = numeric(),
@@ -61,3 +61,13 @@ for(j in 1:length(year_available)){
 total_df["time"] <- NULL
 
 total_df2 <- total_df[order(total_df$time_string),]
+
+total_df %>% 
+  dplyr::filter(temperature > 0) %>% 
+  ggplot(aes(x = time_string, y = temperature)) + 
+  geom_line()
+
+
+
+
+

@@ -2,6 +2,8 @@
 #install.packages("oce") 
 #install.packages("ocedata")
 library(oce)
+library(dplyr)
+library(magrittr)
 library(ocedata)
 #test
 setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
@@ -9,14 +11,14 @@ out=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/",(as.numeric(
 outroot=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/") 
 
 
-lst=list.files(pattern="*^.*D.*.ODF$")
+odf_file_list <- list.files(pattern="*^.*D.*.ODF$")
 
-l=length(list)
+l <- length(odf_file_list)
 
 
 for (n in 1:l) {
-  od=read.odf(list[n])
-  ctd<-read.ctd.odf(list[n])
+  od <- read.odf(odf_file_list[n])
+  ctd<-read.ctd.odf(odf_file_list[n])
   png(paste(out,"BBMP",substr(od@metadata$date,1,10),'.png',sep=""),height=800,width=800)
   plot.new()
   par(oma=c(0,0,2,0))
@@ -41,8 +43,8 @@ for (n in 1:l) {
 
 
 
-d=read.odf(list[l])
-ctd<-read.ctd.odf(list[l])
+d=read.odf(odf_file_list[l])
+ctd<-read.ctd.odf(odf_file_list[l])
 png(paste(outroot,"Recent_Profile.png",sep=""),height=800,width=800)
 plot.new()
 par(oma=c(0,0,2,0))
@@ -72,7 +74,7 @@ out1=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",(as.num
 
 for (n in 1:l) {
   
-  file.copy(from=list[n],to=out1, overwrite=T,recursive=F)  
+  file.copy(from=odf_file_list[n],to=out1, overwrite=T,recursive=F)  
   
 }
 

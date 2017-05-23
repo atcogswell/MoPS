@@ -13,10 +13,10 @@ outroot=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/")
 
 odf_file_list <- list.files(pattern="*^.*D.*.ODF$")
 
-l <- length(odf_file_list)
+no_odf_files <- length(odf_file_list)
 
 
-for (n in 1:l) {
+for (n in 1:no_odf_files) {
   od <- read.odf(odf_file_list[n])
   ctd<-read.ctd.odf(odf_file_list[n])
   png(paste(out,"BBMP",substr(od@metadata$date,1,10),'.png',sep=""),height=800,width=800)
@@ -43,8 +43,8 @@ for (n in 1:l) {
 
 
 
-d=read.odf(odf_file_list[l])
-ctd<-read.ctd.odf(odf_file_list[l])
+d=read.odf(odf_file_list[no_odf_files])
+ctd<-read.ctd.odf(odf_file_list[no_odf_files])
 png(paste(outroot,"Recent_Profile.png",sep=""),height=800,width=800)
 plot.new()
 par(oma=c(0,0,2,0))
@@ -72,9 +72,12 @@ dev.off()
 setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
 out1=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",(as.numeric(format(Sys.Date(), "%Y"))),"/", sep=""))
 
-for (n in 1:l) {
+for (n in 1:no_odf_files) {
   
-  file.copy(from=odf_file_list[n],to=out1, overwrite=T,recursive=F)  
+  file.copy(from = odf_file_list[n], 
+            to = out1, 
+            overwrite = T, 
+            recursive=F)  
   
 }
 

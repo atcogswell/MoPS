@@ -48,16 +48,14 @@ for(j in 1:length(year_available)){
       month_time <- rep(format(opened_ctd_odf[["startTime"]], "%m") %>% as.numeric(), nrow(odf_df))
       day_time <- rep(format(opened_ctd_odf[["startTime"]], "%d") %>% as.numeric(), nrow(odf_df))
       julian_day <- rep(yday(opened_ctd_odf[["startTime"]]), nrow(odf_df))
-      
+
       odf_df1 <- data.frame(time_string, year_time, month_time, day_time, julian_day, odf_df)
-      year_time <- rep(format(opened_ctd_odf[["startTime"]], "%Y"), nrow(odf_df))
-      month_time <- rep(format(opened_ctd_odf[["startTime"]], "%m"), nrow(odf_df))
-      julian_day <- rep(yday(opened_ctd_odf[["startTime"]]), nrow(odf_df))
-      
-      odf_df1 <- data.frame(odf_df, time_string, year_time, month_time, julian_day)
+
       total_df <- bind_rows(odf_df1, total_df)
   }
 }
 
 
 total_df["time"] <- NULL
+
+total_df2 <- total_df[order(total_df$time_string),]

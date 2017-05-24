@@ -83,9 +83,9 @@ for (n in 1:no_odf_files) {
 
 ##stocking plots, csv's and odf's. blah 
 
-source("MoPS/odf_file_finder_lister.R")
-source("MoPS/odf_plot_functions.R")
-source("MoPS/transfer_functions_ODF_and_CSV.R")
+source("C:\\Users\\mccains\\Documents\\MoPS\\odf_file_finder_lister.R")
+source("C:\\Users\\mccains\\Documents\\MoPS\\odf_plot_functions.R")
+source("C:\\Users\\mccains\\Documents\\MoPS\\transfer_functions_ODF_and_CSV.R")
 
 current_year <- format(Sys.Date(), "%Y") %>% as.numeric()
 

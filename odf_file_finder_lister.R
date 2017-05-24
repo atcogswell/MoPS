@@ -38,6 +38,9 @@ odf_file_lister <- function(working_directory, year_i = year, site_code = "667")
   return(odf_file_list_i)
 }
 
+# arc_wd_test <- paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", 2017, sep = "")
+# odf_tester_s <- odf_file_lister(arc_wd_test, year_i = 2017)
+
 #getting odfs from Arc (preferrably) or Src.
 directory_lister_wrapper <- function(year_x = year, site_code_i = "667"){
   
@@ -54,11 +57,11 @@ directory_lister_wrapper <- function(year_x = year, site_code_i = "667"){
   
   #conditional if the ODFs are not in the Arc, the ODFs from the Src are taken.
   #use_src is a global variable used to inform functions later in the pipeline.
-  if(no_odf_files == 0 | !dir.exists(arc_wd)){
+  if(!dir.exists(arc_wd)){
     setwd(src_wd)
-    odf_files <- odf_file_lister(working_directory = src_wd, year_i = year_x)
     use_src <<- TRUE
     used_directory <<- src_wd
+    odf_files <- odf_file_lister(working_directory = src_wd, year_i = year_x)
   } 
   return(odf_files)
 }

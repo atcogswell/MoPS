@@ -81,7 +81,7 @@ for (n in 1:no_odf_files) {
   
 }
 
-##stocking plots, csv's and odf's. blah 
+##stocking plots, csv's and odf's. 
 
 source("C:\\Users\\mccains\\Documents\\MoPS\\odf_file_finder_lister.R")
 source("C:\\Users\\mccains\\Documents\\MoPS\\odf_plot_functions.R")
@@ -103,8 +103,12 @@ odf_plot_function(odf_file = odf_file_number,
                   odf_file_list = odf_file_list_current_year, 
                   testing_plots = FALSE, 
                   recent_plot = TRUE)
-###
 
+### updating aggregated csv file
+
+source("C:\\Users\\mccains\\Documents\\MoPS\\bulk_data_aggreation.R")
+
+###
 
 ##This section creates the weekly anomaly plots by depth and uses the anomaly file from BBMP_TS_2000_####.csv####
 ##\\dcnsbiona01a\BIODataSvcIn\_BIOWeb\BBMP

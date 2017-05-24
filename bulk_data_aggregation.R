@@ -1,7 +1,5 @@
 #Plotting the weekly CTD Data
 
-#test
-
 library(ggplot2)
 library(magrittr)
 library(testthat)
@@ -30,19 +28,17 @@ total_df <- data.frame(pressure = numeric(),
                        month_time = character(),
                        julian_day = numeric())
 
-year_available <- c(1999:2016)
+year_available <- c(1999:format(Sys.Date(), "%Y") %>% as.numeric())
 
 for(j in 1:length(year_available)){
   
     year <- year_available[j]
-    # year <- 2003
-    
     odf_files <- directory_lister_wrapper(year)
     no_odf_files <- length(odf_files)
     
   for(i in 1:no_odf_files){
       print(i)
-      opened_ctd_odf <- read.ctd.odf(odf_files[i])
+      opened_ctd_odf <- read.ctd.odf(odf_files[1])
       odf_df <- as.data.frame(opened_ctd_odf@data)
       
       time_string <- rep(opened_ctd_odf[["startTime"]], nrow(odf_df))
@@ -60,12 +56,23 @@ for(j in 1:length(year_available)){
 
 total_df["time"] <- NULL
 
-total_df2 <- total_df[order(total_df$time_string),]
+total_df2 <- total_df[order(total_df$time_string, decreasing = FALSE), ]
 
-total_df2 %>% 
-  dplyr::filter(pressure == 0.5, temperature > 0, year_time > 2015) %>% 
-  ggplot(aes(x = time_string, y = temperature)) + 
-  geom_point()
+#writing the entire file:
+
+write.csv(x = total_df2, 
+          row.names = FALSE, 
+          file = "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\CSV\\aggregated_profiles.csv")
+  
+  
+  
+  
+  
+  
+
+
+
+
 
 
 

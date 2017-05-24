@@ -1,4 +1,4 @@
-##Script for taking 1996-2009 CTD files and plotting the results
+## Script for taking 1996-2009 CTD files and plotting the results
 
 library(oce)
 library(ocedata)
@@ -6,7 +6,7 @@ library(magrittr)
 library(testthat)
 
 
-#wrapper for doing a whole year of plots
+# wrapper for doing a whole year of plots
 odf_year_plots <- function(year){
   # Within a certain year directory, determines all the ODF Files there.
   # year <- 2007
@@ -16,7 +16,7 @@ odf_year_plots <- function(year){
   lapply(1:no_odf_files, odf_plot_function, year, odf_files)
 }
 
-#function for doing the last plot in the four-panels of plots. 
+# function for doing the last plot in the four-panels of plots. 
 fluorescence_oxygen_plot <- function(od_i = od, ctd_i = ctd){
   
   # od_i <- read.odf("C:\\Users\\mccains\\Documents\\Data Testing\\CTD_BCD2016667_001_01_DN.ODF")
@@ -76,8 +76,8 @@ fluorescence_oxygen_plot <- function(od_i = od, ctd_i = ctd){
   rm(ctd_i)
 }
 
-#four plot function
-odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing_plots = FALSE, 
+# four plot function
+odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing_plots = FALSE, recent_plot = FALSE,
                               out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP", 
                               source_root = "R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\"){
   
@@ -97,7 +97,7 @@ odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing
     png(paste(out_dir,"BBMP",substr(od[["date"]], 1, 10),'.png',sep=""),
         height = 800,
         width = 800)
-  } else (recent_plot){
+  } else {
     png(paste(out_dir, "Recent_Profile.png", sep = ""),
         height = 800,
         width = 800)
@@ -120,7 +120,5 @@ odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing
   setwd(paste(source_root, year, sep = ""))
 }
 
-
-for(i in 1999:2009){
-  odf_year_plots(i)
-}
+# test
+# odf_year_plots(2014)

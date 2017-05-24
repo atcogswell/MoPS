@@ -78,27 +78,32 @@ fluorescence_oxygen_plot <- function(od_i = od, ctd_i = ctd){
 
 # four plot function
 odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing_plots = FALSE, recent_plot = FALSE,
-                              out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP", 
+                              out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\", 
                               source_root = "R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\"){
   
-  # odf_file <- 10
-  # odf_file_list <- odf_files
+  # out_root <- "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\"
+  # 
+  # setwd("R:\\Science\\BIODataSvc\\SRC\\BBMP\\COMPASS\\2017")
+  
+  # odf_file <- 20
+  # odf_file_list <- odf_file_list_current_year
+  
   print(odf_file_list[odf_file])
   od <- read.odf(odf_file_list[odf_file])
   ctd <- read.ctd.odf(odf_file_list[odf_file])
   out_dir <- paste(out_root,
-                   "\\", year, "\\",
+                   year, "\\",
                    sep="")
   if(testing_plots){
     out_dir <- c("C:\\Users\\McCainS\\Documents\\Test plots\\")
   }
-  setwd(out_dir)
+  # setwd(out_dir)
   if(!recent_plot){
     png(paste(out_dir,"BBMP",substr(od[["date"]], 1, 10),'.png',sep=""),
         height = 800,
         width = 800)
   } else {
-    png(paste(out_dir, "Recent_Profile.png", sep = ""),
+    png(paste(out_root, "Recent_Profile_test.png", sep = ""),
         height = 800,
         width = 800)
   }
@@ -117,7 +122,7 @@ odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing
         cex = 1.4)# title for overall plot (filename, here)
   
   dev.off()
-  setwd(paste(source_root, year, sep = ""))
+  # setwd(paste(source_root, year, sep = ""))
 }
 
 # test

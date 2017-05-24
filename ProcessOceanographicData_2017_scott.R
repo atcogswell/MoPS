@@ -96,9 +96,10 @@ transfer_files_odf(current_year)
 ###updating most recent cast plots
 
 odf_file_list_current_year <- directory_lister_wrapper(year_x = current_year, site_code_i = "667")
-odf_file_number <- directory_lister_wrapper(year_x = current_year, site_code_i = "667")
+odf_file_number <- directory_lister_wrapper(year_x = current_year, site_code_i = "667") %>% length()
 
-odf_plot_function(odf_file = current_year, 
+odf_plot_function(odf_file = odf_file_number, 
+                  year = current_year,
                   odf_file_list = odf_file_list_current_year, 
                   testing_plots = FALSE, 
                   recent_plot = TRUE)

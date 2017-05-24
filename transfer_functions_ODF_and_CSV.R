@@ -15,7 +15,6 @@ library(stringr)
 
 '%!in%' <- function(x,y)!('%in%'(x,y))
 
-
 #function to rename the files to a standard format.
 odf_file_renamer <- function(odf_file_i, file_extension = "ODF", src_format = TRUE){
 
@@ -52,7 +51,7 @@ odf_file_renamer <- function(odf_file_i, file_extension = "ODF", src_format = TR
 # odf_file_renamer("CTD_BCD2011667_042_01_DN.ODF", src_format = FALSE)
 
 #function for transferring and renaming files from the COMPASS shared files, to the BBMP website folder
-transfer_files_odf <- function(year){
+transfer_files_odf <- function(year, out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\ODF\\"){
   #### 
   #This function copies files from the Arc, to the BBMP website FTP. 
   #Input is just one year.
@@ -61,7 +60,7 @@ transfer_files_odf <- function(year){
   odf_files <- directory_lister_wrapper(year_x = year)
   no_odf_files <- length(odf_files)
 
-  out_file_dir_base <- paste("R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\ODF\\",
+  out_file_dir_base <- paste(out_root,
           year, "\\",
           sep = "")
   
@@ -91,7 +90,7 @@ substr_right <- function(x, n){
   substr(x, nchar(x) - n + 1, nchar(x))
 }
 
-transfer_files_csv <- function(year){
+transfer_files_csv <- function(year, out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\CSV\\"){
   #### 
   #This function copies files from the Arc, to the BBMP website FTP. 
   #ODF File is converted to a .csv
@@ -101,7 +100,7 @@ transfer_files_csv <- function(year){
   odf_files <- directory_lister_wrapper(year_x = year)
   no_odf_files <- length(odf_files)
   
-  out_file_dir <- paste("R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\CSV\\",
+  out_file_dir <- paste(out_root,
           year, "\\",
           sep="")
   
@@ -126,7 +125,11 @@ transfer_files_csv <- function(year){
 # transfer_files_odf(2017)
 
 
+#for loop in transfer_csv
 
+#does the renamer need a directory to be set?
+#the opened ctd_odf file could be done by pasting out_root with the file name
+#same with the write.ctd thing
 
 
 

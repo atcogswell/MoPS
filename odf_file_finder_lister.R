@@ -19,7 +19,7 @@ odf_file_lister <- function(working_directory, year_i = year, site_code = "667")
               "File folder does not exist in the FTP.")  
   # setwd(working_directory)
   if(!use_src){
-    odf_file_list_i <- list.files(pattern="*^.*D.*.ODF$")
+    odf_file_list_i <- list.files(pattern = "*^.*D.*.ODF$")
     if(length(odf_file_list_i) == 0){
       odf_file_list_i <- list.files(pattern = ".ODF$")
     }
@@ -42,10 +42,12 @@ odf_file_lister <- function(working_directory, year_i = year, site_code = "667")
 # odf_tester_s <- odf_file_lister(arc_wd_test, year_i = 2017)
 
 #getting odfs from Arc (preferrably) or Src.
-directory_lister_wrapper <- function(year_x = year, site_code_i = "667"){
+directory_lister_wrapper <- function(year_x = year, site_code_i = "667", 
+                                     arc_root = "R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\",
+                                     src_root = "R:\\Science\\BIODataSvc\\SRC\\BBMP\\COMPASS\\"){
   
-  arc_wd <- paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year_x, sep = "")
-  src_wd <- paste("R:\\Science\\BIODataSvc\\SRC\\BBMP\\COMPASS\\", year_x, sep = "")
+  arc_wd <- paste(arc_root, year_x, sep = "")
+  src_wd <- paste(src_root, year_x, sep = "")
   
   if(dir.exists(arc_wd)){
     setwd(arc_wd)

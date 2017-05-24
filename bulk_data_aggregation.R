@@ -62,10 +62,10 @@ total_df["time"] <- NULL
 
 total_df2 <- total_df[order(total_df$time_string),]
 
-total_df %>% 
-  dplyr::filter(temperature > 0) %>% 
+total_df2 %>% 
+  dplyr::filter(pressure == 0.5, temperature > 0, year_time > 2015) %>% 
   ggplot(aes(x = time_string, y = temperature)) + 
-  geom_line()
+  geom_point()
 
 
 

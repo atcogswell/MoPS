@@ -10,54 +10,8 @@ library(ocedata)
 library(Hmisc)
 library(RColorBrewer)
 
-total_df <- data.frame(pressure = numeric(),
-                       temperature = numeric(),
-                       conductivity = numeric(),
-                       oxygenCurrent = numeric(),
-                       oxygenTemperature = numeric(),
-                       # unknown = numeric(),
-                       fluorometer = numeric(),
-                       par = numeric(),
-                       salinity = numeric(),
-                       oxygen = numeric(),
-                       sigmaTheta = numeric(),
-                       # flagArchaic = numeric(),
-                       start_time = as.POSIXct(character()))
-year_available <- c(2000:2006, 2009:2016)
-
-for(j in 1:length(year_available)){
-  
-  year <- year_available[j]
-  temp_wd <- paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year, sep = "")
-  setwd(temp_wd)
-  odf_files <- list.files(pattern="*^.*D.*.ODF$")
-  
-  #there is one weird file in 2002, this line takes that file out
-  # odf_files <- odf_files[odf_files != "02667011.ODF"]
-  #Only files that have 667 in the subject line (666 not accepted)
-  only_667 <- grepl(pattern = "667", x = odf_files)
-  only_bcd <- grepl(pattern = "BCD", x = odf_files)
-  only_dn <- grepl(pattern = "DN", x = odf_files
-  )
-  
-  odf_files <- odf_files[only_667 & only_bcd & only_dn]
-  
-  no_odf_files <- length(odf_files)
-  
-  for(i in 1:no_odf_files){
-    print(i)
-    opened_ctd_odf <- read.ctd.odf(odf_files[i])
-    odf_df <- as.data.frame(opened_ctd_odf@data)
-    
-    start_time <- rep(opened_ctd_odf[["startTime"]], nrow(odf_df))
-    
-    odf_df1 <- data.frame(odf_df, start_time)
-    total_df <- bind_rows(odf_df1, total_df)
-  }
-}
-
 # colz <- colorRampPalette(c("blue", "red"))(51)
-# ani.options(convert = "C:\\Program Files\\ImageMagick-7.0.5-Q16\\convert.exe")
+ani.options(convert = "C:\\Program Files\\ImageMagick-7.0.5-Q16\\convert.exe")
 
 p1 <- total_df %>% 
   filter(start_time > "2010-12-30") %>% 
@@ -149,6 +103,7 @@ p2 <- tw_test %>%
   geom_hline(yintercept = 0) +
   # stat_function(fun = function(x)sin(x), colour = "black", size = 1) +
   scale_colour_gradient(low = "blue", high = "red")
+
 
 gganimate(p2)
 

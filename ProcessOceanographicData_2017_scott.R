@@ -2,81 +2,113 @@
 #install.packages("oce") 
 #install.packages("ocedata")
 library(oce)
+library(dplyr)
+library(magrittr)
 library(ocedata)
 #test
-setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
-out=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/",(as.numeric(format(Sys.Date(), "%Y"))),"/", sep=""))
-outroot=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/") 
+# setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
+# out=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/",(as.numeric(format(Sys.Date(), "%Y"))),"/", sep=""))
+# outroot=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/") 
+# 
+# 
+# odf_file_list <- list.files(pattern="*^.*D.*.ODF$")
+# 
+# no_odf_files <- length(odf_file_list)
+# 
+# 
+# for (n in 1:no_odf_files) {
+#   od <- read.odf(odf_file_list[n])
+#   ctd<-read.ctd.odf(odf_file_list[n])
+#   png(paste(out,"BBMP",substr(od@metadata$date,1,10),'.png',sep=""),height=800,width=800)
+#   plot.new()
+#   par(oma=c(0,0,2,0))
+#   par(mfrow=c(2,2)) # four panels, filled in reading order
+#   plot(ctd,which=1,keepNA=T)
+#   plot(ctd,which=2)
+#   plot(ctd,which=3)
+#   par(mar=c(3.6,3.4,3.5,2))
+#   plot(ctd@data$fluorometer,ctd@data$pressure, ylim=rev(range(ctd@data$pressure)), type="l",col="green", xlab="Fluorescence [mg/m^3]", ylab="",col.lab="green")
+#   axis(1, labels = T, col.ticks = "green",col.axis = 'green')
+#   par(new=T)
+#   min_oxy=0
+#   #min_oxy=round(min(ctd@data$oxygen,na.rm=T),0)-1
+#   max_oxy=round(max(ctd@data$oxygen,na.rm=T),0)
+#   if(max_oxy>0) plot(ctd@data$oxygen,ctd@data$pressure, ylim=rev(range(ctd@data$pressure)), type="l",col="black", axes=F, xlab="", ylab="Pressure [dbar]") else (mtext("Oxygen was not collected.")) 
+#   title("Oxygen [ml/l]", line=2, font.main=1, cex.main=1)
+#   Axis(side=3, x=ctd@data$oxygen, at=c(1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10))
+#   #plot(ctd,which=0)
+#   title(paste("Compass Buoy Station CTD Profile",  od@metadata$date,sep=": "),outer=TRUE,cex=1.4) # title for overall plot (filename, here)
+#   dev.off()
+# }
+# 
+# 
+# 
+# d=read.odf(odf_file_list[no_odf_files])
+# ctd<-read.ctd.odf(odf_file_list[no_odf_files])
+# png(paste(outroot,"Recent_Profile.png",sep=""),height=800,width=800)
+# plot.new()
+# par(oma=c(0,0,2,0))
+# par(mfrow=c(2,2)) # four panels, filled in reading order
+# plot(ctd,which=1, keepNA=T)
+# plot(ctd,which=2)
+# plot(ctd,which=3)
+# par(mar=c(3.6,3.4,3.5,2))
+# plot(ctd@data$fluorometer,ctd@data$pressure, ylim=rev(range(ctd@data$pressure)), type="l",col="green", xlab="Fluorescence [mg/m^3]", ylab="",col.lab="green")
+# axis(1, labels = T, col.ticks = "green",col.axis = 'green')
+# par(new=T)
+# min_oxy=0
+# #min_oxy=round(min(ctd@data$oxygen,na.rm=T),0)-1
+# max_oxy=round(max(ctd@data$oxygen,na.rm=T),0)
+# if(max_oxy>0)plot(ctd@data$oxygen,ctd@data$pressure, ylim=rev(range(ctd@data$pressure)), type="l",col="black", axes=F, xlab="", ylab="Pressure [dbar]") else (mtext("Oxygen was not collected.")) 
+# title("Oxygen [ml/l]", line=2, font.main=1, cex.main=1)
+# Axis(side=3, x=ctd@data$oxygen, at=c(1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10))
+# #plot(ctd,which=0)
+# title(paste("Compass Buoy Station CTD Profile",  od@metadata$date,sep=": "),outer=TRUE,cex=1.4) # title for overall plot (filename, here)
+# dev.off()
+# 
+# 
+# #### Copy Recent ODF files to directory for website ########
+# 
+# setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
+# out1=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",(as.numeric(format(Sys.Date(), "%Y"))),"/", sep=""))
+# 
+# for (n in 1:no_odf_files) {
+#   
+#   file.copy(from = odf_file_list[n], 
+#             to = out1, 
+#             overwrite = T, 
+#             recursive=F)  
+#   
+# }
 
+##stocking plots, csv's and odf's. 
 
-lst=list.files(pattern="*^.*D.*.ODF$")
+source("~/MoPS/odf_file_finder_lister.R")
+source("~/MoPS/odf_plot_functions.R")
+source("~/MoPS/transfer_functions_ODF_and_CSV.R")
 
-l=length(list)
+current_year <- format(Sys.Date(), "%Y") %>% as.numeric()
 
+odf_year_plots(current_year)
+transfer_files_csv(current_year)
+transfer_files_odf(current_year)
 
-for (n in 1:l) {
-  od=read.odf(list[n])
-  ctd<-read.ctd.odf(list[n])
-  png(paste(out,"BBMP",substr(od@metadata$date,1,10),'.png',sep=""),height=800,width=800)
-  plot.new()
-  par(oma=c(0,0,2,0))
-  par(mfrow=c(2,2)) # four panels, filled in reading order
-  plot(ctd,which=1,keepNA=T)
-  plot(ctd,which=2)
-  plot(ctd,which=3)
-  par(mar=c(3.6,3.4,3.5,2))
-  plot(ctd@data$fluorometer,ctd@data$pressure, ylim=rev(range(ctd@data$pressure)), type="l",col="green", xlab="Fluorescence [mg/m^3]", ylab="",col.lab="green")
-  axis(1, labels = T, col.ticks = "green",col.axis = 'green')
-  par(new=T)
-  min_oxy=0
-  #min_oxy=round(min(ctd@data$oxygen,na.rm=T),0)-1
-  max_oxy=round(max(ctd@data$oxygen,na.rm=T),0)
-  if(max_oxy>0) plot(ctd@data$oxygen,ctd@data$pressure, ylim=rev(range(ctd@data$pressure)), type="l",col="black", axes=F, xlab="", ylab="Pressure [dbar]") else (mtext("Oxygen was not collected.")) 
-  title("Oxygen [ml/l]", line=2, font.main=1, cex.main=1)
-  Axis(side=3, x=ctd@data$oxygen, at=c(1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10))
-  #plot(ctd,which=0)
-  title(paste("Compass Buoy Station CTD Profile",  od@metadata$date,sep=": "),outer=TRUE,cex=1.4) # title for overall plot (filename, here)
-  dev.off()
-}
+###updating most recent cast plots
 
+odf_file_list_current_year <- directory_lister_wrapper(year_x = current_year, site_code_i = "667")
+odf_file_number <- directory_lister_wrapper(year_x = current_year, site_code_i = "667") %>% length()
 
+odf_plot_function(odf_file = odf_file_number, 
+                  year = current_year,
+                  odf_file_list = odf_file_list_current_year, 
+                  testing_plots = FALSE, 
+                  recent_plot = TRUE)
 
-d=read.odf(list[l])
-ctd<-read.ctd.odf(list[l])
-png(paste(outroot,"Recent_Profile.png",sep=""),height=800,width=800)
-plot.new()
-par(oma=c(0,0,2,0))
-par(mfrow=c(2,2)) # four panels, filled in reading order
-plot(ctd,which=1, keepNA=T)
-plot(ctd,which=2)
-plot(ctd,which=3)
-par(mar=c(3.6,3.4,3.5,2))
-plot(ctd@data$fluorometer,ctd@data$pressure, ylim=rev(range(ctd@data$pressure)), type="l",col="green", xlab="Fluorescence [mg/m^3]", ylab="",col.lab="green")
-axis(1, labels = T, col.ticks = "green",col.axis = 'green')
-par(new=T)
-min_oxy=0
-#min_oxy=round(min(ctd@data$oxygen,na.rm=T),0)-1
-max_oxy=round(max(ctd@data$oxygen,na.rm=T),0)
-if(max_oxy>0)plot(ctd@data$oxygen,ctd@data$pressure, ylim=rev(range(ctd@data$pressure)), type="l",col="black", axes=F, xlab="", ylab="Pressure [dbar]") else (mtext("Oxygen was not collected.")) 
-title("Oxygen [ml/l]", line=2, font.main=1, cex.main=1)
-Axis(side=3, x=ctd@data$oxygen, at=c(1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10))
-#plot(ctd,which=0)
-title(paste("Compass Buoy Station CTD Profile",  od@metadata$date,sep=": "),outer=TRUE,cex=1.4) # title for overall plot (filename, here)
-dev.off()
+### updating aggregated csv file
 
+source("~/MoPS/bulk_data_aggreation.R")
 
-#### Copy Recent ODF files to directory for website ########
-
-setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
-out1=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",(as.numeric(format(Sys.Date(), "%Y"))),"/", sep=""))
-
-for (n in 1:l) {
-  
-  file.copy(from=list[n],to=out1, overwrite=T,recursive=F)  
-  
-}
-
-
+###
 
 ##This section creates the weekly anomaly plots by depth and uses the anomaly file from BBMP_TS_2000_####.csv####
 ##\\dcnsbiona01a\BIODataSvcIn\_BIOWeb\BBMP
@@ -99,11 +131,11 @@ library(gridExtra)
 library(Rmisc)
 
 #Create data and plot for previous year####
-setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
+setwd(paste("R:/Science/BIODataSvc/SRC/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
 
 #list of files and counts in current and previous year
 years<-c(as.numeric(format(Sys.Date(), "%Y"))-1,as.numeric(format(Sys.Date(), "%Y"))) #current and previous years to name the ODF summaries in the list "frec"
-wds<-c((paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y")))-1,sep="")),(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep="")))
+wds<-c((paste("R:/Science/BIODataSvc/SRC/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y")))-1,sep="")),(paste("R:/Science/BIODataSvc/SRC/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep="")))
 listp=list.files(wds[1],pattern="*^.*D.*.ODF$")
 listc=list.files(wds[2],pattern="*^.*D.*.ODF$")
 list=list(listp,listc)
@@ -138,7 +170,7 @@ for (i in 1:length(years)) {
   }
   
   names(ind)<-c("FILE","START_DATE_TIME")
-  ofile <-paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",years[i],"/",years[i],"667ODFSUMMARY.tsv",sep="")
+  ofile <-paste("R:/Shared/Cogswell/_BIOWeb/BBMP/ODF/",years[i],"/",years[i],"667ODFSUMMARY.tsv",sep="")
   cat(paste("Folder consists of ",nrow(ind)," ODF files from ",years[i]," Bedford Basin Compass Station occupations.",sep=""), file=ofile, sep="\n", append=FALSE)
   cat("", file=ofile, sep="\n", append=TRUE)
   write.table(ind, file=ofile, append=TRUE, quote=TRUE, sep=",",
@@ -156,7 +188,7 @@ arec<-arrange(arec,date)
 #compile ODF data for current year
 
 
-setwd("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP")
+setwd("R:/Shared/Cogswell/_BIOWeb/BBMP")
 datasum<-read.csv("BBMP_TS_2000_2015.csv")
 datasum$woy<-as.numeric(strftime(as.POSIXlt(datasum$date),format="%W"))
 
@@ -183,7 +215,7 @@ gp<-as.data.frame(gp)
 gp$var<-as.character(gp$var)
 
 
-setwd("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP")
+setwd("R:/Shared/Cogswell/_BIOWeb/BBMP")
 #setwd("//Svnsbiofs02/MARSHARED/Shared/Cogswell/test")
 
 
@@ -377,7 +409,7 @@ p<-NULL
 
 ##### Weekly anomaly bar chart ---- 
 
-setwd("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP")
+setwd("R:/Shared/Cogswell/_BIOWeb/BBMP")
 #setwd("//Svnsbiofs02/MARSHARED/Shared/Cogswell/test")
 #install.packages("png")
 library(png)

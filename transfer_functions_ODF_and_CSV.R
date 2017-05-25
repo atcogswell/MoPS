@@ -122,7 +122,7 @@ transfer_files_csv <- function(year, out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\
 }
 
 # transfer_files_csv(2017)
-# transfer_files_odf(2017)
+# transfer_files_odf(2012)
 
 
 #for loop in transfer_csv

@@ -83,9 +83,9 @@ library(ocedata)
 
 ##stocking plots, csv's and odf's. 
 
-source("C:\\Users\\mccains\\Documents\\MoPS\\odf_file_finder_lister.R")
-source("C:\\Users\\mccains\\Documents\\MoPS\\odf_plot_functions.R")
-source("C:\\Users\\mccains\\Documents\\MoPS\\transfer_functions_ODF_and_CSV.R")
+source("~/MoPS/odf_file_finder_lister.R")
+source("~/MoPS/odf_plot_functions.R")
+source("~/MoPS/transfer_functions_ODF_and_CSV.R")
 
 current_year <- format(Sys.Date(), "%Y") %>% as.numeric()
 
@@ -106,7 +106,7 @@ odf_plot_function(odf_file = odf_file_number,
 
 ### updating aggregated csv file
 
-source("C:\\Users\\mccains\\Documents\\MoPS\\bulk_data_aggreation.R")
+source("~/MoPS/bulk_data_aggreation.R")
 
 ###
 
@@ -154,24 +154,31 @@ ind<-NULL
 for (i in 1:length(years)) {
   
   for (n in 1:length(list[[i]])){
-    od<-read.odf(paste(wds[i],"/",list[[i]][n],sep=""))
-    dates<-od@metadata$date
-    odname<-as.data.frame(list[[i]][n])
-    tmp3<-cbind(odname,as.data.frame(dates))
-    ind<-rbind(ind,tmp3)
-    od<-as.data.frame(od@data)
-    datain<-subset(od,od$pressure==2|od$pressure==5|od$pressure==10|od$pressure==60)
-    test<-as.Date(substr(dates,1,10))
-    datain$date<-as.Date(substr(dates,1,10))
-    datain<-dplyr::select(datain,date,pressure,temperature,salinity,sigmaTheta)
-    datagather<-tidyr::gather(datain,parameter,value,3:5)
-    dataout<-rbind(dataout,datagather)
-    
+    od <- read.odf(paste(wds[i],"/", list[[i]][n], sep=""))
+    dates <- od@metadata$date
+    odname <- as.data.frame(list[[i]][n])
+    tmp3 <- cbind(odname,as.data.frame(dates))
+    ind <- rbind(ind,tmp3)
+    od <- as.data.frame(od@data)
+    datain <- subset(od,od$pressure==2|od$pressure==5|od$pressure==10|od$pressure==60)
+    test <- as.Date(substr(dates,1,10))
+    datain$date <- as.Date(substr(dates, 1, 10))
+    datain <- dplyr::select(datain, date, pressure, temperature, salinity, sigmaTheta)
+    datagather <- tidyr::gather(datain,parameter, value, 3:5)
+    dataout <- rbind(dataout, datagather)
   }
   
-  names(ind)<-c("FILE","START_DATE_TIME")
-  ofile <-paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",years[i],"/",years[i],"667ODFSUMMARY.tsv",sep="")
-  cat(paste("Folder consists of ",nrow(ind)," ODF files from ",years[i]," Bedford Basin Compass Station occupations.",sep=""), file=ofile, sep="\n", append=FALSE)
+  names(ind) <- c("FILE", "START_DATE_TIME")
+  ofile <-paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",
+                years[i],
+                "/",
+                years[i],
+                "667ODFSUMMARY.tsv",
+                sep = "")
+  cat(paste("Folder consists of ",nrow(ind)," ODF files from ",years[i]," Bedford Basin Compass Station occupations.",sep=""),
+      file = ofile, 
+      sep = "\n", 
+      append = FALSE)
   cat("", file=ofile, sep="\n", append=TRUE)
   write.table(ind, file=ofile, append=TRUE, quote=TRUE, sep=",",
               eol="\n", na="NA", dec=".", row.names=FALSE, col.names=TRUE)

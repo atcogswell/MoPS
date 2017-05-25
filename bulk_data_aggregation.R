@@ -38,7 +38,7 @@ for(j in 1:length(year_available)){
     
   for(i in 1:no_odf_files){
       print(i)
-      opened_ctd_odf <- read.ctd.odf(odf_files[1])
+      opened_ctd_odf <- read.ctd.odf(odf_files[i])
       odf_df <- as.data.frame(opened_ctd_odf@data)
       
       time_string <- rep(opened_ctd_odf[["startTime"]], nrow(odf_df))
@@ -62,7 +62,11 @@ total_df2 <- total_df[order(total_df$time_string, decreasing = FALSE), ]
 
 write.csv(x = total_df2, 
           row.names = FALSE, 
-          file = "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\CSV\\aggregated_profiles.csv")
+          file = "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\CSV\\bbmp_aggregated_profiles.csv")
+
+write.csv(x = total_df2, 
+          row.names = FALSE, 
+          file = "C:\\Users\\mccains\\Documents\\Data Testing\\bbmp_aggregated_profiles.csv")
   
   
   

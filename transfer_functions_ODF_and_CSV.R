@@ -15,6 +15,12 @@ library(stringr)
 
 '%!in%' <- function(x,y)!('%in%'(x,y))
 
+
+odf_date_finder <- function(odf_file_i){
+  odf_read_in <- read.odf(odf_file_i)
+  date_string_i <- odf_read_in[["date"]]
+}
+  
 #function to rename the files to a standard format.
 odf_file_renamer <- function(odf_file_i, file_extension = "ODF", src_format = TRUE){
 
@@ -64,21 +70,38 @@ transfer_files_odf <- function(year, out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\
           year, "\\",
           sep = "")
   
+  odf_date_summary <- vector(length = no_odf_files)
+  odf_name_summary <- vector(length = no_odf_files)
   for(i in 1:no_odf_files){
     
     new_file_name <- odf_file_renamer(odf_file_i = odf_files[i], 
                                       src_format = use_src, 
                                       file_extension = "ODF")
+    summary_date <- odf_date_finder(odf_file_i = odf_files[i])
     
     start_file <- paste(used_directory, "\\", odf_files[i], sep = "")
-    
     out_file <- paste(out_file_dir_base, new_file_name, sep = "")
-    
     file.copy(from = start_file, to = out_file)
     
     print(out_file)
     
+    odf_date_summary <- c(odf_date_summary, summary_date)
+    odf_name_summary <- c(odf_name_summary, new_file_name)
   }
+  
+  odf_summary_dates_names <- cbind(odf_name_summary, odf_date_summary)
+  
+  odf_summary_file <- paste(out_root, year, "\\", year, "667ODFSUMMARY.tsv", sep = "")
+  cat(paste("Folder consists of ", 
+            no_odf_files ,
+            " ODF files from ",
+            year,
+            " Bedford Basin Compass Station occupations.",
+            sep=""), 
+      file = odf_summary_file, sep = "\n", append = FALSE)
+  cat("", file = odf_summary_file, sep = "\n", append = TRUE)
+  write.table(odf_summary_dates_names, file = odf_summary_file, append = TRUE, quote = TRUE, sep=",",
+              eol = "\n", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE)
 }
 
 # transfer_files_odf(year = 2008)
@@ -122,7 +145,7 @@ transfer_files_csv <- function(year, out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\
 }
 
 # transfer_files_csv(2017)
-transfer_files_odf(2017)
+# transfer_files_odf(2017)
 
 
 #for loop in transfer_csv
@@ -130,8 +153,6 @@ transfer_files_odf(2017)
 #does the renamer need a directory to be set?
 #the opened ctd_odf file could be done by pasting out_root with the file name
 #same with the write.ctd thing
-
-
 
 
 

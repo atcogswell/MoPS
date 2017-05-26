@@ -21,7 +21,7 @@ map('worldHires', c('Canada', 'USA'),
     fill = TRUE,
     border = "darkseagreen", lwd = 1)
 
-par(mgp = c(3,1,0))
+par(mgp = c(1,1,0))
 text(-64.5, 43.1, 
      expression(italic(' Atlantic Ocean\nOc\u{E9}an Atlantique')), 
      col = "darkslategrey", 

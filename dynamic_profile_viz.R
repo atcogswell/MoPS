@@ -9,7 +9,7 @@ library(oce)
 library(ocedata)
 library(gganimate)
 library(animation)
-
+library(lubridate)
 library(tweenr)
 
 
@@ -19,7 +19,8 @@ setwd(dir = "C:\\Users\\mccains\\Documents\\Data Testing")
 
 master_df <- read.csv("bbmp_aggregated_profiles.csv")
 master_df$week_time <- week(master_df$time_string)
-master_df2 <- master_df %>% filter(year_time != "2004")
+master_df2 <- master_df %>% filter(year_time != "2004", 
+                                   pressure < 65)
 # 
 fluor <- master_df2 %>% group_by(pressure, week_time) %>%
   summarise(week_temp = mean(temperature),
@@ -34,8 +35,6 @@ fluor <- master_df2 %>% group_by(pressure, week_time) %>%
              ymin= -pressure + 1,
              ymax = -pressure, fill = week_fluor)) +
   # scale_y_reverse() +
-  theme_bw() +
-  geom_hline(yintercept = 0) +
   geom_rect() +
   geom_area(
     aes(x), data.frame(x = c(1, 20)),
@@ -43,13 +42,19 @@ fluor <- master_df2 %>% group_by(pressure, week_time) %>%
     stat="function") +
   coord_cartesian(ylim = c(-max(master_df2$pressure), 0),
                   xlim = c(1, 20)) +
-  theme_minimal() +
-  # theme(axis.text.x = element_blank(),
-  #       axis.ticks.x = element_blank()) +
+  # theme_minimal() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.title = element_text(size = 14)) +
+  guides(fill = FALSE) +
+  geom_path(lwd = 2.25, alpha = 0.4) +
+  geom_hline(yintercept = 0.5, lwd = 1.25, colour = "gray20") +
   labs(x = "Fluorescence", y="Meters Below Sealevel") +
-  geom_point() +
   scale_fill_gradient(low = "dodgerblue4", high = "green") +
-  ggtitle("Week Number ")
+  ggtitle("Week Number: ")
+
+# gganimate(fluor, cmd.fun = shell, interval = 0.075, saver = "gif", "flu.gif")
 
 
 temp <- master_df2 %>% group_by(pressure, week_time) %>%
@@ -64,9 +69,6 @@ temp <- master_df2 %>% group_by(pressure, week_time) %>%
              xmax = 20,
              ymin= -pressure + 1,
              ymax = -pressure, fill = week_temp)) +
-  # scale_y_reverse() +
-  theme_bw() +
-  geom_hline(yintercept = 0) +
   geom_rect() +
   geom_area(
     aes(x), data.frame(x = c(1, 20)),
@@ -74,12 +76,15 @@ temp <- master_df2 %>% group_by(pressure, week_time) %>%
     stat="function") +
   coord_cartesian(ylim = c(-max(master_df2$pressure), 0),
                   xlim = c(1, 20)) +
-  theme_minimal() +
-  # theme(axis.text.x = element_blank(),
-  #       axis.ticks.x = element_blank()) +
-  labs(x = "Temperature", y="Meters Below Sealevel") +
-  geom_point() +
-  scale_fill_gradient(low = "dodgerblue4", high = "red") +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.title = element_text(size = 14)) +
+  guides(fill = FALSE) +
+  geom_path(lwd = 2.25, alpha = 0.4) +
+  labs(x = "Temperature (C)", y="Meters Below Sealevel") +
+  geom_hline(yintercept = 0.5, lwd = 1.25, colour = "gray20") +
+  scale_fill_gradient(low = "dodgerblue4", high = "red") +  
   ggtitle("Week Number ")
 
 oxy <- master_df2 %>% group_by(pressure, week_time) %>%
@@ -94,9 +99,6 @@ oxy <- master_df2 %>% group_by(pressure, week_time) %>%
              xmax = 10,
              ymin= -pressure + 1,
              ymax = -pressure, fill = week_oxy)) +
-  # scale_y_reverse() +
-  theme_bw() +
-  geom_hline(yintercept = 0) +
   geom_rect() +
   geom_area(
     aes(x), data.frame(x = c(1, 20)),
@@ -104,11 +106,14 @@ oxy <- master_df2 %>% group_by(pressure, week_time) %>%
     stat="function") +
   coord_cartesian(ylim = c(-max(master_df2$pressure), 0),
                   xlim = c(1, 10)) +
-  theme_minimal() +
-  # theme(axis.text.x = element_blank(),
-  #       axis.ticks.x = element_blank()) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.title = element_text(size = 14)) +
+  guides(fill = FALSE) +
+  geom_path(lwd = 2.25, alpha = 0.4) +
+  geom_hline(yintercept = 0.5, lwd = 1.25, colour = "gray20") +
   labs(x = "Oxygen Concentration", y="Meters Below Sealevel") +
-  geom_point() +
   scale_fill_gradient(low = "grey68", high = "blue4") +
   ggtitle("Week Number ")
 
@@ -124,9 +129,6 @@ salt <- master_df2 %>% group_by(pressure, week_time) %>%
              xmax = 33,
              ymin= -pressure + 1,
              ymax = -pressure, fill = week_salt)) +
-  # scale_y_reverse() +
-  theme_bw() +
-  geom_hline(yintercept = 0) +
   geom_rect() +
   geom_area(
     aes(x), data.frame(x = c(1, 20)),
@@ -134,18 +136,21 @@ salt <- master_df2 %>% group_by(pressure, week_time) %>%
     stat="function") +
   coord_cartesian(ylim = c(-max(master_df2$pressure), 0),
                   xlim = c(27, 33)) +
-  theme_minimal() +
-  # theme(axis.text.x = element_blank(),
-  #       axis.ticks.x = element_blank()) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.title = element_text(size = 14)) +
+  guides(fill = FALSE) +
+  geom_path(lwd = 2.25, alpha = 0.4) +
+  geom_hline(yintercept = 0.5, lwd = 1.25, colour = "gray20") +
   labs(x = "Salinity", y="Meters Below Sealevel") +
-  geom_point() +
   scale_fill_gradient(low = "blue", high = "white") +
   ggtitle("Week Number ")
 
-gganimate(salt, cmd.fun = shell, interval = 0.1, saver = "gif", "salt.mp4")
-gganimate(oxy, cmd.fun = shell, interval = 0.1, saver = "gif", "oxy.mp4")
-gganimate(fluor, cmd.fun = shell, interval = 0.1, saver = "gif", "flu.mp4")
-gganimate(temp, cmd.fun = shell, interval = 0.1, saver = "gif", "temp.mp4")
+gganimate(salt, cmd.fun = shell, interval = 0.075, saver = "gif", "salt.gif")
+gganimate(oxy, cmd.fun = shell, interval = 0.075, saver = "gif", "oxy.gif")
+gganimate(fluor, cmd.fun = shell, interval = 0.075, saver = "gif", "flu.gif")
+gganimate(temp, cmd.fun = shell, interval = 0.075, saver = "gif", "temp.gif")
 
 
 

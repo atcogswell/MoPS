@@ -1,0 +1,71 @@
+---
+title: "R Scripts for Fixed Station Monitoring"
+author: "Scott McCain"
+date: "May 26, 2017"
+output: html_document
+---
+
+```{r setup, echo = FALSE, warning = FALSE, mesSage = FALSE, include = FALSE}
+knitr::opts_chunk$set(cache=TRUE)
+source("~/MoPS/odf_plot_functions.R")
+source("~/MoPS/odf_file_finder_lister.R")
+source("~/MoPS/transfer_functions_ODF_and_CSV.R")
+```
+
+The following functions can be used to: 
+
+  1) populate a designated File Transfer Protocol (FTP) with backlogged profile images, ODF cast files, and CSVs, 
+  2) create an aggregated .csv file of all casts, with date labels.
+
+They provide a general framework for doing the objectives above, however have been specifically applied to the Bedford Basin Monitoring Program. Below, I describe the functions, their use, and how to adopt them for future use.
+
+__General Use__  
+
+* `odf_file_lister()`: Produces a set of odf files that are matched for certain naming conventions. e.g. searches for only Bedford Basin 667.  
+* `directory_lister_wrapper()`: A wrapper function for the `odf_file_lister()`, to switch to the Src if files aren't present.  
+
+__Plotting Functions__  
+
+* `fluorescence_oxygen_plot()`: Creates a the last fluorescence/oxygen plot in the four-panels of plots. Function needed for years that have one or both variable missing.  
+* `odf_plot_function()`: Creates the four panel plot.  
+* `odf_year_plots()`: Creates the four panel plot for an year.  
+
+__File Transfer and Conversion__    
+
+* `odf_date_finder()`: Simple function that returns the date of an ODF.
+* `odf_file_renamer()`: Reads in an ODF file, and depending if it was read from the Arc (double quality controlled), or from the Src, the name will be reformated.  
+* `transfer_files_odf()`: Files are renamed and copied from the Arc or Src and transferred into the BBMP site FTP.  
+* `transfer_files_csv()`: Files are renamed and converted from the Arc or Src and transferred into the BBMP.  
+site FTP.
+
+### Description of Functions and Key Considerations for Future Use
+
+There are two expected problems with adapting this code for another fixed station.
+
+1) Working directory switching.
+2) File naming and searching.
+
+`odf_file_lister` lists all files in a working directory from some pattern (e.g. searching for the site code "667"). These patterns differ if the file was found in the Src or the Arc. This function would need to be altered to accomodate a new file naming convention.
+
+```{r file_lister, echo = TRUE, tidy = FALSE, message = FALSE}
+odf_file_lister
+```
+
+`directory_lister_wrapper` is the function that would enable new directory switching. The arguments `arc_root` and `src_root` are critical for this. An important aspect of this function is that global variables are declared depending on where the files are located (via `use_src <<- TRUE/FALSE`). This allows the functions to "talk" to each other, which is particularly important for naming. 
+
+```{r directory_lister_wrapper, echo = TRUE, tidy = FALSE}
+directory_lister_wrapper
+```
+
+
+`odf_file_renamer` renames files dynamically dependent on the original file location (src vs. arc).
+```{r odf_file_renam, echo = TRUE, tidy = FALSE, message = FALSE}
+odf_file_renamer
+```
+
+`transfer_files_csv` and `transfer_files_odf` are very similar functions, in that they both transfer files. The key difference is that ODF files can simply be copied, while csv files have to be opened and rewritten into a different directory.
+
+```{r transferring_files, echo = TRUE, tidy = FALSE, message = FALSE}
+transfer_files_csv
+transfer_files_odf
+```

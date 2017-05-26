@@ -19,6 +19,7 @@ library(stringr)
 odf_date_finder <- function(odf_file_i){
   odf_read_in <- read.odf(odf_file_i)
   date_string_i <- odf_read_in[["date"]]
+  return(date)
 }
   
 #function to rename the files to a standard format.

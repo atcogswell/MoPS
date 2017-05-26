@@ -50,7 +50,7 @@ fluor <- master_df2 %>% group_by(pressure, week_time) %>%
   guides(fill = FALSE) +
   geom_path(lwd = 2.25, alpha = 0.4) +
   geom_hline(yintercept = 0.5, lwd = 1.25, colour = "gray20") +
-  labs(x = "Fluorescence", y="Meters Below Sealevel") +
+  labs(x = expression("Fluorescence ("~mg/m^3~")"), y="Meters Below Sealevel") +
   scale_fill_gradient(low = "dodgerblue4", high = "green") +
   ggtitle("Week Number: ")
 
@@ -113,7 +113,7 @@ oxy <- master_df2 %>% group_by(pressure, week_time) %>%
   guides(fill = FALSE) +
   geom_path(lwd = 2.25, alpha = 0.4) +
   geom_hline(yintercept = 0.5, lwd = 1.25, colour = "gray20") +
-  labs(x = "Oxygen Concentration", y="Meters Below Sealevel") +
+  labs(x = "Oxygen Concentration (mL/L)", y="Meters Below Sealevel") +
   scale_fill_gradient(low = "grey68", high = "blue4") +
   ggtitle("Week Number ")
 
@@ -147,10 +147,10 @@ salt <- master_df2 %>% group_by(pressure, week_time) %>%
   scale_fill_gradient(low = "blue", high = "white") +
   ggtitle("Week Number ")
 
-gganimate(salt, cmd.fun = shell, interval = 0.075, saver = "gif", "salt.gif")
-gganimate(oxy, cmd.fun = shell, interval = 0.075, saver = "gif", "oxy.gif")
-gganimate(fluor, cmd.fun = shell, interval = 0.075, saver = "gif", "flu.gif")
-gganimate(temp, cmd.fun = shell, interval = 0.075, saver = "gif", "temp.gif")
+gganimate(salt, cmd.fun = shell, interval = 0.075, saver = "gif", "C:\\Users\\mccains\\Documents\\Data Testing\\salt.gif")
+gganimate(oxy, cmd.fun = shell, interval = 0.075, saver = "gif", "C:\\Users\\mccains\\Documents\\Data Testing\\oxy.gif")
+gganimate(fluor, cmd.fun = shell, interval = 0.075, saver = "gif", "C:\\Users\\mccains\\Documents\\Data Testing\\flu.gif")
+gganimate(temp, cmd.fun = shell, interval = 0.075, saver = "gif", "C:\\Users\\mccains\\Documents\\Data Testing\\temp.gif")
 
 
 

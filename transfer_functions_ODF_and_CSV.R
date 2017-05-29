@@ -18,8 +18,8 @@ library(stringr)
 
 odf_date_finder <- function(odf_file_i){
   odf_read_in <- read.odf(odf_file_i)
-  date_string_i <- odf_read_in[["date"]]
-  return(date)
+  date_string_i <- odf_read_in[["date"]] %>% as.character()
+  return(date_string_i)
 }
   
 #function to rename the files to a standard format.
@@ -63,6 +63,7 @@ transfer_files_odf <- function(year, out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\
   #This function copies files from the Arc, to the BBMP website FTP. 
   #Input is just one year.
   ###
+  # out_root <- "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\ODF\\"
   # year <- 2017
   odf_files <- directory_lister_wrapper(year_x = year)
   no_odf_files <- length(odf_files)
@@ -86,11 +87,11 @@ transfer_files_odf <- function(year, out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\
     
     print(out_file)
     
-    odf_date_summary <- c(odf_date_summary, summary_date)
-    odf_name_summary <- c(odf_name_summary, new_file_name)
+    odf_date_summary[i] <- summary_date
+    odf_name_summary[i] <- new_file_name
   }
   
-  odf_summary_dates_names <- cbind(odf_name_summary, odf_date_summary)
+  odf_summary_dates_names <- data.frame(FILE = odf_name_summary, START_DATE_TIME = odf_date_summary)
   
   odf_summary_file <- paste(out_root, year, "\\", year, "667ODFSUMMARY.tsv", sep = "")
   cat(paste("Folder consists of ", 
@@ -130,6 +131,8 @@ transfer_files_csv <- function(year, out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\
   
   expect_true(no_odf_files > 0, info = "No files found.")
   
+  odf_date_summary <- vector(length = no_odf_files)
+  odf_name_summary <- vector(length = no_odf_files)
   for(i in 1:no_odf_files){
     # start_file <- paste(temp_wd, "\\", odf_files[i], sep = "")
     
@@ -142,18 +145,32 @@ transfer_files_csv <- function(year, out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\
     setwd(out_file_dir)
     write.ctd(opened_ctd_odf, file = paste(out_file_dir, new_odf_file_name, sep = ""))
     print(new_odf_file_name)
+    
+    odf_date_summary[i] <- summary_date
+    odf_name_summary[i] <- new_file_name
   }
+  odf_summary_dates_names <- data.frame(FILE = odf_name_summary, START_DATE_TIME = odf_date_summary)
+  
+  odf_summary_file <- paste(out_root, year, "\\", year, "667CSVSUMMARY.tsv", sep = "")
+  cat(paste("Folder consists of ", 
+            no_odf_files ,
+            " CSV (converted from ODF) files from ",
+            year,
+            " Bedford Basin Compass Station occupations.",
+            sep=""), 
+      file = odf_summary_file, sep = "\n", append = FALSE)
+  cat("", file = odf_summary_file, sep = "\n", append = TRUE)
+  write.table(odf_summary_dates_names, file = odf_summary_file, append = TRUE, quote = TRUE, sep=",",
+              eol = "\n", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE)
 }
 
-# transfer_files_csv(2017)
-# transfer_files_odf(2017)
+
+for(i in 1999:2017){
+  transfer_files_csv(i)
+  transfer_files_odf(i)
+}
 
 
-#for loop in transfer_csv
-
-#does the renamer need a directory to be set?
-#the opened ctd_odf file could be done by pasting out_root with the file name
-#same with the write.ctd thing
 
 
 

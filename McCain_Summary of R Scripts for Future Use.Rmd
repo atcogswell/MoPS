@@ -81,27 +81,38 @@ There are two expected problems with adapting this code for another fixed statio
 
 `odf_file_lister` lists all files in a working directory from some pattern (e.g. searching for the site code "667"). These patterns differ if the file was found in the Src or the Arc. This function would need to be altered to accomodate a new file naming convention.
 
-```{r file_lister, echo = TRUE, tidy = FALSE, message = FALSE}
+<style>
+div.blue pre { background-color:lightblue; }
+div.blue pre.r { background-color:lightblue; }
+</style>
+
+<div class = "blue">
+```{r file_lister, echo = TRUE, tidy = FALSE, message = FALSE, comment = NA}
 odf_file_lister
 ```
+</div>
 
 `directory_lister_wrapper` is the function that would enable new directory switching. The arguments `arc_root` and `src_root` are critical for this. An important aspect of this function is that global variables are declared depending on where the files are located (via `use_src <<- TRUE/FALSE`). This allows the functions to "talk" to each other, which is particularly important for naming.  
 
 If the naming conventions are the same as the BBMP, then a first try would simply by to switch the directory locations in this function (the default is set for the BBMP).
-
-```{r directory_lister_wrapper, echo = TRUE, tidy = TRUE}
+<div class = "blue">
+```{r directory_lister_wrapper, echo = TRUE, tidy = TRUE, comment = NA}
 directory_lister_wrapper
 ```
-
+</div>
 
 `odf_file_renamer` renames files dynamically dependent on the original file location (src vs. arc).
-```{r odf_file_renam, echo = TRUE, tidy = FALSE, message = FALSE}
+<div class = "blue">
+```{r odf_file_renam, echo = TRUE, tidy = FALSE, message = FALSE, comment = NA}
 odf_file_renamer
 ```
+</div>
+
 
 `transfer_files_csv` and `transfer_files_odf` are very similar functions, in that they both transfer files. The key difference is that ODF files can simply be copied, while csv files have to be opened and rewritten into a different directory.
-
-```{r transferring_files, echo = TRUE, tidy = FALSE, message = FALSE}
+<div class = "blue">
+```{r transferring_files, echo = TRUE, tidy = FALSE, message = FALSE, comment = NA}
 transfer_files_csv
 transfer_files_odf
 ```
+</div>

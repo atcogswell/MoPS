@@ -210,147 +210,159 @@ $(document).ready(function () {
 <li>File naming and searching.</li>
 </ol>
 <p><code>odf_file_lister</code> lists all files in a working directory from some pattern (e.g. searching for the site code “667”). These patterns differ if the file was found in the Src or the Arc. This function would need to be altered to accomodate a new file naming convention.</p>
+<style>
+div.blue pre { background-color:lightblue; }
+div.blue pre.r { background-color:lightblue; }
+</style>
+<div class="blue">
 <pre class="r"><code>odf_file_lister</code></pre>
-<pre><code>## function (working_directory, year_i = year, site_code = &quot;667&quot;) 
-## {
-##     expect_true(dir.exists(working_directory), &quot;File folder does not exist in the FTP.&quot;)
-##     if (!use_src) {
-##         odf_file_list_i &lt;- list.files(pattern = &quot;*^.*D.*.ODF$&quot;)
-##         if (length(odf_file_list_i) == 0) {
-##             odf_file_list_i &lt;- list.files(pattern = &quot;.ODF$&quot;)
-##         }
-##         only_667 &lt;- grepl(pattern = paste(site_code, &quot;_&quot;, sep = &quot;&quot;), 
-##             x = odf_file_list_i)
-##         only_DN &lt;- grepl(pattern = &quot;_DN&quot;, x = odf_file_list_i)
-##         if (year_i &gt; 1999) {
-##             only_bcd &lt;- grepl(pattern = &quot;BCD&quot;, x = odf_file_list_i)
-##             odf_file_list_i &lt;- odf_file_list_i[only_667 &amp; only_bcd &amp; 
-##                 only_DN]
-##         }
-##         else if (year_i == 1999) {
-##             only_99667 &lt;- grepl(pattern = &quot;99667&quot;, x = odf_file_list_i)
-##             odf_file_list_i &lt;- odf_file_list_i[only_99667]
-##         }
-##     }
-##     else if (use_src) {
-##         odf_file_list_i &lt;- list.files(pattern = &quot;*^.*D.*.ODF$&quot;)
-##     }
-##     return(odf_file_list_i)
-## }</code></pre>
+<pre><code>function (working_directory, year_i = year, site_code = &quot;667&quot;) 
+{
+    expect_true(dir.exists(working_directory), &quot;File folder does not exist in the FTP.&quot;)
+    if (!use_src) {
+        odf_file_list_i &lt;- list.files(pattern = &quot;*^.*D.*.ODF$&quot;)
+        if (length(odf_file_list_i) == 0) {
+            odf_file_list_i &lt;- list.files(pattern = &quot;.ODF$&quot;)
+        }
+        only_667 &lt;- grepl(pattern = paste(site_code, &quot;_&quot;, sep = &quot;&quot;), 
+            x = odf_file_list_i)
+        only_DN &lt;- grepl(pattern = &quot;_DN&quot;, x = odf_file_list_i)
+        if (year_i &gt; 1999) {
+            only_bcd &lt;- grepl(pattern = &quot;BCD&quot;, x = odf_file_list_i)
+            odf_file_list_i &lt;- odf_file_list_i[only_667 &amp; only_bcd &amp; 
+                only_DN]
+        }
+        else if (year_i == 1999) {
+            only_99667 &lt;- grepl(pattern = &quot;99667&quot;, x = odf_file_list_i)
+            odf_file_list_i &lt;- odf_file_list_i[only_99667]
+        }
+    }
+    else if (use_src) {
+        odf_file_list_i &lt;- list.files(pattern = &quot;*^.*D.*.ODF$&quot;)
+    }
+    return(odf_file_list_i)
+}</code></pre>
+</div>
 <p><code>directory_lister_wrapper</code> is the function that would enable new directory switching. The arguments <code>arc_root</code> and <code>src_root</code> are critical for this. An important aspect of this function is that global variables are declared depending on where the files are located (via <code>use_src &lt;&lt;- TRUE/FALSE</code>). This allows the functions to “talk” to each other, which is particularly important for naming.</p>
-<p>If the naming conventions are the same as the BBMP, then a first try would simply by to switch the directory locations in this function (the default is set for the BBMP).</p>
+If the naming conventions are the same as the BBMP, then a first try would simply by to switch the directory locations in this function (the default is set for the BBMP).
+<div class="blue">
 <pre class="r"><code>directory_lister_wrapper</code></pre>
-<pre><code>## function (year_x = year, site_code_i = &quot;667&quot;, arc_root = &quot;R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\&quot;, 
-##     src_root = &quot;R:\\Science\\BIODataSvc\\SRC\\BBMP\\COMPASS\\&quot;) 
-## {
-##     arc_wd &lt;- paste(arc_root, year_x, sep = &quot;&quot;)
-##     src_wd &lt;- paste(src_root, year_x, sep = &quot;&quot;)
-##     if (dir.exists(arc_wd)) {
-##         setwd(arc_wd)
-##         use_src &lt;&lt;- FALSE
-##         used_directory &lt;&lt;- arc_wd
-##         odf_files &lt;- odf_file_lister(working_directory = arc_wd, 
-##             year_i = year_x, site_code = site_code_i)
-##         no_odf_files &lt;- length(odf_files)
-##     }
-##     if (!dir.exists(arc_wd)) {
-##         setwd(src_wd)
-##         use_src &lt;&lt;- TRUE
-##         used_directory &lt;&lt;- src_wd
-##         odf_files &lt;- odf_file_lister(working_directory = src_wd, 
-##             year_i = year_x)
-##     }
-##     return(odf_files)
-## }</code></pre>
-<p><code>odf_file_renamer</code> renames files dynamically dependent on the original file location (src vs. arc).</p>
+<pre><code>function (year_x = year, site_code_i = &quot;667&quot;, arc_root = &quot;R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\&quot;, 
+    src_root = &quot;R:\\Science\\BIODataSvc\\SRC\\BBMP\\COMPASS\\&quot;) 
+{
+    arc_wd &lt;- paste(arc_root, year_x, sep = &quot;&quot;)
+    src_wd &lt;- paste(src_root, year_x, sep = &quot;&quot;)
+    if (dir.exists(arc_wd)) {
+        setwd(arc_wd)
+        use_src &lt;&lt;- FALSE
+        used_directory &lt;&lt;- arc_wd
+        odf_files &lt;- odf_file_lister(working_directory = arc_wd, 
+            year_i = year_x, site_code = site_code_i)
+        no_odf_files &lt;- length(odf_files)
+    }
+    if (!dir.exists(arc_wd)) {
+        setwd(src_wd)
+        use_src &lt;&lt;- TRUE
+        used_directory &lt;&lt;- src_wd
+        odf_files &lt;- odf_file_lister(working_directory = src_wd, 
+            year_i = year_x)
+    }
+    return(odf_files)
+}</code></pre>
+</div>
+<code>odf_file_renamer</code> renames files dynamically dependent on the original file location (src vs. arc).
+<div class="blue">
 <pre class="r"><code>odf_file_renamer</code></pre>
-<pre><code>## function (odf_file_i, file_extension = &quot;ODF&quot;, src_format = TRUE) 
-## {
-##     expect_that(odf_file_i, is_a(&quot;character&quot;))
-##     if (file_extension %!in% c(&quot;ODF&quot;, &quot;csv&quot;)) {
-##         stop(&quot;File extension is not available.&quot;)
-##     }
-##     if (src_format) {
-##         odf_read_in &lt;- read.odf(odf_file_i)
-##         year_date &lt;- format(odf_read_in[[&quot;date&quot;]], &quot;%Y&quot;)
-##         front_string &lt;- &quot;CTD_BCD&quot;
-##         cast_number &lt;- substr(odf_file_i, nchar(odf_file_i) - 
-##             6, nchar(odf_file_i) - 4)
-##         final_file_name &lt;- paste(front_string, year_date, &quot;667_&quot;, 
-##             cast_number, &quot;_01_DN.&quot;, file_extension, sep = &quot;&quot;)
-##     }
-##     else {
-##         final_file_name &lt;- paste(str_sub(odf_file_i, start = 1, 
-##             end = -4), file_extension, sep = &quot;&quot;)
-##     }
-##     return(final_file_name)
-## }</code></pre>
-<p><code>transfer_files_csv</code> and <code>transfer_files_odf</code> are very similar functions, in that they both transfer files. The key difference is that ODF files can simply be copied, while csv files have to be opened and rewritten into a different directory.</p>
+<pre><code>function (odf_file_i, file_extension = &quot;ODF&quot;, src_format = TRUE) 
+{
+    expect_that(odf_file_i, is_a(&quot;character&quot;))
+    if (file_extension %!in% c(&quot;ODF&quot;, &quot;csv&quot;)) {
+        stop(&quot;File extension is not available.&quot;)
+    }
+    if (src_format) {
+        odf_read_in &lt;- read.odf(odf_file_i)
+        year_date &lt;- format(odf_read_in[[&quot;date&quot;]], &quot;%Y&quot;)
+        front_string &lt;- &quot;CTD_BCD&quot;
+        cast_number &lt;- substr(odf_file_i, nchar(odf_file_i) - 
+            6, nchar(odf_file_i) - 4)
+        final_file_name &lt;- paste(front_string, year_date, &quot;667_&quot;, 
+            cast_number, &quot;_01_DN.&quot;, file_extension, sep = &quot;&quot;)
+    }
+    else {
+        final_file_name &lt;- paste(str_sub(odf_file_i, start = 1, 
+            end = -4), file_extension, sep = &quot;&quot;)
+    }
+    return(final_file_name)
+}</code></pre>
+</div>
+<code>transfer_files_csv</code> and <code>transfer_files_odf</code> are very similar functions, in that they both transfer files. The key difference is that ODF files can simply be copied, while csv files have to be opened and rewritten into a different directory.
+<div class="blue">
 <pre class="r"><code>transfer_files_csv</code></pre>
-<pre><code>## function (year, out_root = &quot;R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\CSV\\&quot;) 
-## {
-##     odf_files &lt;- directory_lister_wrapper(year_x = year)
-##     no_odf_files &lt;- length(odf_files)
-##     out_file_dir &lt;- paste(out_root, year, &quot;\\&quot;, sep = &quot;&quot;)
-##     expect_true(no_odf_files &gt; 0, info = &quot;No files found.&quot;)
-##     odf_date_summary &lt;- vector(length = no_odf_files)
-##     odf_name_summary &lt;- vector(length = no_odf_files)
-##     for (i in 1:no_odf_files) {
-##         setwd(used_directory)
-##         new_odf_file_name &lt;- odf_file_renamer(odf_file_i = odf_files[i], 
-##             src_format = use_src, file_extension = &quot;csv&quot;)
-##         opened_ctd_odf &lt;- read.ctd.odf(odf_files[i])
-##         setwd(out_file_dir)
-##         write.ctd(opened_ctd_odf, file = paste(out_file_dir, 
-##             new_odf_file_name, sep = &quot;&quot;))
-##         print(new_odf_file_name)
-##         odf_date_summary[i] &lt;- summary_date
-##         odf_name_summary[i] &lt;- new_file_name
-##     }
-##     odf_summary_dates_names &lt;- data.frame(FILE = odf_name_summary, 
-##         START_DATE_TIME = odf_date_summary)
-##     odf_summary_file &lt;- paste(out_root, year, &quot;\\&quot;, year, &quot;667CSVSUMMARY.tsv&quot;, 
-##         sep = &quot;&quot;)
-##     cat(paste(&quot;Folder consists of &quot;, no_odf_files, &quot; CSV (converted from ODF) files from &quot;, 
-##         year, &quot; Bedford Basin Compass Station occupations.&quot;, 
-##         sep = &quot;&quot;), file = odf_summary_file, sep = &quot;\n&quot;, append = FALSE)
-##     cat(&quot;&quot;, file = odf_summary_file, sep = &quot;\n&quot;, append = TRUE)
-##     write.table(odf_summary_dates_names, file = odf_summary_file, 
-##         append = TRUE, quote = TRUE, sep = &quot;,&quot;, eol = &quot;\n&quot;, na = &quot;NA&quot;, 
-##         dec = &quot;.&quot;, row.names = FALSE, col.names = TRUE)
-## }</code></pre>
+<pre><code>function (year, out_root = &quot;R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\CSV\\&quot;) 
+{
+    odf_files &lt;- directory_lister_wrapper(year_x = year)
+    no_odf_files &lt;- length(odf_files)
+    out_file_dir &lt;- paste(out_root, year, &quot;\\&quot;, sep = &quot;&quot;)
+    expect_true(no_odf_files &gt; 0, info = &quot;No files found.&quot;)
+    odf_date_summary &lt;- vector(length = no_odf_files)
+    odf_name_summary &lt;- vector(length = no_odf_files)
+    for (i in 1:no_odf_files) {
+        setwd(used_directory)
+        new_odf_file_name &lt;- odf_file_renamer(odf_file_i = odf_files[i], 
+            src_format = use_src, file_extension = &quot;csv&quot;)
+        opened_ctd_odf &lt;- read.ctd.odf(odf_files[i])
+        setwd(out_file_dir)
+        write.ctd(opened_ctd_odf, file = paste(out_file_dir, 
+            new_odf_file_name, sep = &quot;&quot;))
+        print(new_odf_file_name)
+        odf_date_summary[i] &lt;- summary_date
+        odf_name_summary[i] &lt;- new_file_name
+    }
+    odf_summary_dates_names &lt;- data.frame(FILE = odf_name_summary, 
+        START_DATE_TIME = odf_date_summary)
+    odf_summary_file &lt;- paste(out_root, year, &quot;\\&quot;, year, &quot;667CSVSUMMARY.tsv&quot;, 
+        sep = &quot;&quot;)
+    cat(paste(&quot;Folder consists of &quot;, no_odf_files, &quot; CSV (converted from ODF) files from &quot;, 
+        year, &quot; Bedford Basin Compass Station occupations.&quot;, 
+        sep = &quot;&quot;), file = odf_summary_file, sep = &quot;\n&quot;, append = FALSE)
+    cat(&quot;&quot;, file = odf_summary_file, sep = &quot;\n&quot;, append = TRUE)
+    write.table(odf_summary_dates_names, file = odf_summary_file, 
+        append = TRUE, quote = TRUE, sep = &quot;,&quot;, eol = &quot;\n&quot;, na = &quot;NA&quot;, 
+        dec = &quot;.&quot;, row.names = FALSE, col.names = TRUE)
+}</code></pre>
 <pre class="r"><code>transfer_files_odf</code></pre>
-<pre><code>## function (year, out_root = &quot;R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\ODF\\&quot;) 
-## {
-##     odf_files &lt;- directory_lister_wrapper(year_x = year)
-##     no_odf_files &lt;- length(odf_files)
-##     out_file_dir_base &lt;- paste(out_root, year, &quot;\\&quot;, sep = &quot;&quot;)
-##     odf_date_summary &lt;- vector(length = no_odf_files)
-##     odf_name_summary &lt;- vector(length = no_odf_files)
-##     for (i in 1:no_odf_files) {
-##         new_file_name &lt;- odf_file_renamer(odf_file_i = odf_files[i], 
-##             src_format = use_src, file_extension = &quot;ODF&quot;)
-##         summary_date &lt;- odf_date_finder(odf_file_i = odf_files[i])
-##         start_file &lt;- paste(used_directory, &quot;\\&quot;, odf_files[i], 
-##             sep = &quot;&quot;)
-##         out_file &lt;- paste(out_file_dir_base, new_file_name, sep = &quot;&quot;)
-##         file.copy(from = start_file, to = out_file)
-##         print(out_file)
-##         odf_date_summary[i] &lt;- summary_date
-##         odf_name_summary[i] &lt;- new_file_name
-##     }
-##     odf_summary_dates_names &lt;- data.frame(FILE = odf_name_summary, 
-##         START_DATE_TIME = odf_date_summary)
-##     odf_summary_file &lt;- paste(out_root, year, &quot;\\&quot;, year, &quot;667ODFSUMMARY.tsv&quot;, 
-##         sep = &quot;&quot;)
-##     cat(paste(&quot;Folder consists of &quot;, no_odf_files, &quot; ODF files from &quot;, 
-##         year, &quot; Bedford Basin Compass Station occupations.&quot;, 
-##         sep = &quot;&quot;), file = odf_summary_file, sep = &quot;\n&quot;, append = FALSE)
-##     cat(&quot;&quot;, file = odf_summary_file, sep = &quot;\n&quot;, append = TRUE)
-##     write.table(odf_summary_dates_names, file = odf_summary_file, 
-##         append = TRUE, quote = TRUE, sep = &quot;,&quot;, eol = &quot;\n&quot;, na = &quot;NA&quot;, 
-##         dec = &quot;.&quot;, row.names = FALSE, col.names = TRUE)
-## }</code></pre>
+<pre><code>function (year, out_root = &quot;R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\ODF\\&quot;) 
+{
+    odf_files &lt;- directory_lister_wrapper(year_x = year)
+    no_odf_files &lt;- length(odf_files)
+    out_file_dir_base &lt;- paste(out_root, year, &quot;\\&quot;, sep = &quot;&quot;)
+    odf_date_summary &lt;- vector(length = no_odf_files)
+    odf_name_summary &lt;- vector(length = no_odf_files)
+    for (i in 1:no_odf_files) {
+        new_file_name &lt;- odf_file_renamer(odf_file_i = odf_files[i], 
+            src_format = use_src, file_extension = &quot;ODF&quot;)
+        summary_date &lt;- odf_date_finder(odf_file_i = odf_files[i])
+        start_file &lt;- paste(used_directory, &quot;\\&quot;, odf_files[i], 
+            sep = &quot;&quot;)
+        out_file &lt;- paste(out_file_dir_base, new_file_name, sep = &quot;&quot;)
+        file.copy(from = start_file, to = out_file)
+        print(out_file)
+        odf_date_summary[i] &lt;- summary_date
+        odf_name_summary[i] &lt;- new_file_name
+    }
+    odf_summary_dates_names &lt;- data.frame(FILE = odf_name_summary, 
+        START_DATE_TIME = odf_date_summary)
+    odf_summary_file &lt;- paste(out_root, year, &quot;\\&quot;, year, &quot;667ODFSUMMARY.tsv&quot;, 
+        sep = &quot;&quot;)
+    cat(paste(&quot;Folder consists of &quot;, no_odf_files, &quot; ODF files from &quot;, 
+        year, &quot; Bedford Basin Compass Station occupations.&quot;, 
+        sep = &quot;&quot;), file = odf_summary_file, sep = &quot;\n&quot;, append = FALSE)
+    cat(&quot;&quot;, file = odf_summary_file, sep = &quot;\n&quot;, append = TRUE)
+    write.table(odf_summary_dates_names, file = odf_summary_file, 
+        append = TRUE, quote = TRUE, sep = &quot;,&quot;, eol = &quot;\n&quot;, na = &quot;NA&quot;, 
+        dec = &quot;.&quot;, row.names = FALSE, col.names = TRUE)
+}</code></pre>
+</div>
 </div>
 
 
@@ -376,7 +388,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

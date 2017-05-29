@@ -1,9 +1,37 @@
 ---
-title: "R Scripts for Fixed Station Monitoring"
+title: "Summary of Employment Objectives and Deliverables"
 author: "Scott McCain"
 date: "May 26, 2017"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
+
+### Summary
+
+-	Wrote a flexible series of R scripts to perform a series of objectives: file conversion, file transfer, and plotting. This framework (detailed below) can be used for any other fixed station websites.
+-	Updated the Bedford Basin Monitoring Program, by completing plots from 1999-2009, and ODFs from 1999-2009.
+-	Converted all current ODFs to CSVs onto the website as well, and created a continually updating aggregated CSV with consistent formatting.
+-	Worked with Patrick Upson to update the look and feel of the website.
+-	Contributed all code and development through the collaborative and version-controlled system Git and GitHub.
+-	Met with stakeholders to establish goals and use-cases for website
+    +	Catherine Johnson, Emmanuel Devred, Dave Brickman, Andrew Cogswell (BIO)
+    +	Dave Covey and Richard Davis (Dalhousie, MEOPAR)
+
+### Framework for Fixed Station Websites
+
+-	Populating an FTP:
+    +	Declare working directories, determine file naming structure.
+    +	Create folders in FTP with similar structure to BBMP FTP.
+    +	Using the transfer, conversion, and plotting functions, fill in the folders.
+    +	Using the bulk data aggregation script, create aggregated csv of station.
+- Create a site-context map:
+    +	Adjust the latitude and longitude limits for the map R script, and produce a corresponding site map (easily adapted from `Bedford_Basin_Map.R`)
+-	Write detailed site description and sampling overview m
+    +	Similar to the current text on the BBMP website, a detailed overview of sampling should be written (and translated). This text should overview why this site was chosen, what sampling is done, and any other important site characteristics. 
+
+
+### R Scripts for Fixed Station Website Populating
 
 ```{r setup, echo = FALSE, warning = FALSE, mesSage = FALSE, include = FALSE}
 knitr::opts_chunk$set(cache=TRUE)
@@ -38,7 +66,7 @@ __File Transfer and Conversion__
 * `transfer_files_csv()`: Files are renamed and converted from the Arc or Src and transferred into the BBMP.  
 site FTP.
 
-### Description of Functions and Key Considerations for Future Use
+### Function Descriptions and Key Considerations for Future Use
 
 There are two expected problems with adapting this code for another fixed station.
 

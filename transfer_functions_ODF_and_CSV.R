@@ -164,12 +164,12 @@ transfer_files_csv <- function(year, out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\
               eol = "\n", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE)
 }
 
-
-for(i in 1999:2017){
-  transfer_files_csv(i)
-  transfer_files_odf(i)
-}
-
+# 
+# for(i in 1999:2017){
+#   transfer_files_csv(i)
+#   transfer_files_odf(i)
+# }
+# 
 
 
 

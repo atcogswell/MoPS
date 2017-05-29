@@ -78,7 +78,7 @@ fluorescence_oxygen_plot <- function(od_i = od, ctd_i = ctd){
 
 # four plot function
 odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing_plots = FALSE, recent_plot = FALSE,
-                              out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\", 
+                              out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\Profile_Image_Archive\\", 
                               source_root = "R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\"){
   
   # out_root <- "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\"

@@ -64,9 +64,10 @@ write.csv(x = total_df2,
           row.names = FALSE, 
           file = "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\CSV\\bbmp_aggregated_profiles.csv")
 
-write.csv(x = total_df2, 
-          row.names = FALSE, 
-          file = "C:\\Users\\mccains\\Documents\\Data Testing\\bbmp_aggregated_profiles.csv")
+# 
+# write.csv(x = total_df2, 
+#           row.names = FALSE, 
+#           file = "C:\\Users\\mccains\\Documents\\Data Testing\\bbmp_aggregated_profiles.csv")
   
   
   

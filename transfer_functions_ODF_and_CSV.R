@@ -11,7 +11,7 @@ library(dplyr)
 library(testthat)
 library(stringr)
 
-# setwd("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\2000")
+# setwd("R:/Science/BIODataSvc/ARC/Archive/ctd/2000")
 
 '%!in%' <- function(x,y)!('%in%'(x,y))
 
@@ -58,18 +58,18 @@ odf_file_renamer <- function(odf_file_i, file_extension = "ODF", src_format = TR
 # odf_file_renamer("CTD_BCD2011667_042_01_DN.ODF", src_format = FALSE)
 
 #function for transferring and renaming files from the COMPASS shared files, to the BBMP website folder
-transfer_files_odf <- function(year, out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\ODF\\"){
+transfer_files_odf <- function(year, out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP/ODF/", site_code = "667"){
   #### 
   #This function copies files from the Arc, to the BBMP website FTP. 
   #Input is just one year.
   ###
-  # out_root <- "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\ODF\\"
+  # out_root <- "R:/Shared/Cogswell/_BIOWeb/BBMP/ODF/"
   # year <- 2017
-  odf_files <- directory_lister_wrapper(year_x = year)
+  odf_files <- directory_lister_wrapper(year, site_code)
   no_odf_files <- length(odf_files)
 
   out_file_dir_base <- paste(out_root,
-          year, "\\",
+          year, "/",
           sep = "")
   
   odf_date_summary <- vector(length = no_odf_files)
@@ -81,7 +81,7 @@ transfer_files_odf <- function(year, out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\
                                       file_extension = "ODF")
     summary_date <- odf_date_finder(odf_file_i = odf_files[i])
     
-    start_file <- paste(used_directory, "\\", odf_files[i], sep = "")
+    start_file <- paste(used_directory, "/", odf_files[i], sep = "")
     out_file <- paste(out_file_dir_base, new_file_name, sep = "")
     file.copy(from = start_file, to = out_file)
     
@@ -93,7 +93,7 @@ transfer_files_odf <- function(year, out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\
   
   odf_summary_dates_names <- data.frame(FILE = odf_name_summary, START_DATE_TIME = odf_date_summary)
   
-  odf_summary_file <- paste(out_root, year, "\\", year, "667ODFSUMMARY.tsv", sep = "")
+  odf_summary_file <- paste(out_root, year, "/", year, site_code, "ODFSUMMARY.tsv", sep = "")
   cat(paste("Folder consists of ", 
             no_odf_files ,
             " ODF files from ",
@@ -115,18 +115,18 @@ substr_right <- function(x, n){
   substr(x, nchar(x) - n + 1, nchar(x))
 }
 
-transfer_files_csv <- function(year, out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\CSV\\"){
+transfer_files_csv <- function(year, out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP/CSV/", site_code = "667"){
   #### 
   #This function copies files from the Arc, to the BBMP website FTP. 
   #ODF File is converted to a .csv
   #Input is just one year.
   ### 
   # year <- 2017
-  odf_files <- directory_lister_wrapper(year_x = year)
+  odf_files <- directory_lister_wrapper(year, site_code)
   no_odf_files <- length(odf_files)
   
   out_file_dir <- paste(out_root,
-          year, "\\",
+          year, "/",
           sep="")
   
   expect_true(no_odf_files > 0, info = "No files found.")
@@ -134,12 +134,14 @@ transfer_files_csv <- function(year, out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\
   odf_date_summary <- vector(length = no_odf_files)
   odf_name_summary <- vector(length = no_odf_files)
   for(i in 1:no_odf_files){
-    # start_file <- paste(temp_wd, "\\", odf_files[i], sep = "")
+    # start_file <- paste(temp_wd, "/", odf_files[i], sep = "")
     
     setwd(used_directory)
     new_odf_file_name <- odf_file_renamer(odf_file_i = odf_files[i], 
                                           src_format = use_src,
                                           file_extension = "csv")
+    summary_date <- odf_date_finder(odf_file_i = odf_files[i])
+    
     # new_odf_file_name <- paste(str_sub(odf_files[i], start = 1, end = -4), "csv", sep = "")
     opened_ctd_odf <- read.ctd.odf(odf_files[i])
     setwd(out_file_dir)
@@ -147,11 +149,11 @@ transfer_files_csv <- function(year, out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\
     print(new_odf_file_name)
     
     odf_date_summary[i] <- summary_date
-    odf_name_summary[i] <- new_file_name
+    odf_name_summary[i] <- new_odf_file_name
   }
   odf_summary_dates_names <- data.frame(FILE = odf_name_summary, START_DATE_TIME = odf_date_summary)
   
-  odf_summary_file <- paste(out_root, year, "\\", year, "667CSVSUMMARY.tsv", sep = "")
+  odf_summary_file <- paste(out_root, year, "/", year, site_code, "CSVSUMMARY.tsv", sep = "")
   cat(paste("Folder consists of ", 
             no_odf_files ,
             " CSV (converted from ODF) files from ",
@@ -164,12 +166,11 @@ transfer_files_csv <- function(year, out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\
               eol = "\n", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE)
 }
 
-# 
+
 # for(i in 1999:2017){
 #   transfer_files_csv(i)
 #   transfer_files_odf(i)
 # }
-# 
 
 
 

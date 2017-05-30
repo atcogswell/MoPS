@@ -5,22 +5,26 @@ library(ocedata)
 library(magrittr)
 library(testthat)
 
-
 # wrapper for doing a whole year of plots
-odf_year_plots <- function(year){
+odf_year_plots <- function(year, 
+                           out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP/Profile_Image_Archive/",
+                           site_code = "667", site_name = "BBMP"){
   # Within a certain year directory, determines all the ODF Files there.
-  # year <- 2007
-  odf_files <- directory_lister_wrapper(year_x = year)
+  
+  # year <- 2010
+  # site_code <- "667"
+  
+  odf_files <- directory_lister_wrapper(year = year, site_code = site_code)
   no_odf_files <- length(odf_files)
   #From the index above, plots all ODFs within a year.
-  lapply(1:no_odf_files, odf_plot_function, year, odf_files)
+  lapply(1:no_odf_files, FUN = odf_plot_function, year = year, odf_file_list = odf_files, out_root = out_root, site_name = site_name)
 }
 
 # function for doing the last plot in the four-panels of plots. 
 fluorescence_oxygen_plot <- function(od_i = od, ctd_i = ctd){
   
-  # od_i <- read.odf("C:\\Users\\mccains\\Documents\\Data Testing\\CTD_BCD2016667_001_01_DN.ODF")
-  # ctd_i <- read.ctd.odf("C:\\Users\\mccains\\Documents\\Data Testing\\CTD_BCD2016667_001_01_DN.ODF")
+  # od_i <- read.odf("C:/Users/mccains/Documents/Data Testing/CTD_BCD2016667_001_01_DN.ODF")
+  # ctd_i <- read.ctd.odf("C:/Users/mccains/Documents/Data Testing/CTD_BCD2016667_001_01_DN.ODF")
   
   fluorescence <- ctd_i[["fluorometer"]] %>% is.numeric()
   max_oxygen <- ctd_i[["oxygen"]] %>% max(na.rm = TRUE) %>% round(0) > 0
@@ -77,13 +81,12 @@ fluorescence_oxygen_plot <- function(od_i = od, ctd_i = ctd){
 }
 
 # four plot function
-odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing_plots = FALSE, recent_plot = FALSE,
-                              out_root = "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\Profile_Image_Archive\\", 
-                              source_root = "R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\"){
+odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, out_root, 
+                              testing_plots = FALSE, recent_plot = FALSE, site_name){
   
-  # out_root <- "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\"
+  # out_root <- "R:/Shared/Cogswell/_BIOWeb/BBMP/"
   # 
-  # setwd("R:\\Science\\BIODataSvc\\SRC\\BBMP\\COMPASS\\2017")
+  # setwd("R:/Science/BIODataSvc/SRC/BBMP/COMPASS/2017")
   
   # odf_file <- 20
   # odf_file_list <- odf_file_list_current_year
@@ -92,14 +95,14 @@ odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing
   od <- read.odf(odf_file_list[odf_file])
   ctd <- read.ctd.odf(odf_file_list[odf_file])
   out_dir <- paste(out_root,
-                   year, "\\",
+                   year, "/",
                    sep="")
   if(testing_plots){
-    out_dir <- c("C:\\Users\\McCainS\\Documents\\Test plots\\")
+    out_dir <- c("C:/Users/McCainS/Documents/Test plots/")
   }
   # setwd(out_dir)
   if(!recent_plot){
-    png(paste(out_dir,"BBMP",substr(od[["date"]], 1, 10),'.png',sep=""),
+    png(paste(out_dir, site_name, substr(od[["date"]], 1, 10),'.png',sep=""),
         height = 800,
         width = 800)
   } else {
@@ -122,7 +125,6 @@ odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, testing
         cex = 1.4)# title for overall plot (filename, here)
   
   dev.off()
-  # setwd(paste(source_root, year, sep = ""))
 }
 
 # test

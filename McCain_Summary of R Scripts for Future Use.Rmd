@@ -29,7 +29,7 @@ output:
 
 1)	Populating an FTP:
     +	Declare working directories, determine file naming structure.
-    +	Create folders in FTP with similar structure to BBMP FTP.
+    +	Create folders in FTP with similar structure to BBMP FTP (this can be done automatically with `directory_structure()`).
     +	Using the transfer, conversion, and plotting functions, fill in the folders.
     +	Using the bulk data aggregation script, create aggregated csv of station.
 2) Create a site-context map:
@@ -45,6 +45,7 @@ knitr::opts_chunk$set(cache=FALSE)
 source("~/MoPS/odf_plot_functions.R")
 source("~/MoPS/odf_file_finder_lister.R")
 source("~/MoPS/transfer_functions_ODF_and_CSV.R")
+source("~/MoPS/FTP_folder_initialization.R")
 ```
 
 The following functions can be used to: 
@@ -58,6 +59,7 @@ __General Use__
 
 * `odf_file_lister()`: Produces a set of odf files that are matched for certain naming conventions. e.g. searches for only Bedford Basin 667.  
 * `directory_lister_wrapper()`: A wrapper function for the `odf_file_lister()`, which switches to the Src if files aren't present.  
+* `directory_structure()`: Creates a directory structure with three layers: (1) the FTP name (e.g. BBMP), (2) all sub-directories for file types (e.g. CSV, ODF, and Profile_Image_Archives), and (3) sub-folders for every year within a set year range. 
 
 __Plotting Functions__  
 
@@ -79,7 +81,7 @@ There are two expected problems with adapting this code for another fixed statio
 1) Working directory switching.
 2) File naming and searching.
 
-`odf_file_lister` lists all files in a working directory from some pattern (e.g. searching for the site code "667"). These patterns differ if the file was found in the Src or the Arc. This function would need to be altered to accomodate a new file naming convention.
+`odf_file_lister()` lists all files in a working directory from some pattern (e.g. searching for the site code "667"). These patterns differ if the file was found in the Src or the Arc. This function would need to be altered to accomodate a new file naming convention.
 
 <style>
 div.blue pre { background-color:lightblue; }
@@ -92,24 +94,34 @@ odf_file_lister
 ```
 </div>
 
-`directory_lister_wrapper` is the function that would enable new directory switching. The arguments `arc_root` and `src_root` are critical for this. An important aspect of this function is that global variables are declared depending on where the files are located (via `use_src <<- TRUE/FALSE`). This allows the functions to "talk" to each other, which is particularly important for naming.  
+`directory_lister_wrapper()` is the function that would enable new directory switching. The arguments `arc_root` and `src_root` are critical for this. An important aspect of this function is that global variables are declared depending on where the files are located (via `use_src <<- TRUE/FALSE`). This allows the functions to "talk" to each other, which is particularly important for naming.  
 
-If the naming conventions are the same as the BBMP, then a first try would simply by to switch the directory locations in this function (the default is set for the BBMP).
+If the naming conventions are the same as the BBMP, then a first try would simply be to switch the directory locations in this function (the default is set for the BBMP).
+
 <div class = "blue">
 ```{r directory_lister_wrapper, echo = TRUE, tidy = TRUE, comment = NA}
 directory_lister_wrapper
 ```
 </div>
 
-`odf_file_renamer` renames files dynamically dependent on the original file location (src vs. arc).
+`directory_structure()` creates a system of directories and sub-directories for subsequently populating with ODFs, CSVs, and profile images. If another file type is added (e.g. NetCDF), this could be adapted easily with the argument `sub_directories = c("CSV", "ODF", "Profile_Image_Archives", "NetCDF")`.
+
+<div class = "blue">
+```{r direc_struc, echo = TRUE, tidy = FALSE, message = FALSE, comment = NA}
+directory_structure
+```
+</div>
+
+`odf_file_renamer()` renames files dynamically dependent on the original file location (src vs. arc).
+
 <div class = "blue">
 ```{r odf_file_renam, echo = TRUE, tidy = FALSE, message = FALSE, comment = NA}
 odf_file_renamer
 ```
 </div>
 
+`transfer_files_csv()` and `transfer_files_odf()` are very similar functions, in that they both transfer files. The key difference is that ODF files can simply be copied, while csv files have to be opened and rewritten into a different directory.
 
-`transfer_files_csv` and `transfer_files_odf` are very similar functions, in that they both transfer files. The key difference is that ODF files can simply be copied, while csv files have to be opened and rewritten into a different directory.
 <div class = "blue">
 ```{r transferring_files, echo = TRUE, tidy = FALSE, message = FALSE, comment = NA}
 transfer_files_csv

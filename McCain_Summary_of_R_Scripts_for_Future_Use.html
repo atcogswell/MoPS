@@ -156,7 +156,7 @@ $(document).ready(function () {
 <li>Populating an FTP:
 <ul>
 <li>Declare working directories, determine file naming structure.</li>
-<li>Create folders in FTP with similar structure to BBMP FTP.</li>
+<li>Create folders in FTP with similar structure to BBMP FTP (this can be done automatically with <code>directory_structure()</code>).</li>
 <li>Using the transfer, conversion, and plotting functions, fill in the folders.</li>
 <li>Using the bulk data aggregation script, create aggregated csv of station.</li>
 </ul></li>
@@ -182,7 +182,9 @@ $(document).ready(function () {
 <ul>
 <li><code>odf_file_lister()</code>: Produces a set of odf files that are matched for certain naming conventions. e.g. searches for only Bedford Basin 667.<br />
 </li>
-<li><code>directory_lister_wrapper()</code>: A wrapper function for the <code>odf_file_lister()</code>, which switches to the Src if files aren’t present.</li>
+<li><code>directory_lister_wrapper()</code>: A wrapper function for the <code>odf_file_lister()</code>, which switches to the Src if files aren’t present.<br />
+</li>
+<li><code>directory_structure()</code>: Creates a directory structure with three layers: (1) the FTP name (e.g. BBMP), (2) all sub-directories for file types (e.g. CSV, ODF, and Profile_Image_Archives), and (3) sub-folders for every year within a set year range.</li>
 </ul>
 <p><strong>Plotting Functions</strong></p>
 <ul>
@@ -209,7 +211,7 @@ $(document).ready(function () {
 <li>Working directory switching.</li>
 <li>File naming and searching.</li>
 </ol>
-<p><code>odf_file_lister</code> lists all files in a working directory from some pattern (e.g. searching for the site code “667”). These patterns differ if the file was found in the Src or the Arc. This function would need to be altered to accomodate a new file naming convention.</p>
+<p><code>odf_file_lister()</code> lists all files in a working directory from some pattern (e.g. searching for the site code “667”). These patterns differ if the file was found in the Src or the Arc. This function would need to be altered to accomodate a new file naming convention.</p>
 <style>
 div.blue pre { background-color:lightblue; }
 div.blue pre.r { background-color:lightblue; }
@@ -243,8 +245,8 @@ div.blue pre.r { background-color:lightblue; }
     return(odf_file_list_i)
 }</code></pre>
 </div>
-<p><code>directory_lister_wrapper</code> is the function that would enable new directory switching. The arguments <code>arc_root</code> and <code>src_root</code> are critical for this. An important aspect of this function is that global variables are declared depending on where the files are located (via <code>use_src &lt;&lt;- TRUE/FALSE</code>). This allows the functions to “talk” to each other, which is particularly important for naming.</p>
-If the naming conventions are the same as the BBMP, then a first try would simply by to switch the directory locations in this function (the default is set for the BBMP).
+<p><code>directory_lister_wrapper()</code> is the function that would enable new directory switching. The arguments <code>arc_root</code> and <code>src_root</code> are critical for this. An important aspect of this function is that global variables are declared depending on where the files are located (via <code>use_src &lt;&lt;- TRUE/FALSE</code>). This allows the functions to “talk” to each other, which is particularly important for naming.</p>
+<p>If the naming conventions are the same as the BBMP, then a first try would simply be to switch the directory locations in this function (the default is set for the BBMP).</p>
 <div class="blue">
 <pre class="r"><code>directory_lister_wrapper</code></pre>
 <pre><code>function (year_x = year, site_code_i = &quot;667&quot;, arc_root = &quot;R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\&quot;, 
@@ -270,7 +272,38 @@ If the naming conventions are the same as the BBMP, then a first try would simpl
     return(odf_files)
 }</code></pre>
 </div>
-<code>odf_file_renamer</code> renames files dynamically dependent on the original file location (src vs. arc).
+<p><code>directory_structure()</code> creates a system of directories and sub-directories for subsequently populating with ODFs, CSVs, and profile images. If another file type is added (e.g. NetCDF), this could be adapted easily with the argument <code>sub_directories = c(&quot;CSV&quot;, &quot;ODF&quot;, &quot;Profile_Image_Archives&quot;, &quot;NetCDF&quot;)</code>.</p>
+<div class="blue">
+<pre class="r"><code>directory_structure</code></pre>
+<pre><code>function (parent_directory, first_year = 1999, latest_year, sub_directories) 
+{
+    if (missing(latest_year)) {
+        latest_year &lt;- format(Sys.Date(), &quot;%Y&quot;) %&gt;% as.numeric()
+    }
+    if (missing(sub_directories)) {
+        sub_directories &lt;- c(&quot;/Profile_Image_Archives/&quot;, &quot;/CSV/&quot;, 
+            &quot;/ODF/&quot;)
+    }
+    else if (!missing(sub_directories)) {
+        warning(&quot;Creating different directory structure. Ensure that each folder has a '/' before and after name.&quot;)
+    }
+    root_dir_created &lt;- paste(&quot;~/&quot;, parent_directory, &quot;/&quot;, sep = &quot;&quot;)
+    expect_is(object = parent_directory, class = &quot;character&quot;)
+    expect_is(object = first_year, class = &quot;numeric&quot;)
+    expect_is(object = latest_year, class = &quot;numeric&quot;)
+    expect_false(dir.exists(root_dir_created), &quot;Parent directory already exists, use a different directory name.&quot;)
+    dir.create(root_dir_created)
+    for (sub_directory in 1:length(sub_directories)) {
+        dir.create(path = paste(root_dir_created, sub_directories[sub_directory], 
+            sep = &quot;&quot;))
+        for (year_i in first_year:latest_year) {
+            dir.create(path = paste(&quot;~/&quot;, parent_directory, sub_directories[sub_directory], 
+                year_i, sep = &quot;&quot;))
+        }
+    }
+}</code></pre>
+</div>
+<p><code>odf_file_renamer()</code> renames files dynamically dependent on the original file location (src vs. arc).</p>
 <div class="blue">
 <pre class="r"><code>odf_file_renamer</code></pre>
 <pre><code>function (odf_file_i, file_extension = &quot;ODF&quot;, src_format = TRUE) 
@@ -295,7 +328,7 @@ If the naming conventions are the same as the BBMP, then a first try would simpl
     return(final_file_name)
 }</code></pre>
 </div>
-<code>transfer_files_csv</code> and <code>transfer_files_odf</code> are very similar functions, in that they both transfer files. The key difference is that ODF files can simply be copied, while csv files have to be opened and rewritten into a different directory.
+<p><code>transfer_files_csv()</code> and <code>transfer_files_odf()</code> are very similar functions, in that they both transfer files. The key difference is that ODF files can simply be copied, while csv files have to be opened and rewritten into a different directory.</p>
 <div class="blue">
 <pre class="r"><code>transfer_files_csv</code></pre>
 <pre><code>function (year, out_root = &quot;R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\CSV\\&quot;) 

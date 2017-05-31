@@ -1,156 +1,162 @@
 #Plotting the weekly CTD Data
 
+#Exploring dynamic data visualizations
+
 library(ggplot2)
-library(magrittr)
-library(animate)
-library(gganimate)
 library(dplyr)
+library(magrittr)
 library(oce)
 library(ocedata)
-library(Hmisc)
-library(RColorBrewer)
-
-total_df <- data.frame(pressure = numeric(),
-                       temperature = numeric(),
-                       conductivity = numeric(),
-                       oxygenCurrent = numeric(),
-                       oxygenTemperature = numeric(),
-                       # unknown = numeric(),
-                       fluorometer = numeric(),
-                       par = numeric(),
-                       salinity = numeric(),
-                       oxygen = numeric(),
-                       sigmaTheta = numeric(),
-                       # flagArchaic = numeric(),
-                       start_time = as.POSIXct(character()))
-year_available <- c(2000:2006, 2009:2016)
-
-for(j in 1:length(year_available)){
-  
-  year <- year_available[j]
-  temp_wd <- paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\", year, sep = "")
-  setwd(temp_wd)
-  odf_files <- list.files(pattern="*^.*D.*.ODF$")
-  
-  #there is one weird file in 2002, this line takes that file out
-  # odf_files <- odf_files[odf_files != "02667011.ODF"]
-  #Only files that have 667 in the subject line (666 not accepted)
-  only_667 <- grepl(pattern = "667", x = odf_files)
-  only_bcd <- grepl(pattern = "BCD", x = odf_files)
-  only_dn <- grepl(pattern = "DN", x = odf_files
-  )
-  
-  odf_files <- odf_files[only_667 & only_bcd & only_dn]
-  
-  no_odf_files <- length(odf_files)
-  
-  for(i in 1:no_odf_files){
-    print(i)
-    opened_ctd_odf <- read.ctd.odf(odf_files[i])
-    odf_df <- as.data.frame(opened_ctd_odf@data)
-    
-    start_time <- rep(opened_ctd_odf[["startTime"]], nrow(odf_df))
-    
-    odf_df1 <- data.frame(odf_df, start_time)
-    total_df <- bind_rows(odf_df1, total_df)
-  }
-}
-
-# colz <- colorRampPalette(c("blue", "red"))(51)
-# ani.options(convert = "C:\\Program Files\\ImageMagick-7.0.5-Q16\\convert.exe")
-
-p1 <- total_df %>% 
-  filter(start_time > "2010-12-30") %>% 
-  ggplot(aes(y = pressure, x = temperature, colour = temperature, 
-             frame = start_time %>% as.factor(),
-             fill = start_time %>% as.factor())) + 
-  geom_path(size = 2, alpha = 0.8) + 
-  geom_path(size = 2.5, alpha = 0.6) + 
-  geom_path(size = 3, alpha = 0.5) + 
-  geom_path(size = 3.5, alpha = 0.4) + 
-  geom_path(size = 4, alpha = 0.3) + 
-  scale_y_reverse() + 
-  theme_classic() +
-  theme(legend.position = "none", 
-        axis.text=element_text(size=12),
-        axis.title=element_text(size=14,face="bold")) + 
-  labs(x = "Temperature (C)", y = "Depth (m)") + 
-  geom_hline(yintercept = 0) +
-  # stat_function(fun = function(x)sin(x), colour = "black", size = 1) +
-  scale_colour_gradient(low = "blue", high = "red")
-
-gganimate(p1, interval = 0.075)
+library(gganimate)
+library(animation)
+library(lubridate)
+library(tweenr)
 
 
-blah <- total_df %>% 
-  filter(start_time > "2010-12-30") %>%
-  ggplot(aes(xmin = 1, xmax = 10, ymin= -pressure + 1, ymax = -pressure, 
-             fill = temperature, frame = start_time %>% as.factor())) + 
-  geom_rect() + 
+setwd(dir = "C:\\Users\\mccains\\Documents\\Data Testing")
+
+# ani.options(convert = "C:/DFO-MPO/ImageMagick-7.0.5-Q16/convert.exe")
+
+master_df <- read.csv("bbmp_aggregated_profiles.csv")
+master_df$week_time <- week(master_df$time_string)
+master_df2 <- master_df %>% filter(year_time != "2004", 
+                                   pressure < 65)
+# 
+fluor <- master_df2 %>% group_by(pressure, week_time) %>%
+  summarise(week_temp = mean(temperature),
+            week_fluor = mean(fluorometer, na.rm = TRUE),
+            week_salt = mean(salinity),
+            week_oxy = mean(oxygen)) %>%
+  ggplot(aes(y = -pressure,
+             x = week_fluor,
+             frame = week_time,
+             xmin = 1,
+             xmax = 20,
+             ymin= -pressure + 1,
+             ymax = -pressure, fill = week_fluor)) +
+  # scale_y_reverse() +
+  geom_rect() +
   geom_area(
-    aes(x), data.frame(x = c(1, 10)), 
-    inherit.aes = F, 
-    stat="function",
-    fun = function(x)abs(sin(2*x)) + 0.2, fill = "blue") + 
-  coord_cartesian(ylim = c( -max(test_file_df$pressure), 10)) + 
-  theme_minimal() + 
-  theme(axis.text.x = element_blank(), 
-        axis.ticks.x = element_blank()) + 
-  labs(x=NULL, y="Meters Below Sealevel") + 
-  scale_fill_gradient(low = "dodgerblue4", high = "red")
+    aes(x), data.frame(x = c(1, 20)),
+    inherit.aes = F,
+    stat="function") +
+  coord_cartesian(ylim = c(-max(master_df2$pressure), 0),
+                  xlim = c(1, 20)) +
+  # theme_minimal() +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.title = element_text(size = 14)) +
+  guides(fill = FALSE) +
+  geom_path(lwd = 2.25, alpha = 0.4) +
+  geom_hline(yintercept = 0.5, lwd = 1.25, colour = "gray20") +
+  labs(x = expression("Fluorescence ("~mg/m^3~")"), y="Meters Below Sealevel") +
+  scale_fill_gradient(low = "dodgerblue4", high = "green") +
+  ggtitle("Week Number: ")
+
+# gganimate(fluor, cmd.fun = shell, interval = 0.075, saver = "gif", "flu.gif")
 
 
-gganimate(blah, interval = 0.1)
-gganimate(blah, interval = 0.05, "bbmp_temp2.gif", saver = "gif")
+temp <- master_df2 %>% group_by(pressure, week_time) %>%
+  summarise(week_temp = mean(temperature, na.rm = TRUE),
+            week_fluor = mean(fluorometer, na.rm = TRUE),
+            week_salt = mean(salinity, na.rm = TRUE),
+            week_oxy = mean(oxygen, na.rm = TRUE)) %>%
+  ggplot(aes(y = -pressure,
+             x = week_temp,
+             frame = week_time,
+             xmin = 1,
+             xmax = 20,
+             ymin= -pressure + 1,
+             ymax = -pressure, fill = week_temp)) +
+  geom_rect() +
+  geom_area(
+    aes(x), data.frame(x = c(1, 20)),
+    inherit.aes = F,
+    stat="function") +
+  coord_cartesian(ylim = c(-max(master_df2$pressure), 0),
+                  xlim = c(1, 20)) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.title = element_text(size = 14)) +
+  guides(fill = FALSE) +
+  geom_path(lwd = 2.25, alpha = 0.4) +
+  labs(x = "Temperature (C)", y="Meters Below Sealevel") +
+  geom_hline(yintercept = 0.5, lwd = 1.25, colour = "gray20") +
+  scale_fill_gradient(low = "dodgerblue4", high = "red") +  
+  ggtitle("Week Number ")
+
+oxy <- master_df2 %>% group_by(pressure, week_time) %>%
+  summarise(week_temp = mean(temperature, na.rm = TRUE),
+            week_fluor = mean(fluorometer, na.rm = TRUE),
+            week_salt = mean(salinity, na.rm = TRUE),
+            week_oxy = mean(oxygen, na.rm = TRUE)) %>%
+  ggplot(aes(y = -pressure,
+             x = week_oxy ,
+             frame = week_time,
+             xmin = 1,
+             xmax = 10,
+             ymin= -pressure + 1,
+             ymax = -pressure, fill = week_oxy)) +
+  geom_rect() +
+  geom_area(
+    aes(x), data.frame(x = c(1, 20)),
+    inherit.aes = F,
+    stat="function") +
+  coord_cartesian(ylim = c(-max(master_df2$pressure), 0),
+                  xlim = c(1, 10)) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.title = element_text(size = 14)) +
+  guides(fill = FALSE) +
+  geom_path(lwd = 2.25, alpha = 0.4) +
+  geom_hline(yintercept = 0.5, lwd = 1.25, colour = "gray20") +
+  labs(x = "Oxygen Concentration (mL/L)", y="Meters Below Sealevel") +
+  scale_fill_gradient(low = "grey68", high = "blue4") +
+  ggtitle("Week Number ")
+
+salt <- master_df2 %>% group_by(pressure, week_time) %>%
+  summarise(week_temp = mean(temperature, na.rm = TRUE),
+            week_fluor = mean(fluorometer, na.rm = TRUE),
+            week_salt = mean(salinity, na.rm = TRUE),
+            week_oxy = mean(oxygen, na.rm = TRUE)) %>%
+  ggplot(aes(y = -pressure,
+             x = week_salt ,
+             frame = week_time,
+             xmin = 27,
+             xmax = 33,
+             ymin= -pressure + 1,
+             ymax = -pressure, fill = week_salt)) +
+  geom_rect() +
+  geom_area(
+    aes(x), data.frame(x = c(1, 20)),
+    inherit.aes = F,
+    stat="function") +
+  coord_cartesian(ylim = c(-max(master_df2$pressure), 0),
+                  xlim = c(27, 33)) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.title = element_text(size = 14)) +
+  guides(fill = FALSE) +
+  geom_path(lwd = 2.25, alpha = 0.4) +
+  geom_hline(yintercept = 0.5, lwd = 1.25, colour = "gray20") +
+  labs(x = "Salinity", y="Meters Below Sealevel") +
+  scale_fill_gradient(low = "blue", high = "white") +
+  ggtitle("Week Number ")
+
+gganimate(salt, cmd.fun = shell, interval = 0.075, saver = "gif", "C:\\Users\\mccains\\Documents\\Data Testing\\salt.gif")
+gganimate(oxy, cmd.fun = shell, interval = 0.075, saver = "gif", "C:\\Users\\mccains\\Documents\\Data Testing\\oxy.gif")
+gganimate(fluor, cmd.fun = shell, interval = 0.075, saver = "gif", "C:\\Users\\mccains\\Documents\\Data Testing\\flu.gif")
+gganimate(temp, cmd.fun = shell, interval = 0.075, saver = "gif", "C:\\Users\\mccains\\Documents\\Data Testing\\temp.gif")
 
 
-p2 <- total_df %>% 
-  filter(start_time > "2010-12-30") %>% 
-  ggplot(aes(y = pressure, x = sigmaTheta, colour = temperature, 
-             frame = start_time %>% as.factor(),
-             fill = start_time %>% as.factor())) + 
-  geom_path(size = 1, alpha = 0.8) + 
-  geom_path(size = 1.5, alpha = 0.6) + 
-  geom_path(size = 1.7, alpha = 0.2) + 
-  scale_y_reverse() + 
-  theme_classic() +
-  theme(legend.position = "none", 
-        axis.text=element_text(size=12),
-        axis.title=element_text(size=14,face="bold")) + 
-  labs(x = "Water Density", y = "Depth (m)") + 
-  stat_function(fun = function(x)sin(x), colour = "black", size = 1) +
-  scale_colour_gradient(low = "blue", high = "red")
-
-setwd("C:\\Users\\cogswella\\Documents\\Bedford Basin Monitoring Program")
-
-gganimate(p2, interval = 0.05, title_frame = FALSE, "bbmp_temp.gif", saver = "gif")
 
 
-tw_test_df <- total_df %>% 
-  filter(start_time > "2010-12-30")
 
-tw_test <- tween_appear(tw_test_df, time = "start_time", nframes = 100)
 
-p2 <- tw_test %>% 
-  ggplot(aes(y = pressure, x = temperature, colour = temperature, 
-             frame = start_time %>% as.factor(),
-             fill = start_time %>% as.factor())) + 
-  geom_path(size = 2, alpha = 0.8) + 
-  geom_path(size = 2.5, alpha = 0.6) + 
-  geom_path(size = 3, alpha = 0.5) + 
-  geom_path(size = 3.5, alpha = 0.4) + 
-  geom_path(size = 4, alpha = 0.3) + 
-  scale_y_reverse() + 
-  theme_classic() +
-  theme(legend.position = "none", 
-        axis.text=element_text(size=12),
-        axis.title=element_text(size=14,face="bold")) + 
-  labs(x = "Temperature (C)", y = "Depth (m)") + 
-  geom_hline(yintercept = 0) +
-  # stat_function(fun = function(x)sin(x), colour = "black", size = 1) +
-  scale_colour_gradient(low = "blue", high = "red")
-
-gganimate(p2)
 
 
 

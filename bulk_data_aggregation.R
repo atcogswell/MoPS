@@ -33,7 +33,7 @@ year_available <- c(1999:format(Sys.Date(), "%Y") %>% as.numeric())
 for(j in 1:length(year_available)){
   
     year <- year_available[j]
-    odf_files <- directory_lister_wrapper(year)
+    odf_files <- directory_lister_wrapper(year, site_code = "667")
     no_odf_files <- length(odf_files)
     
   for(i in 1:no_odf_files){

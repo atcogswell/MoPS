@@ -106,7 +106,7 @@ odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, out_roo
         height = 800,
         width = 800)
   } else {
-    png(paste(out_root, "Recent_Profile_test.png", sep = ""),
+    png(paste(out_root, "Recent_Profile.png", sep = ""),
         height = 800,
         width = 800)
   }

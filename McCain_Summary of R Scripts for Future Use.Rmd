@@ -10,7 +10,8 @@ output:
 ### Index
 
 1) [Summary of Deliverables](#summary-of-deliverables)
-2) [Framework for fixed station websites.](#framework-for-fixed-station-websites)
+2) [Framework for fixed station websites](#framework-for-fixed-station-websites)
+    + [Example of Initializing and Populating a New Folder System](#example-of-initializing-and-populating-a-new-folder-system)
 3) [R Scripts for Fixed Station Website Populating](#r-scripts-for-fixed-station-website-populating)
     + [Function Descriptions and Key Considerations for Future Use](#function-descriptions-and-key-considerations-for-future-use)
 
@@ -36,11 +37,48 @@ output:
     +	Adjust the latitude and longitude limits for the map R script, and produce a corresponding site map (easily adapted from `Bedford_Basin_Map.R`)
 3)	Write detailed site description and sampling overview:
     +	Similar to the current text on the BBMP website, a detailed overview of sampling should be written (and translated). This text should overview why this site was chosen, what sampling is done, and any other important site characteristics. 
+    
+#### Example of Initializing and Populating a New Folder System
 
+This simple example demonstrates how to create and populate a new folder system:
+
+<style>
+div.blue pre { background-color:lightblue1; }
+div.blue pre.r { background-color:lightcyan; }
+</style>
+
+<div class = "blue">
+```{r initial, echo = TRUE, warning = FALSE, message = FALSE, eval = FALSE}
+ftp_name <- "HL2"
+
+# Creates file directory structure
+directory_structure(parent_directory = ftp_name, first_year = 1999)
+
+#populate the folders
+for(i in 1999:2017){
+  #Completes all profile image archives.
+  odf_year_plots(year = i, 
+                 out_root = paste("~/", ftp_name, "/Profile_Image_Archives/", sep = ""), 
+                 site_code = "666")
+  # Completes all CSV archives.
+  transfer_files_csv(year = i, 
+                     out_root = paste("~/", ftp_name, "/CSV/", sep = ""), 
+                     site_code = "666")
+  # Completes all ODF archives.
+  transfer_files_odf(year = i, 
+                     out_root = paste("~/", ftp_name, "/ODF/", sep = ""), 
+                     site_code = "666")
+}
+
+#Use bulk_data_aggregation.R if a single data file is required - set the arguments (e.g. year range) within.
+
+#That's it! This will be written to your home directory (e.g. Documents), but can be then manually copied to a new FTP.
+```
+</div>
 
 ### R Scripts for Fixed Station Website Populating
 
-```{r setup, echo = FALSE, warning = FALSE, mesSage = FALSE, include = FALSE}
+```{r setup, echo = FALSE, warning = FALSE, message = FALSE, include = FALSE}
 knitr::opts_chunk$set(cache=FALSE)
 source("~/MoPS/odf_plot_functions.R")
 source("~/MoPS/odf_file_finder_lister.R")
@@ -74,7 +112,7 @@ __File Transfer and Conversion__
 * `transfer_files_odf()`: Files are renamed and copied from the Arc or Src and transferred into the BBMP site FTP.  
 * `transfer_files_csv()`: Files are renamed and converted from the Arc or Src and transferred into the BBMP site FTP.
 
-### Function Descriptions and Key Considerations for Future Use
+#### Function Descriptions and Key Considerations for Future Use
 
 There are two expected problems with adapting this code for another fixed station.
 
@@ -83,13 +121,8 @@ There are two expected problems with adapting this code for another fixed statio
 
 `odf_file_lister()` lists all files in a working directory from some pattern (e.g. searching for the site code "667"). These patterns differ if the file was found in the Src or the Arc. This function would need to be altered to accomodate a new file naming convention.
 
-<style>
-div.blue pre { background-color:lightblue; }
-div.blue pre.r { background-color:lightblue; }
-</style>
-
 <div class = "blue">
-```{r file_lister, echo = TRUE, tidy = FALSE, message = FALSE, comment = NA}
+```{r file_lister, echo = TRUE, tidy = FALSE, message = FALSE, comment = NA, keep.source = TRUE}
 odf_file_lister
 ```
 </div>

@@ -15,7 +15,6 @@ library(stringr)
 
 '%!in%' <- function(x,y)!('%in%'(x,y))
 
-
 odf_date_finder <- function(odf_file_i){
   odf_read_in <- read.odf(odf_file_i)
   date_string_i <- odf_read_in[["date"]] %>% as.character()
@@ -23,7 +22,7 @@ odf_date_finder <- function(odf_file_i){
 }
   
 #function to rename the files to a standard format.
-odf_file_renamer <- function(odf_file_i, file_extension = "ODF", src_format = TRUE){
+odf_file_renamer <- function(odf_file_i, file_extension = "ODF", src_format = FALSE){
 
   # odf_file_i <- "CTD_BCD2000667_75_1_DN.ODF"
   #ensuring that the function argument is a character object (the file name)
@@ -58,14 +57,22 @@ odf_file_renamer <- function(odf_file_i, file_extension = "ODF", src_format = TR
 # odf_file_renamer("CTD_BCD2011667_042_01_DN.ODF", src_format = FALSE)
 
 #function for transferring and renaming files from the COMPASS shared files, to the BBMP website folder
-transfer_files_odf <- function(year, out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP/ODF/", site_code = "667"){
+transfer_files_odf <- function(year, 
+                               out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP/ODF/", 
+                               site_code = "667",
+                               arc_root = "R:/Science/BIODataSvc/ARC/Archive/ctd/",
+                               src_root = "R:/Science/BIODataSvc/SRC/BBMP/COMPASS/"){
   #### 
   #This function copies files from the Arc, to the BBMP website FTP. 
   #Input is just one year.
   ###
   # out_root <- "R:/Shared/Cogswell/_BIOWeb/BBMP/ODF/"
   # year <- 2017
-  odf_files <- directory_lister_wrapper(year, site_code)
+  
+  expect_true(dir.exists(c(out_root, arc_root, src_root)) %>% all(), 
+              info = "One of your working directories does not exist. Check the arguments: out_root, src_root, and arc_root.") 
+  
+  odf_files <- directory_lister_wrapper(year, site_code, arc_root = arc_root, src_root = src_root)
   no_odf_files <- length(odf_files)
 
   out_file_dir_base <- paste(out_root,
@@ -77,7 +84,7 @@ transfer_files_odf <- function(year, out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP
   for(i in 1:no_odf_files){
     
     new_file_name <- odf_file_renamer(odf_file_i = odf_files[i], 
-                                      src_format = use_src, 
+                                      src_format = FALSE, 
                                       file_extension = "ODF")
     summary_date <- odf_date_finder(odf_file_i = odf_files[i])
     
@@ -115,14 +122,22 @@ substr_right <- function(x, n){
   substr(x, nchar(x) - n + 1, nchar(x))
 }
 
-transfer_files_csv <- function(year, out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP/CSV/", site_code = "667"){
+transfer_files_csv <- function(year, 
+                               out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP/CSV/", 
+                               site_code = "667",
+                               arc_root = "R:/Science/BIODataSvc/ARC/Archive/ctd/",
+                               src_root = "R:/Science/BIODataSvc/SRC/BBMP/COMPASS/"){
   #### 
   #This function copies files from the Arc, to the BBMP website FTP. 
   #ODF File is converted to a .csv
   #Input is just one year.
   ### 
   # year <- 2017
-  odf_files <- directory_lister_wrapper(year, site_code)
+  
+  expect_true(dir.exists(c(out_root, arc_root, src_root)) %>% all(), 
+              info = "One of your working directories does not exist. Check the arguments: out_root, src_root, and arc_root.") 
+  
+  odf_files <- directory_lister_wrapper(year, site_code, arc_root = arc_root, src_root = src_root)
   no_odf_files <- length(odf_files)
   
   out_file_dir <- paste(out_root,
@@ -138,7 +153,7 @@ transfer_files_csv <- function(year, out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP
     
     setwd(used_directory)
     new_odf_file_name <- odf_file_renamer(odf_file_i = odf_files[i], 
-                                          src_format = use_src,
+                                          src_format = FALSE,
                                           file_extension = "csv")
     summary_date <- odf_date_finder(odf_file_i = odf_files[i])
     
@@ -166,11 +181,6 @@ transfer_files_csv <- function(year, out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP
               eol = "\n", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE)
 }
 
-
-# for(i in 1999:2017){
-#   transfer_files_csv(i)
-#   transfer_files_odf(i)
-# }
 
 
 

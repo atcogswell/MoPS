@@ -8,13 +8,15 @@ library(testthat)
 # wrapper for doing a whole year of plots
 odf_year_plots <- function(year, 
                            out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP/Profile_Image_Archive/",
-                           site_code = "667", site_name = "BBMP"){
+                           site_code = "667", site_name = "BBMP",
+                           arc_root = "R:/Science/BIODataSvc/ARC/Archive/ctd/",
+                           src_root = "R:/Science/BIODataSvc/SRC/BBMP/COMPASS/"){
+  
+  expect_true(dir.exists(c(out_root, arc_root, src_root)) %>% all(), 
+              info = "One of your working directories does not exist. Check the arguments: out_root, src_root, and arc_root.") 
+
   # Within a certain year directory, determines all the ODF Files there.
-  
-  # year <- 2010
-  # site_code <- "667"
-  
-  odf_files <- directory_lister_wrapper(year = year, site_code = site_code)
+  odf_files <- directory_lister_wrapper(year = year, site_code = site_code, arc_root = arc_root, src_root = src_root)
   no_odf_files <- length(odf_files)
   #From the index above, plots all ODFs within a year.
   lapply(1:no_odf_files, FUN = odf_plot_function, year = year, odf_file_list = odf_files, out_root = out_root, site_name = site_name)
@@ -127,5 +129,4 @@ odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, out_roo
   dev.off()
 }
 
-# test
 # odf_year_plots(2017)

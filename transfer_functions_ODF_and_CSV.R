@@ -15,7 +15,6 @@ library(stringr)
 
 '%!in%' <- function(x,y)!('%in%'(x,y))
 
-
 odf_date_finder <- function(odf_file_i){
   odf_read_in <- read.odf(odf_file_i)
   date_string_i <- odf_read_in[["date"]] %>% as.character()
@@ -58,14 +57,22 @@ odf_file_renamer <- function(odf_file_i, file_extension = "ODF", src_format = FA
 # odf_file_renamer("CTD_BCD2011667_042_01_DN.ODF", src_format = FALSE)
 
 #function for transferring and renaming files from the COMPASS shared files, to the BBMP website folder
-transfer_files_odf <- function(year, out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP/ODF/", site_code = "667"){
+transfer_files_odf <- function(year, 
+                               out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP/ODF/", 
+                               site_code = "667",
+                               arc_root = "R:/Science/BIODataSvc/ARC/Archive/ctd/",
+                               src_root = "R:/Science/BIODataSvc/SRC/BBMP/COMPASS/"){
   #### 
   #This function copies files from the Arc, to the BBMP website FTP. 
   #Input is just one year.
   ###
   # out_root <- "R:/Shared/Cogswell/_BIOWeb/BBMP/ODF/"
   # year <- 2017
-  odf_files <- directory_lister_wrapper(year, site_code)
+  
+  expect_true(dir.exists(c(out_root, arc_root, src_root)) %>% all(), 
+              info = "One of your working directories does not exist. Check the arguments: out_root, src_root, and arc_root.") 
+  
+  odf_files <- directory_lister_wrapper(year, site_code, arc_root = arc_root, src_root = src_root)
   no_odf_files <- length(odf_files)
 
   out_file_dir_base <- paste(out_root,
@@ -115,14 +122,22 @@ substr_right <- function(x, n){
   substr(x, nchar(x) - n + 1, nchar(x))
 }
 
-transfer_files_csv <- function(year, out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP/CSV/", site_code = "667"){
+transfer_files_csv <- function(year, 
+                               out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP/CSV/", 
+                               site_code = "667",
+                               arc_root = "R:/Science/BIODataSvc/ARC/Archive/ctd/",
+                               src_root = "R:/Science/BIODataSvc/SRC/BBMP/COMPASS/"){
   #### 
   #This function copies files from the Arc, to the BBMP website FTP. 
   #ODF File is converted to a .csv
   #Input is just one year.
   ### 
   # year <- 2017
-  odf_files <- directory_lister_wrapper(year, site_code)
+  
+  expect_true(dir.exists(c(out_root, arc_root, src_root)) %>% all(), 
+              info = "One of your working directories does not exist. Check the arguments: out_root, src_root, and arc_root.") 
+  
+  odf_files <- directory_lister_wrapper(year, site_code, arc_root = arc_root, src_root = src_root)
   no_odf_files <- length(odf_files)
   
   out_file_dir <- paste(out_root,

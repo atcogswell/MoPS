@@ -73,7 +73,6 @@ directory_lister_wrapper <- function(year, site_code,
   return(odf_files)
 }
 
-# directory_lister_wrapper(year = 2012, site_code = "666")
 
 
 

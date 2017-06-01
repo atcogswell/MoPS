@@ -128,13 +128,14 @@ $(document).ready(function () {
 <h3>Index</h3>
 <ol style="list-style-type: decimal">
 <li><a href="#summary-of-deliverables">Summary of Deliverables</a></li>
-<li><a href="#framework-for-fixed-station-websites">Framework for fixed station websites</a>
+<li><a href="#framework-for-fixed-station-websites">Framework for Fixed Station Websites</a>
 <ul>
 <li><a href="#example-of-initializing-and-populating-a-new-folder-system">Example of Initializing and Populating a New Folder System</a></li>
 </ul></li>
 <li><a href="#r-scripts-for-fixed-station-website-populating">R Scripts for Fixed Station Website Populating</a>
 <ul>
-<li><a href="#function-descriptions-and-key-considerations-for-future-use">Function Descriptions and Key Considerations for Future Use</a></li>
+<li><a href="#key-considerations-for-future-use">Key Considerations for Future Use</a></li>
+<li><a href="#function-descriptions">Function Descriptions</a></li>
 </ul></li>
 </ol>
 </div>
@@ -215,7 +216,7 @@ for(i in 1999:2017){
 <li>Create an aggregated .csv file of all casts, with date labels.</li>
 </ol>
 <p>These functions are a general framework for doing the objectives above, however have been specifically applied to the Bedford Basin Monitoring Program. Therefore, the default arguments are for the BBMP. Below, I describe the functions, their use, and how to adopt them for future use.</p>
-<p><strong>General Use</strong></p>
+<p>  General Use</p>
 <ul>
 <li><code>odf_file_lister()</code>: Produces a set of odf files that are matched for certain naming conventions. e.g. searches for only Bedford Basin 667.<br />
 </li>
@@ -223,7 +224,7 @@ for(i in 1999:2017){
 </li>
 <li><code>directory_structure()</code>: Creates a directory structure with three layers: (1) the FTP name (e.g. BBMP), (2) all sub-directories for file types (e.g. CSV, ODF, and Profile_Image_Archives), and (3) sub-folders for every year within a set year range.</li>
 </ul>
-<p><strong>Plotting Functions</strong></p>
+<p>  Plotting Functions</p>
 <ul>
 <li><code>fluorescence_oxygen_plot()</code>: Creates a the last fluorescence/oxygen plot in the four-panels of plots. Function needed for years that have one or both variables missing.<br />
 </li>
@@ -231,7 +232,7 @@ for(i in 1999:2017){
 </li>
 <li><code>odf_year_plots()</code>: Creates the four panel plot for an year.</li>
 </ul>
-<p><strong>File Transfer and Conversion</strong></p>
+<p>  File Transfer and Conversion</p>
 <ul>
 <li><code>odf_date_finder()</code>: Simple function that returns the date of an ODF.</li>
 <li><code>odf_file_renamer()</code>: Reads in an ODF file, and depending if it was read from the Arc (double quality controlled), or from the Src, the name will be reformated.<br />
@@ -240,14 +241,23 @@ for(i in 1999:2017){
 </li>
 <li><code>transfer_files_csv()</code>: Files are renamed and converted from the Arc or Src and transferred into the BBMP site FTP.</li>
 </ul>
-</div>
-<div id="function-descriptions-and-key-considerations-for-future-use" class="section level3">
-<h3>Function Descriptions and Key Considerations for Future Use</h3>
+<div id="key-considerations-for-future-use" class="section level4">
+<h4>Key Considerations for Future Use</h4>
 <p>There are two expected problems with adapting this code for another fixed station.</p>
 <ol style="list-style-type: decimal">
 <li>Working directory switching.</li>
 <li>File naming and searching.</li>
 </ol>
+<p>To address these:</p>
+<ol style="list-style-type: decimal">
+<li>Use the arguments <code>arc_root</code> and <code>src_root</code> (described in functions below) to determine the first location to look and the second location to look for source files, respectively. Use the argument <code>out_root</code> to set the location for files to be copied/written to.</li>
+<li>Adapt the function <code>odf_file_lister()</code> to search for a specific file naming pattern.</li>
+</ol>
+<hr />
+</div>
+<div id="function-descriptions" class="section level4">
+<h4>Function Descriptions</h4>
+<hr />
 <p><code>odf_file_lister()</code> lists all files in a working directory from some pattern (e.g. searching for the site code “667”). These patterns differ if the file was found in the Src or the Arc. This function would need to be altered to accomodate a new file naming convention.</p>
 <div class="blue">
 <pre class="r"><code>odf_file_lister</code></pre>
@@ -279,6 +289,7 @@ for(i in 1999:2017){
     return(odf_file_list_i)
 }</code></pre>
 </div>
+<hr />
 <p><code>directory_lister_wrapper()</code> is the function that would enable new directory switching. The arguments <code>arc_root</code> and <code>src_root</code> are critical for this. An important aspect of this function is that global variables are declared depending on where the files are located (via <code>use_src &lt;&lt;- TRUE/FALSE</code>). This allows the functions to “talk” to each other, which is particularly important for naming.</p>
 <p>If the naming conventions are the same as the BBMP, then a first try would simply be to switch the directory locations in this function (the default is set for the BBMP).</p>
 <div class="blue">
@@ -306,6 +317,7 @@ for(i in 1999:2017){
     return(odf_files)
 }</code></pre>
 </div>
+<hr />
 <p><code>directory_structure()</code> creates a system of directories and sub-directories for subsequently populating with ODFs, CSVs, and profile images. If another file type is added (e.g. NetCDF), this could be adapted easily with the argument <code>sub_directories = c(&quot;CSV&quot;, &quot;ODF&quot;, &quot;Profile_Image_Archives&quot;, &quot;NetCDF&quot;)</code>.</p>
 <div class="blue">
 <pre class="r"><code>directory_structure</code></pre>
@@ -337,7 +349,104 @@ for(i in 1999:2017){
     }
 }</code></pre>
 </div>
-<p><code>odf_file_renamer()</code> renames files dynamically dependent on the original file location (src vs. arc).</p>
+<hr />
+<p><code>fluorescence_oxygen_plot</code> is a function for handling the fluorescence/oxygen plot in the four-panel plot. It is most useful for earlier years (~2000) in which only one, or neither, of these variables were measured.</p>
+<div class="blue">
+<pre class="r"><code>fluorescence_oxygen_plot</code></pre>
+<pre><code>function (od_i = od, ctd_i = ctd) 
+{
+    fluorescence &lt;- ctd_i[[&quot;fluorometer&quot;]] %&gt;% is.numeric()
+    max_oxygen &lt;- ctd_i[[&quot;oxygen&quot;]] %&gt;% max(na.rm = TRUE) %&gt;% 
+        round(0) &gt; 0
+    if (fluorescence &amp; max_oxygen == TRUE) {
+        plot(ctd_i[[&quot;fluorometer&quot;]], ctd_i[[&quot;pressure&quot;]], ylim = rev(range(ctd_i[[&quot;pressure&quot;]])), 
+            type = &quot;l&quot;, col = &quot;green&quot;, xlab = &quot;Fluorescence [mg/m^3]&quot;, 
+            ylab = &quot;&quot;, col.lab = &quot;green&quot;)
+        axis(1, labels = T, col.ticks = &quot;green&quot;, col.axis = &quot;green&quot;)
+        par(new = TRUE)
+        plot(x = ctd_i[[&quot;oxygen&quot;]], y = ctd_i[[&quot;pressure&quot;]], 
+            ylim = rev(range(ctd_i[[&quot;pressure&quot;]], na.rm = TRUE)), 
+            type = &quot;l&quot;, col = &quot;black&quot;, axes = F, xlab = &quot;&quot;, ylab = &quot;Pressure [dbar]&quot;)
+        title(&quot;Oxygen [ml/l]&quot;, line = 2, font.main = 1, cex.main = 1)
+        Axis(side = 3, x = ctd_i[[&quot;oxygen&quot;]], at = seq(from = 1, 
+            to = 10, by = 0.5))
+    }
+    else if (fluorescence &amp; !max_oxygen == TRUE) {
+        plot(ctd_i[[&quot;fluorometer&quot;]], ctd_i[[&quot;pressure&quot;]], ylim = rev(range(ctd_i[[&quot;pressure&quot;]], 
+            na.rm = TRUE)), type = &quot;l&quot;, col = &quot;green&quot;, xlab = &quot;Fluorescence [mg/m^3]&quot;, 
+            ylab = &quot;&quot;, col.lab = &quot;green&quot;)
+        axis(1, labels = T, col.ticks = &quot;green&quot;, col.axis = &quot;green&quot;)
+        mtext(&quot;Oxygen was not collected.&quot;, side = 1)
+    }
+    else if (!fluorescence &amp; max_oxygen) {
+        plot(ctd_i[[&quot;oxygen&quot;]], ctd_i[[&quot;pressure&quot;]], ylim = rev(range(ctd_i[[&quot;pressure&quot;]], 
+            na.rm = TRUE)), type = &quot;l&quot;, col = &quot;black&quot;, axes = FALSE, 
+            xlab = &quot;&quot;, ylab = &quot;Pressure [dbar]&quot;)
+        box()
+        axis(2)
+        title(&quot;Oxygen [ml/l]&quot;, line = 2, font.main = 1, cex.main = 1)
+        Axis(side = 3, x = ctd_i[[&quot;oxygen&quot;]], at = seq(from = 1, 
+            to = 10, by = 0.5))
+        mtext(&quot;Fluorescence was not collected.&quot;, side = 1)
+    }
+    else if (!fluorescence &amp; !max_oxygen == TRUE) {
+        plot.new()
+        mtext(&quot;Fluorescence and oxygen were not collected.&quot;, 
+            side = 1)
+    }
+    rm(ctd_i)
+}</code></pre>
+</div>
+<hr />
+<p><code>odf_plot_function()</code> is the core function for creating plots from a single ODF file. Note that there is no default for the <code>out_root</code> argument, as it is inherited from the wrapper function <code>odf_year_plots()</code>.</p>
+<div class="blue">
+<pre class="r"><code>odf_plot_function</code></pre>
+<pre><code>function (odf_file, year, odf_file_list = odf_files, out_root, 
+    testing_plots = FALSE, recent_plot = FALSE, site_name) 
+{
+    print(odf_file_list[odf_file])
+    od &lt;- read.odf(odf_file_list[odf_file])
+    ctd &lt;- read.ctd.odf(odf_file_list[odf_file])
+    out_dir &lt;- paste(out_root, year, &quot;/&quot;, sep = &quot;&quot;)
+    if (testing_plots) {
+        out_dir &lt;- c(&quot;C:/Users/McCainS/Documents/Test plots/&quot;)
+    }
+    if (!recent_plot) {
+        png(paste(out_dir, site_name, substr(od[[&quot;date&quot;]], 1, 
+            10), &quot;.png&quot;, sep = &quot;&quot;), height = 800, width = 800)
+    }
+    else {
+        png(paste(out_root, &quot;Recent_Profile.png&quot;, sep = &quot;&quot;), 
+            height = 800, width = 800)
+    }
+    plot.new()
+    par(oma = c(0, 0, 2, 0))
+    par(mfrow = c(2, 2))
+    plot(ctd, which = 1, keepNA = T)
+    plot(ctd, which = 2)
+    plot(ctd, which = 3)
+    par(mar = c(3.6, 3.4, 3.5, 2))
+    fluorescence_oxygen_plot(od_i = od, ctd_i = ctd)
+    title(paste(&quot;Compass Buoy Station CTD Profile&quot;, od[[&quot;date&quot;]], 
+        sep = &quot;: &quot;), outer = TRUE, cex = 1.4)
+    dev.off()
+}</code></pre>
+</div>
+<hr />
+<p><code>odf_year_plots()</code> is a wrapper function to make a plot for every ODF in a given year.</p>
+<div class="blue">
+<pre class="r"><code>odf_year_plots</code></pre>
+<pre><code>function (year, out_root = &quot;R:/Shared/Cogswell/_BIOWeb/BBMP/Profile_Image_Archive/&quot;, 
+    site_code = &quot;667&quot;, site_name = &quot;BBMP&quot;) 
+{
+    odf_files &lt;- directory_lister_wrapper(year = year, site_code = site_code)
+    no_odf_files &lt;- length(odf_files)
+    lapply(1:no_odf_files, FUN = odf_plot_function, year = year, 
+        odf_file_list = odf_files, out_root = out_root, site_name = site_name)
+}</code></pre>
+</div>
+<hr />
+<p><code>odf_file_renamer()</code> renames files dynamically dependent on the original file location (src vs. arc). (Note this is recently deprecated, file names now reflect where they were found.)</p>
 <div class="blue">
 <pre class="r"><code>odf_file_renamer</code></pre>
 <pre><code>function (odf_file_i, file_extension = &quot;ODF&quot;, src_format = FALSE) 
@@ -362,6 +471,7 @@ for(i in 1999:2017){
     return(final_file_name)
 }</code></pre>
 </div>
+<hr />
 <p><code>transfer_files_csv()</code> and <code>transfer_files_odf()</code> are very similar functions, in that they both transfer files. The key difference is that ODF files can simply be copied, while csv files have to be opened and rewritten into a different directory.</p>
 <div class="blue">
 <pre class="r"><code>transfer_files_csv</code></pre>
@@ -432,6 +542,7 @@ for(i in 1999:2017){
         append = TRUE, quote = TRUE, sep = &quot;,&quot;, eol = &quot;\n&quot;, na = &quot;NA&quot;, 
         dec = &quot;.&quot;, row.names = FALSE, col.names = TRUE)
 }</code></pre>
+</div>
 </div>
 </div>
 

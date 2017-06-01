@@ -10,10 +10,11 @@ output:
 ### Index
 
 1) [Summary of Deliverables](#summary-of-deliverables)
-2) [Framework for fixed station websites](#framework-for-fixed-station-websites)
+2) [Framework for Fixed Station Websites](#framework-for-fixed-station-websites)
     + [Example of Initializing and Populating a New Folder System](#example-of-initializing-and-populating-a-new-folder-system)
 3) [R Scripts for Fixed Station Website Populating](#r-scripts-for-fixed-station-website-populating)
-    + [Function Descriptions and Key Considerations for Future Use](#function-descriptions-and-key-considerations-for-future-use)
+    + [Key Considerations for Future Use](#key-considerations-for-future-use)
+    + [Function Descriptions](#function-descriptions)
 
 ### Summary of Deliverables
 
@@ -93,32 +94,41 @@ The following functions can be used to:
 
 These functions are a general framework for doing the objectives above, however have been specifically applied to the Bedford Basin Monitoring Program. Therefore, the default arguments are for the BBMP. Below, I describe the functions, their use, and how to adopt them for future use.
 
-__General Use__  
+&nbsp;&nbsp;General Use
 
 * `odf_file_lister()`: Produces a set of odf files that are matched for certain naming conventions. e.g. searches for only Bedford Basin 667.  
 * `directory_lister_wrapper()`: A wrapper function for the `odf_file_lister()`, which switches to the Src if files aren't present.  
 * `directory_structure()`: Creates a directory structure with three layers: (1) the FTP name (e.g. BBMP), (2) all sub-directories for file types (e.g. CSV, ODF, and Profile_Image_Archives), and (3) sub-folders for every year within a set year range. 
 
-__Plotting Functions__  
+&nbsp;&nbsp;Plotting Functions
 
 * `fluorescence_oxygen_plot()`: Creates a the last fluorescence/oxygen plot in the four-panels of plots. Function needed for years that have one or both variables missing.  
 * `odf_plot_function()`: Creates the four panel plot.  
 * `odf_year_plots()`: Creates the four panel plot for an year.  
 
-__File Transfer and Conversion__    
+&nbsp;&nbsp;File Transfer and Conversion   
 
 * `odf_date_finder()`: Simple function that returns the date of an ODF.
 * `odf_file_renamer()`: Reads in an ODF file, and depending if it was read from the Arc (double quality controlled), or from the Src, the name will be reformated.  
 * `transfer_files_odf()`: Files are renamed and copied from the Arc or Src and transferred into the BBMP site FTP.  
 * `transfer_files_csv()`: Files are renamed and converted from the Arc or Src and transferred into the BBMP site FTP.
 
-#### Function Descriptions and Key Considerations for Future Use
+#### Key Considerations for Future Use
 
 There are two expected problems with adapting this code for another fixed station.
 
 1) Working directory switching.
 2) File naming and searching.
 
+To address these:
+
+1) Use the arguments `arc_root` and `src_root` (described in functions below) to determine the first location to look and the second location to look for source files, respectively. Use the argument `out_root` to set the location for files to be copied/written to.
+2) Adapt the function `odf_file_lister()` to search for a specific file naming pattern.
+
+****
+
+#### Function Descriptions
+****
 `odf_file_lister()` lists all files in a working directory from some pattern (e.g. searching for the site code "667"). These patterns differ if the file was found in the Src or the Arc. This function would need to be altered to accomodate a new file naming convention.
 
 <div class = "blue">
@@ -126,7 +136,7 @@ There are two expected problems with adapting this code for another fixed statio
 odf_file_lister
 ```
 </div>
-
+****
 `directory_lister_wrapper()` is the function that would enable new directory switching. The arguments `arc_root` and `src_root` are critical for this. An important aspect of this function is that global variables are declared depending on where the files are located (via `use_src <<- TRUE/FALSE`). This allows the functions to "talk" to each other, which is particularly important for naming.  
 
 If the naming conventions are the same as the BBMP, then a first try would simply be to switch the directory locations in this function (the default is set for the BBMP).
@@ -136,7 +146,7 @@ If the naming conventions are the same as the BBMP, then a first try would simpl
 directory_lister_wrapper
 ```
 </div>
-
+****
 `directory_structure()` creates a system of directories and sub-directories for subsequently populating with ODFs, CSVs, and profile images. If another file type is added (e.g. NetCDF), this could be adapted easily with the argument `sub_directories = c("CSV", "ODF", "Profile_Image_Archives", "NetCDF")`.
 
 <div class = "blue">
@@ -144,15 +154,40 @@ directory_lister_wrapper
 directory_structure
 ```
 </div>
+****
+`fluorescence_oxygen_plot` is a function for handling the fluorescence/oxygen plot in the four-panel plot. It is most useful for earlier years (~2000) in which only one, or neither, of these variables were measured.
 
-`odf_file_renamer()` renames files dynamically dependent on the original file location (src vs. arc).
+<div class = "blue">
+```{r flu_plot, echo = TRUE, tidy = FALSE, message = FALSE, comment = NA}
+fluorescence_oxygen_plot
+```
+</div>
+****
+`odf_plot_function()` is the core function for creating plots from a single ODF file. Note that there is no default for the `out_root` argument, as it is inherited from the wrapper function `odf_year_plots()`.
+
+<div class = "blue">
+```{r plot_root, echo = TRUE, tidy = FALSE, message = FALSE, comment = NA}
+odf_plot_function
+```
+</div>
+****
+`odf_year_plots()` is a wrapper function to make a plot for every ODF in a given year.
+
+<div class = "blue">
+```{r plot_wrapper, echo = TRUE, tidy = FALSE, message = FALSE, comment = NA}
+odf_year_plots
+```
+</div>
+
+****
+`odf_file_renamer()` renames files dynamically dependent on the original file location (src vs. arc). (Note this is recently deprecated, file names now reflect where they were found.)
 
 <div class = "blue">
 ```{r odf_file_renam, echo = TRUE, tidy = FALSE, message = FALSE, comment = NA}
 odf_file_renamer
 ```
 </div>
-
+****
 `transfer_files_csv()` and `transfer_files_odf()` are very similar functions, in that they both transfer files. The key difference is that ODF files can simply be copied, while csv files have to be opened and rewritten into a different directory.
 
 <div class = "blue">

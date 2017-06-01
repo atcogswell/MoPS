@@ -167,11 +167,6 @@ transfer_files_csv <- function(year, out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP
 }
 
 
-# for(i in 1999:2017){
-#   transfer_files_csv(i)
-#   transfer_files_odf(i)
-# }
-
 
 
 

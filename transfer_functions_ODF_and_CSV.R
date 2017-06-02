@@ -90,7 +90,7 @@ transfer_files_odf <- function(year,
     
     start_file <- paste(used_directory, "/", odf_files[i], sep = "")
     out_file <- paste(out_file_dir_base, new_file_name, sep = "")
-    file.copy(from = start_file, to = out_file)
+    file.copy(from = start_file, to = out_file, overwrite = TRUE)
     
     print(out_file)
     

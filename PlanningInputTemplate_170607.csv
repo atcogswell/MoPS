@@ -1,0 +1,80 @@
+lon_dd,lat_dd,station,operation,core,optime,xoptime,type,comments,owner,loc1,kts
+-63.6141,44.6811, ,BIO,0,0,0,Transit, ,NA,1,5
+-63.6403,44.6937,HL_00,CTD,0,1,0,Operations,Equipment tests,NA,1,5
+-63.611,44.676, ,Transit,0,0,0,Transit, ,NA,1,5
+-63.599,44.674, ,Transit,0,0,0,Transit, ,NA,1,5
+-63.584,44.663, ,Transit,0,0,0,Transit, ,NA,1,5
+-63.5687,44.6545, ,Transit,0,0,0,Transit, ,NA,1,5
+-63.5632,44.6397, ,Transit,0,0,0,Transit, ,NA,1,10
+-63.5225,44.5717, ,Transit,0,0,0,Transit, ,NA,1,10
+-63.3167,44.2667,HL_02,Nets_2_CTD,1,1,0.5,Operations,,NA,1,10
+-65.48,43.25,BBL_01,Net_CTD,1,1,0,Operations,,NA,2,10
+-65.48,43,BBL_02,Net_CTD,1,1,0,Operations,,NA,2,10
+-65.4833,42.76,BBL_03,Net_CTD,1,1,0,Operations,,NA,2,10
+-65.4833,42.45,BBL_04,Net_CTD,1,1,0,Operations,,NA,2,10
+-65.84,42.3,PS_03,CTD_2_Nutrients,0,1,0.5,Operations, ,NA,2,10
+-65.9033,42.2333,PS_05,CTD_2_Nutrients,0,1,0.5,Operations, ,NA,2,10
+-65.9683,42.1633,PS_07,CTD_2_Nutrients,0,1,0.5,Operations, ,NA,2,10
+-66.0833,42.0617,PS_09,CTD_Nutrients,0,1,0,Operations, ,NA,2,10
+-66.1417,41.99,PS_10,Net_CTD,0,1,0,Operations, ,NA,2,10
+-66.0374,42.1183,PS_08,Net_CTD,0,1,0,Operations, ,NA,2,10
+-65.9383,42.2,PS_06,Net_2_CTD,0,1,0.5,Operations, ,NA,2,10
+-65.87,42.2717,PS_04,Net_2_CTD,0,1,0.5,Operations, ,NA,2,10
+-65.8083,42.3367,PS_02,CTD_2_Nutrients,0,1,0.5,Operations, ,NA,2,10
+-65.7433,42.4183,PS_01,Net_CTD,0,1,0,Operations, ,NA,2,10
+-65.5,42.1333,BBL_05,Net_CTD,1,2,0,Operations, ,NA,2,10
+-65.51,42,BBL_06,Net_CTD_2,1,2.5,0.5,Operations,,NA,2,10
+-65.35,41.8667,BBL_07,Net_CTD_2,1,3,0,Operations,,NA,2,10
+-61.4333,42.475,HL_07,Net_CTD_2_ARGO,1,3,0.5,Operations,APEX,NA,3,10
+-61.5167,42.6183,HL_06.7,Net_CTD_2,0,3,0,Operations, ,NA,3,10
+-61.6167,42.7333,HL_06.3,Net_CTD_2,0,2.5,0.5,Operations, ,NA,3,10
+-61.7333,42.8317,HL_06,Net_CTD_2,1,2.5,0.5,Operations,,NA,3,10
+-61.8333,42.94,HL_05.5,Net_CTD,0,1,0,Operations,,NA,3,10
+-62.0983,43.1825,HL_05,Net_CTD,1,1,0,Operations, ,NA,3,10
+-62.4513,43.479,HL_04,Net_CTD,1,1,0,Operations,,NA,3,10
+-62.7527,43.7635,HL_03.3,Net_CTD,0,1,0,Operations,,NA,3,10
+-62.8833,43.8833,HL_03,Net_CTD,1,1,0,Operations, ,NA,3,10
+-63.3167,44.2667,HL_02,Nets_2_CTD,1,1.5,0,Operations,,NA,3,10
+-63.45,44.4002,HL_01,Nets_CTD,1,1,0,Operations,,NA,3,10
+-59,43.71,SG_28,Net_CTD_2,0,2.5,0.5,Operations,,NA,4,10
+-59.02,44,GULD_03,Net_CTD,0,2,0,Operations, ,NA,4,10
+-58.9,43.79,GULD_04,Net_CTD_2,0,2.5,0.5,Operations, ,NA,4,10
+-58.73,43.86,SG_23,Net_CTD_2,0,2.5,0.5,Operations,,NA,4,10
+-57.5267,43.4733,LL_09,Net_CTD_2_ARGO_2,1,4,0.5,Operations,APEX & SOLO.,NA,5,10
+-57.8333,43.7833,LL_08,Net_CTD_2_ARGO,1,3.5,0.5,Operations,APEX,NA,5,10
+-58.175,44.1333,LL_07,Net_CTD_2,1,2.5,0.5,Operations,,NA,5,10
+-58.5083,44.475,LL_06,Net_CTD,1,1,0,Operations, ,NA,5,10
+-58.85,44.8167,LL_05,Net_CTD,1,1,0,Operations, ,NA,5,10
+-59.175,45.1583,LL_04,Net_CTD,1,1,0,Operations, ,NA,5,10
+-59.5167,45.4917,LL_03,Net_CTD,1,1,0,Operations, ,NA,5,10
+-59.7017,45.6583,LL_02,Net_CTD,1,1,0,Operations,,NA,5,10
+-59.85,45.825,LL_01,Net_CTD,1,1,0,Operations,,NA,5,10
+-59.5333,46,STAB_01,Net_CTD,0,1,0,Operations, ,NA,6,10
+-59.365,46.1083,STAB_02,Net_CTD,0,1,0,Operations, ,NA,6,10
+-59.195,46.2167,STAB_03,Net_CTD,0,1,0,Operations, ,NA,6,10
+-59.065,46.3,STAB_04,Net_CTD,0,1,0,Operations, ,NA,6,10
+-58.8833,46.4167,STAB_05,Net_CTD_2,0,1.5,0.5,Operations,,NA,6,10
+-58.436076,46.710533,STAB_06,Net_CTD_2,0,1.5,0.5,Operations,,NA,6,10
+-59.3417,47.5833,CSL_06,Net_CTD,1,1,0,Operations,,NA,7,10
+-59.5583,47.4333,CSL_05,Net_CTD,1,1,0,Operations, ,NA,7,10
+-59.7833,47.2717,CSL_04,Net_CTD,1,1,0,Operations,,NA,7,10
+-59.9917,47.1,CSL_03,Net_CTD,1,1,0,Operations, ,NA,7,10
+-60.1167,47.0233,CSL_02,Net_CTD,1,1,0,Operations, ,NA,7,10
+-60.2167,46.9583,CSL_01,Net_CTD,1,1,0,Operations, ,NA,7,10
+-56.14,44.98,BP_01,Net_CTD,0,1,0,Operations,,NA,8,10
+-56.44,44.92,BP_04,Net_CTD,0,1,0,Operations,,NA,8,10
+-56.63,44.89,BP_05,Net_CTD,0,1,0,Operations,,NA,8,10
+-56.8077,44.8476,BANQ_B6,Net_CTD_2,0,2,0,Operations,,NA,8,10
+-57.0267,44.8088,BANQ_B5,Net_CTD,0,1,0,Operations,,NA,8,10
+-57.25,44.78,BANQ_B4,Net_CTD,0,1,0,Operations,,NA,8,10
+-57.3486,44.7623,BANQ_B3,Net_CTD,0,1,0,Operations,,NA,8,10
+-57.4746,44.7448,BANQ_B2,Net_CTD,0,1,0,Operations,,NA,8,10
+-57.6549,44.7196,BANQ_B1,Net_CTD,0,1,0,Operations,,NA,8,10
+-63.3167,44.2667,HL_02,Nets_2_CTD,1,2,0,Operations,,NA,9,10
+-63.5225,44.5717, ,Transit,0,0,0,Transit, ,NA,9,10
+-63.5632,44.6397, ,Transit,0,0,0,Transit, ,NA,9,10
+-63.5687,44.6545, ,Transit,0,0,0,Transit, ,NA,9,5
+-63.584,44.663, ,Transit,0,0,0,Transit, ,NA,9,5
+-63.599,44.674, ,Transit,0,0,0,Transit, ,NA,9,5
+-63.611,44.676, ,Transit,0,0,0,Transit, ,NA,9,5
+-63.6141,44.6811, ,BIO,0,0,0,Transit, ,NA,9,5

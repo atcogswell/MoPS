@@ -5,16 +5,36 @@
 
 # Sections will be run in the order presented:
 
+
+#Inputs ----
+
+# Enter working directory
+wd<-"c:/users/cogswella/documents/azmp/missions/2017/2017 Spring"
+setwd(wd)
+
+# Enter mission plan file .csv
+file<-"TEST_config1.csv"
+
+# Enter Start Date
+y<-2017
+m<-06 
+d<-30
+h<-15
+s=ISOdate(y, m, d, h) #start date and time for mission (Year, month, day, 24hr time)
+
+# Enter depth raster directory
+rwd<-"C:/Users/cogswella/Documents/AZMP/Missions/ArcGIS Projects/BaseLayers/Baythymetry/CHS_AtlanticBathymetricCompilation/chs15sec1.asc"
+
 ### 1. Load Packages only if they are not already installed----
 
-#install.packages("rgdal")
-#install.packages("dismo")
-#install.packages("raster")
-#install.packages ("maptools")
-#install.packages ("rgeos")
-#install.packages ("mapview")
-#install.packages("shiny")
-#if (!require('devtools')) install.packages('devtools')
+if (!require("rgdal")) install.packages("rgdal")
+if (!require("dismo")) install.packages("dismo")
+if (!require("raster")) install.packages("raster")
+if (!require("maptools")) install.packages("maptools")
+if (!require("rgeos")) install.packages("rgeos")
+if (!require("mapview")) install.packages("mapview")
+if (!require("shiny")) install.packages("shiny")
+if (!require('devtools')) install.packages('devtools')
 #devtools::install_github('rstudio/leaflet')
 
 ### 2. Loading libraries ---- 
@@ -28,46 +48,15 @@ library(mapview)
 library(leaflet)
 library(dplyr)
 
-### 3. set working directories is only necessary on the first run.----  
-##Save history so these don't need to be run again.
+#### 3. Choose your input file ----
 
-##Set working directory using:
-  
-cd<-readline("Do you want to change working the working directory (y or n): ")
-if (cd=="y") wd<-readline("what is your working directory? (start with c:/users/cogswella/documents/azmp/missions: ")
-setwd(wd) #set your working directory
-
-##Enter path and file name for ascii bathymetry
-#rwd=choose.dir(default="", caption="Please Select Your Working Directory")
-
-##or set directory for ascii bathymetry manually.
-  
-# AZOMP depth raster - GEBCO 1/4 degree (2014)
-#rwd<-"C:/Users/CogswellA/Documents/AZMP/Requests/Ringuette/azomp_depth.asc"
-
-# AZMP depth raster CHS baythymetry
-rwd<-"C:/Users/cogswella/Documents/AZMP/Missions/ArcGIS Projects/BaseLayers/Baythymetry/CHS_AtlanticBathymetricCompilation/chs15sec1.asc"
-
-#### 4. Enter Start Date ----
-
-sd<-readline("Do you want to change your start date (y or n): ")
-if (sd=="y") y<-as.numeric(readline("Enter the start year (yyyy): ")) 
-if (sd=="y") m<-as.numeric(readline("Enter the start month (mm): ")) 
-if (sd=="y") d<-as.numeric(readline("Enter the start day (dd): "))
-if (sd=="y") h<-as.numeric(readline("Enter the start time (hh): "))
-s=ISOdate(y, m, d, h) #start date and time for mission (Year, month, day, 24hr time)
-
-#### 5. Choose your input file ----
-
-f<-readline("Do you want to change your input file (y or n)?: ")
-if (f=="y") file<-readline("Provide your input file (for example: COR2017001_config20.csv): ")
 data<-read.csv(file, stringsAsFactors=F)
 file2<-basename(file)
 
 l<-nrow(data)#number of data rows for loop to add fields
 data$ID<-seq(from=1, to=max(l))
 
-## 6. Distance and time calculations ----
+## 4. Distance and time calculations ----
 
 ## The Great circle functions modified from script provided from Jae Choi - https://github.com/jae0/ecomod/blob/master/spatialmethods/src/_Rfunctions/geodist.r
 great.circle.distance = function (loc1, loc2, R) {
@@ -196,9 +185,8 @@ for (n in 2:l){
 
 #This is where to ask the user to enter a shapefile output name
 
-## 7. Extract depth from ASCII - turn on and off ----
-d<-readline("Do you want to input depth raster? (y or n): ")
-if (d=="y") depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
+## 5. Extract depth from ASCII - turn on and off ----
+depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
 data1<-data[,1:2]
 data2<-data[,3:length(data)]
 data3<-SpatialPointsDataFrame(data1, data2, coords.nrs = numeric(0),proj4string = CRS("+proj=longlat +datum=WGS84"), match.ID = TRUE, bbox = NULL)
@@ -209,7 +197,7 @@ nc<-ncol(data)
 data[,nc]<-data[,nc]*-1
 colnames(data)[nc]<-"depth_m"
 
-## 8. Prepare data for export as a shape file and .csv and remove depth from type "Transit". and create a html plot for export ----
+## 6. Prepare data for export as a shape file and .csv and remove depth from type "Transit". and create a html plot for export ----
 data1<-data[,1:2]
 data2<-data[,1:length(data)]
 
@@ -271,7 +259,7 @@ data4sel<-as.matrix(data4[,c(1:2)])
 data4ln<-coords2Lines(data4sel, ID=paste(file,"Route",sep=" "))
 
 et<-nrow(data4) #et=end time
-dur<-print(paste("The mission without weather/equipment delays is",round(as.numeric(difftime(strptime(data4$arrival[et],"%Y-%m-%d %H:%M:%S"),strptime(data4$departure[1],"%Y-%m-%d %H:%M:%S"))),0), "days long. Please run multi-beam on transit between stations.",sep=" "))
+dur<-print(paste("The mission without weather/equipment delays is",round(as.numeric(difftime(strptime(data4$arrival[et],"%Y-%m-%d %H:%M:%S"),strptime(data4$departure[1],"%Y-%m-%d %H:%M:%S"))),0), "days long.",sep=" "))
 
 
 route<-leaflet(data4) %>%

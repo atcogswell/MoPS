@@ -36,28 +36,28 @@ library(tools)
 
 #### Input data to run scrip: Search Area Name, Extent, Start and End Years, Data Output Directories----
 
-sl<-"Browns Bank Line" #Enter the name for your search area
+sl<-"HL 2" #Enter the name for your search area
 
 # Enter your search area extent
-maxn<-43.35
-minn<-41.767
-maxw<-(-65.610)
-minw<-(-65.250)
+
+maxn<-44.467
+minn<-44.067
+maxw<-(-63.517)
+minw<-(-63.117)
 
 # Enter the start and end years of your ODF search from the ODF archive (current year is likely excluded from the database)
-ys<-2000
+ys<-2016
 ye<-2016
 
 # Enter your output working directory
-wd<-("C:\\Users\\CogswellA\\Documents\\AZMP\\Requests\\Davies\\") #establisheds the working directory for the meta-data summary export
-setwd(wd)
+wd<-("C:\\Users\\CogswellA\\Documents\\AZMP\\Requests\\Test\\") #establisheds the working directory for the meta-data summary export
 
 #### select all ODF files into list from folders in archive ----
 plist<-list() #creates empty list to accept the filtered ODF files
 for (i in ys:ye){
   
-  wd<-paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\",i,sep="")
-  setwd(wd) #working directory is the year within the ctd archive folder within the loop
+  tmpwd<-paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\",i,sep="")
+  setwd(tmpwd) #working directory is the year within the ctd archive folder within the loop
   dn_ODF_files <- list.files(pattern="*^.*DN.*.ODF$") # only selects down casts using the DN in the file name
   if (i!= ys) {select_ODF_files<-dn_ODF_files[-grep("BCD", dn_ODF_files, fixed=T)]} else {select_ODF_files<-dn_ODF_files} 
   
@@ -76,6 +76,8 @@ for (i in ys:ye){
   plist[paste(i,sep=" ")]<-list(ylist) #plist contains the selected ODF files ordered by year
    
 }
+
+setwd(wd)
 
 #### acquire the metadata for the selected odf files for plotting and export ----
 pl<-length(plist) #basically how many years in plist
@@ -110,15 +112,14 @@ for (a in 1:pl){
 
 #### export file metadata and list of odf files ----
 
-dataout<-(paste(wd,"ODF\\",sep="")) #output path for the ODF's to be copied from the archive.
 fname_csv<-paste(sl,"_",ys,"_",ye,"_ODFSummary_",as.numeric(format(Sys.Date(), "%Y%m%d")),".csv",sep="") #file name for your csv output
 write.csv(mdata_all_years,fname_csv, row.names=F) #save your file meta data in .csv format in your wd
 fname_rds<-paste(sl,"_",ys,"_",ye,"_ODFList_",as.numeric(format(Sys.Date(), "%Y%m%d")),".rds",sep="") #file name for your odf list output
 saveRDS(plist,fname_rds) #save your odf data in list form for easy access in R without compiling
 
 #These portions are useful if you do not want to compile these files again
-mdata_all_years<-read.csv(fname_csv) #load your metadata
-plist<-readRDS(fname_rds) #load your odf list for viewing below
+#mdata_all_years<-read.csv(fname_csv) #load your metadata
+#plist<-readRDS(fname_rds) #load your odf list for viewing below
 
 #### plot extent of selections and view metadata----
 
@@ -141,7 +142,7 @@ odfmap<-leaflet(mdata_all_years) %>%
                       labelOptions = labelOptions(noHide = T, direction = 'top', textOnly = T))%>%
   addLabelOnlyMarkers(lng=AZMPcore_fixed$lon_dd, lat=AZMPcore_fixed$lat_dd,label =  as.character(AZMPcore_fixed$station_na),group="Fixed Station Labels", 
                       labelOptions = labelOptions(noHide = T, direction = 'top', textOnly = T))%>%
-  addLegend("bottomright", colors= c("black", "yellow", "red"), labels=c("CTD Locations","AZMP Core Section Stations","AZMP Fixed Stations"), title=paste("Map of ODF files near ", sl, " created on ",Sys.Date(), sep=""),opacity=1)%>% 
+  addLegend("bottomright", colors= c("black", "yellow", "red"), labels=c("CTD Locations","AZMP Core Section Stations","AZMP Fixed Stations"), title=paste("Map of ODF files near ", sl, " between ",ys, " and ",ye, ", ", " created on ",Sys.Date(), " (", minn,", ",maxn,", ",minw,", ",maxw,").", sep=""),opacity=1)%>% 
   addScaleBar("bottomleft",options=scaleBarOptions(maxWidth=100,imperial=T,metric=T,updateWhenIdle=T))%>%
   addLayersControl(
     overlayGroups = c("CTD Subset Locations", "AZMP Core Section Stations", "AZMP Fixed Stations", "Section Labels", "Fixed Station Labels"),
@@ -156,6 +157,18 @@ saveWidget(odfmap,odf_html)
 
 #### copy selected ODF files to specified directory and zip them ----
 
+
+subDir <- "ODF"
+
+if (file.exists(subDir)){
+  setwd(file.path(wd, subDir))
+} else {
+  dir.create(file.path(wd, subDir))
+  setwd(file.path(wd, subDir))
+  
+}
+
+dataout<-getwd()#temporary working directory for odf dataout
 ml<-nrow(mdata_all_years)
 
 for (c in 1:ml){
@@ -165,7 +178,7 @@ for (c in 1:ml){
 }
 
 
-odf_summary_file <- paste(dataout, "ODFSUMMARY.tsv", sep = "")
+odf_summary_file <- paste(dataout, "/ODFSUMMARY.tsv", sep = "")
 cat(paste("Folder consists of ", 
           ml,
           " ODF files between ",
@@ -174,7 +187,15 @@ cat(paste("Folder consists of ",
           ye,
           " near ",
           sl,
-          ".",
+          " (",
+          minn,
+          ", ",
+          maxn,
+          ", ",
+          minw,
+          ", ",
+          maxw,
+          ").",
           sep=""), 
     file = odf_summary_file, sep = "\n", append = FALSE)
 cat("", file = odf_summary_file, sep = "\n", append = TRUE)
@@ -183,4 +204,6 @@ write.table(mdata_all_years, file = odf_summary_file, append = TRUE, quote = TRU
 
 
 files2zip<-dir(dataout,full.names=T)
+
+setwd(wd)
 zip(zipfile='ODFzip',files=files2zip)

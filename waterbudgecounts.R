@@ -3,11 +3,12 @@ library(dplyr)
 
 #compile water budget statistics
 
-setwd("C:/Users/CogswellA/Documents/AZMP/Missions/2017/2017 Spring/COR2017001 Package") 
+setwd("C:\\Users\\CogswellA\\Documents\\AZMP\\Missions\\2017\\2017 Fall") 
+missionname<-"fall2017AZMP"
 
 # read in water budget workbook
 require(XLConnect)
-wb <- loadWorkbook("C:/Users/CogswellA/Documents/AZMP/Missions/2017/2017 Spring/COR2017001 Package/Watersamplesanddepths_azmp_Spring_2017_final.xls")
+wb <- loadWorkbook("C:\\Users\\CogswellA\\Documents\\AZMP\\Missions\\2017\\2017 Fall\\Watersamplesanddepths_azmp_Fall_2017_draft.xls")
 lst = readWorksheet(wb, sheet = getSheets(wb))
 
 
@@ -39,7 +40,7 @@ for (i in 1:n){
   ##bottle number test
   #test<-sum(na.omit(d$X.BOTTLES))+test
   chl<-(nrow(as.data.frame(na.omit(d$CHL)))*2)+chl
-  nuts<-(nrow(as.data.frame(na.omit(d$NUTS)))*3)+nuts
+  nuts<-(nrow(as.data.frame(na.omit(d$NUTS)))*2)+nuts
   tic<-nrow(as.data.frame(na.omit(d$TIC.TA)))+tic
   sal<-nrow(as.data.frame(na.omit(d$SAL)))+sal
   poc<-(nrow(as.data.frame(na.omit(d$POC)))*2)+poc
@@ -68,7 +69,7 @@ wbs<-as.data.frame(wbs)
 date<-format(Sys.Date(),"%Y%m%d")
 time<-format(Sys.time(),"%x")
 time<-strptime(time,format="%H$M%S")
-write.csv(wbs,paste("samplesummary_COR2017001_",format(Sys.Date(), "%Y%m%d"),".csv",sep=""),row.names = F)
+write.csv(wbs,paste("samplesummary_",missionname,"_",format(Sys.time(), "%Y%m%d_%H%M"),".csv",sep=""),row.names = F)
 
 
 

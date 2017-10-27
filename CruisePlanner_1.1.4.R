@@ -3,7 +3,7 @@
 ### - Section that may have to be run
 #### - Parameter that will be necessary to change
 
-#Ctrl+o to collapse all sections
+#alt+o to collapse all sections
 #Shift+alt+o to expand all sections
 
 # Sections must be run in the order presented:

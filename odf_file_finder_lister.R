@@ -43,7 +43,7 @@ odf_file_lister <- function(working_directory, year, site_code){
 #getting odfs from Arc (preferrably) or Src.
 directory_lister_wrapper <- function(year, site_code, 
                                      arc_root = "R:/Science/BIODataSvc/ARC/Archive/ctd/",
-                                     src_root = "R:/Science/BIODataSvc/SRC/BBMP/COMPASS/"){
+                                     src_root = "R:/Science/BIODataSvc/SRC/2010s"){
   
   # src_root <- "R:/Science/BIODataSvc/SRC/BBMP/COMPASS/"
   

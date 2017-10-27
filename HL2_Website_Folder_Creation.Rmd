@@ -1,0 +1,228 @@
+---
+title: "HL2 Website Folder Updates"
+author: "Andrew Cogswell"
+date: "October 25, 2017"
+output:
+pdf_document: default
+html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Developing Content for HL2 Website
+
+## Generate folder directory structure
+
+### Root Directory Example
+This bit of code performs a process that is nearly identical to what is done to create the folder structure for the Bedford Basin Website. You should end up with a root directory that has a folder for CSV, ODF and Profile_Image_Archives:
+
+```{r root directory, echo=FALSE, out.width='100%'}
+knitr::include_graphics("C:\\Users\\CogswellA\\Documents\\AZMP\\R Code\\HL2_Markdown Graphics\\RootDirectoryStructure.JPG")
+```
+
+###Sub-directory example
+The subdirectories within each of the directories in these folders should range from the first year of the program (1999) until the current year:
+
+```{r sub directory, echo=FALSE, out.width='100%'}
+knitr::include_graphics("C:\\Users\\CogswellA\\Documents\\AZMP\\R Code\\HL2_Markdown Graphics\\SubDirectoryStructure.JPG")
+```
+
+###Required Script
+To do this, you'll need to run the first few lines of the **HL2_populate_folders.R file**.  This section calls a function called "directory_structure" from the R file called **HL2_FTP_folder_initialization.R**.  If your root directory name, or "ftp_name", already exists it will ask you to change it:
+
+```{r create directories code, eval=FALSE}
+if (!require('oce')) devtools::install_github('dankelley/oce', force=T)
+library(oce)
+
+ftp_name <- "HL2"
+site_name<-ftp_name
+
+source("C:\\Users\\CogswellA\\Documents\\AZMP\\R Code\\MoPS\\HL2_FTP_folder_initialization.R")
+
+# Creates file directory structure
+directory_structure(parent_directory = ftp_name, first_year = 1999)
+```
+
+
+## Search ODF Archive
+
+Now, you are going to run the first section of the file **ODF_Select_Query_HL_02_1999.R**.  This will search the ODF archive directories from 1999 until 2016 and compile a metadata file that is filtered geographically by the latitudinal and longitudanal extent of your search.  In this case, it is the boundary around HL2 as specified on the [AZMP webpage](http://www.meds-sdmm.dfo-mpo.gc.ca/isdm-gdsi/azmp-pmza/hydro/index-eng.html).This section can take a considerable amount of time to run so be patient!
+
+```{r Compile ODF metadata, eval=FALSE}
+#### Input data to run scrip: Search Area Name, Extent, Start and End Years, Data Output Directories----
+
+sl<-"HL02" #Enter the name for your search area
+
+# Enter your search area extent taken from the HL2 Retrieval Area from the AZMP website
+maxn<-44.37
+minn<-44.17
+maxw<-(-63.42)
+minw<-(-63.22)
+
+# Enter the start and end years of your ODF search from the ODF archive (current year is likely excluded from the database)
+ys<-1999
+ye<-2016
+range<-c(ys:ye)
+
+# Enter your output working directory
+fwd<-("C:\\Users\\CogswellA\\Documents\\test\\") #establisheds the working directory for the meta-data summary export
+setwd(fwd)
+
+#### select all ODF files into list from folders in archive ----
+plist<-list() #creates empty list to accept the filtered ODF files
+mdata_all_years<-NULL
+is.not.null <- function(x) ! is.null(x)
+
+for (i in min(range):max(range)){
+  
+  #wd<-paste("C:\\Users\\CogswellA\\Documents\\AZMP\\Data Management\\2017\\ODFArchive_1999_2016\\",i,sep="")
+  wd<-paste("R:\\Science\\BIODataSvc\\ARC\\Archive\\ctd\\",i,sep="")
+  setwd(wd) #working directory is the year within the ctd archive folder within the loop
+  dn_ODF_files <- list.files(pattern="*^.*DN.*.ODF$") # only selects down casts using the DN in the file name
+  #if (i!= ys) {select_ODF_files<-dn_ODF_files[-grep("BCD", dn_ODF_files, fixed=T)]} else {select_ODF_files<-dn_ODF_files} 
+  select_ODF_files<-dn_ODF_files
+  
+  #this loop pulls all odf files from the folder and spatially filters and selects them into ylist
+  fname=NULL
+  mdata<-NULL
+  
+  for (n in 1:length(select_ODF_files)){
+    tmp_odf<-read.odf(select_ODF_files[n])
+    #tmp_odf<-test
+    tmp_mdata<-NULL
+    
+    if(tmp_odf[['latitude']]<=maxn & tmp_odf[['latitude']]>=minn & tmp_odf[['longitude']]>=maxw & tmp_odf[['longitude']]<=minw & is.not.null(tmp_odf[['conductivity']])) x<-1 else x<-0
+    
+    if (x==1) {
+      fname<-as.data.frame(tmp_odf@metadata$filename)
+      stime<-as.data.frame(tmp_odf@metadata$startTime)
+      ship<-as.data.frame(tmp_odf@metadata$ship)
+      lon<-as.data.frame(tmp_odf@metadata$longitude)
+      lat<-as.data.frame(tmp_odf@metadata$latitude)
+      tmp_mdata<-cbind(fname,stime,ship,lon,lat)
+      names(tmp_mdata)<-c("filename","starttime","ship","longitude","latitude")
+            }
+    
+    mdata<-rbind(mdata,tmp_mdata)
+    
+  }
+  
+  #proc.time()
+ 
+  
+  mdata_all_years<-rbind(mdata,mdata_all_years)
+   
+}
+
+
+mdata_all_years$starttime<-ymd_hms(mdata_all_years$starttime, tz="America/Halifax")
+mdata_all_years$year<-substr(mdata_all_years$starttime,1,4)
+
+#### export file metadata and list of odf files ----
+
+# Enter your output working directory
+setwd(fwd)
+
+
+dataout<-(fwd) #output path for the ODF's to be copied from the archive.
+fname_csv<-paste(sl,"_",ys,"_",ye,"_ODFSummary_",as.numeric(format(Sys.Date(), "%Y%m%d")),".csv",sep="") #file name for your csv output
+write.csv(mdata_all_years,fname_csv, row.names=F) #save your file meta data in .csv format in your wd
+#fname_rds<-paste(sl,"_",ys,"_",ye,"_ODFList_",as.numeric(format(Sys.Date(), "%Y%m%d")),".rds",sep="") #file name for your odf list output
+#saveRDS(plist,fname_rds) #save your odf data in list form for easy access in R without compiling
+
+#These portions are useful if you do not want to compile these files again
+mdata_all_years<-read.csv("HL02_1999_2016_ODFSummary_20171018.csv") #load your metadata
+mdata_all_years<-dplyr::arrange(mdata_all_years,starttime)
+#plist<-readRDS(fname_rds) #load your odf list for viewing below
+```
+
+### Map output
+The next section of the file **ODF_Select_QUERY_HL_02_1999.R** is run to produce a leaflet plot of all of the selected ODF files from within the extent of your search.  It is produced in the RStudio plot panel and is saved as an html file.  This gives you a sense of what you might see:
+
+
+```{r map search results, echo=FALSE, out.width='100%'}
+knitr::include_graphics("C:\\Users\\CogswellA\\Documents\\AZMP\\R Code\\HL2_Markdown Graphics\\HL2_ODF_SearchResults.JPG")
+```
+
+### Copy ODF files to ODF Folder in Root Directory
+The next bit of code in **ODF_Select_QUERY_HL_02_1999.R** copies the list of ODF files from their home directories to the specified root directory and sorted by year into the appropriate subdirectory.  This step also produces a summary ".tsv" file for each year sub-folder that provides the user with ODF metadata and a count of folder contents.
+
+```{r Copy ODF files, eval=FALSE}
+#### copy selected ODF files to specified directory and zip them ----
+
+
+mdata_all_years$year<-substr(mdata_all_years$starttime,1,4)
+yl<-unique(mdata_all_years$year)
+
+for (y in 1:length(yl)){
+  
+  mdataloop<-subset(mdata_all_years, mdata_all_years$year==yl[y])
+  ml<-nrow(mdataloop)
+
+ for (c in 1:ml){
+  
+  file.copy(mdataloop$filename[c],paste(dataout,"ODF\\",yl[y],"\\",sep=""),overwrite = T, recursive=F)
+   fname<-paste("ODFSUMMARY","_",yl[y],".tsv",sep="")
+   odf_summary_file <- paste(dataout,"ODF\\",yl[y],"\\",fname, sep = "")
+   cat(paste("Folder consists of ", 
+             ml,
+             " ODF files near ",
+             sl,
+             ".",
+             sep=""), 
+       file = odf_summary_file, sep = "\n", append = FALSE)
+   cat("", file = odf_summary_file, sep = "\n", append = TRUE)
+   write.table(mdataloop[,c(1:3,5:6)], file = odf_summary_file, append = TRUE, quote = TRUE, sep=",",
+               eol = "\n", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE)
+  
+ }
+
+}
+
+```
+
+
+### Convert ODF to CSV
+Finally, the final section of code in **ODF_Select_QUERY_HL_02_1999.R**  takes contents of each ODF folder aand converts them to CSV and then copied to the CSV sub-folders organized by year
+
+```{r Generate CSV files, eval=FALSE}
+#### Convert ODF to CSV ----
+
+fwd<-("C:\\Users\\CogswellA\\Documents\\HL2\\") #establisheds the working directory for the meta-data summary export
+setwd(fwd)
+mdata_all_years<-read.csv("HL02_1999_2016_ODFSummary_20171018.csv")
+mdata_all_years$year<-substr(mdata_all_years$starttime,1,4)
+yl<-unique(mdata_all_years$year)
+
+for (y in 1:length(yl)){
+  
+  
+  mdataloop<-subset(mdata_all_years, mdata_all_years$year==yl[y])
+  ml<-nrow(mdataloop)
+  
+  for (c in 1:ml){
+    
+    ctd_c<-read.ctd.odf(as.character(mdataloop$filename[c]))
+    write.ctd(ctd_c, paste(fwd,"CSV\\",yl[y],"\\",tools::file_path_sans_ext(basename(ctd_c[['filename']])),".csv",sep=""),flags=F)
+    
+  }
+  
+  fname<-paste("CSVSUMMARY","_",yl[y],".tsv",sep="")
+  csv_summary_file <- paste(dataout,"CSV\\",yl[y],"\\",fname, sep = "")
+  cat(paste("Folder consists of ", 
+            ml,
+            " CSV files near HL2",
+            ".",
+            sep=""), 
+      file = csv_summary_file, sep = "\n", append = FALSE)
+  cat("", file = csv_summary_file, sep = "\n", append = TRUE)
+  write.table(mdataloop[,c(1:3,5:6)], file = csv_summary_file, append = TRUE, quote = TRUE, sep=",",
+              eol = "\n", na = "NA", dec = ".", row.names = FALSE, col.names = TRUE)
+  
+}
+
+```
+
+

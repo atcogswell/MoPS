@@ -179,7 +179,7 @@ for (n in 2:l){
 #This is where to ask the user to enter a shapefile output name
 
 ## 7. Extract depth from ASCII - turn on and off ----
-#depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
+depth <- readAsciiGrid(rwd, proj4string=CRS("+proj=longlat +datum=WGS84"))#assigns ASCII grid from rwd to variable name
 data1<-data[,1:2]
 data2<-data[,3:length(data)]
 data3<-SpatialPointsDataFrame(data1, data2, coords.nrs = numeric(0),proj4string = CRS("+proj=longlat +datum=WGS84"), match.ID = TRUE, bbox = NULL)

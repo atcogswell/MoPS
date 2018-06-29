@@ -82,7 +82,7 @@ fluorescence_oxygen_plot <- function(od_i = od, ctd_i = ctd){
 
 # four plot function
 odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, out_root, 
-                              testing_plots = FALSE, recent_plot = FALSE, site_name){
+                              testing_plots = FALSE, recent_plot = FALSE, site_name = "BBMP"){
   
   # out_root <- "R:/Shared/Cogswell/_BIOWeb/BBMP/"
   # 
@@ -106,7 +106,7 @@ odf_plot_function <- function(odf_file, year, odf_file_list = odf_files, out_roo
         height = 800,
         width = 800)
   } else {
-    png(paste(out_root, "Recent_Profile_test.png", sep = ""),
+    png(paste(out_root, "Recent_Profile.png", sep = ""),
         height = 800,
         width = 800)
   }

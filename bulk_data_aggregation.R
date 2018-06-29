@@ -31,14 +31,14 @@ total_df <- data.frame(pressure = numeric(),
 year_available <- c(1999:format(Sys.Date(), "%Y") %>% as.numeric())
 
 for(j in 1:length(year_available)){
-  
-    year <- year_available[j]
-    odf_files <- directory_lister_wrapper(year)
+    year_j <- year_available[j]
+    print(year_j)
+    odf_files <- directory_lister_wrapper(year = year_j, site_code = "667")
     no_odf_files <- length(odf_files)
     
   for(i in 1:no_odf_files){
-      print(i)
-      opened_ctd_odf <- read.ctd.odf(odf_files[i])
+      print(odf_files[i])
+      opened_ctd_odf <- read.odf(odf_files[i])
       odf_df <- as.data.frame(opened_ctd_odf@data)
       
       time_string <- rep(opened_ctd_odf[["startTime"]], nrow(odf_df))
@@ -62,8 +62,11 @@ total_df2 <- total_df[order(total_df$time_string, decreasing = FALSE), ]
 
 write.csv(x = total_df2, 
           row.names = FALSE, 
-          file = "R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\CSV\\bbmp_aggregated_profiles.csv")
+          file = "R:/Shared/Cogswell/_BIOWeb/BBMP/CSV/bbmp_aggregated_profiles.csv")
 
+#dev.off()
+rm(total_df)
+rm(total_df2)
 # 
 # write.csv(x = total_df2, 
 #           row.names = FALSE, 

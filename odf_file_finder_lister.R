@@ -46,10 +46,11 @@ directory_lister_wrapper <- function(year, site_code,
                                      src_root = "R:/Science/BIODataSvc/SRC/BBMP/COMPASS/"){
   
   # src_root <- "R:/Science/BIODataSvc/SRC/BBMP/COMPASS/"
-  
+  # 
   # year <- 1999
-  # site_code <- "666"
+  # site_code <- "667"
   # arc_root <- "R:/Science/BIODataSvc/ARC/Archive/ctd/"
+  # src_root <- "R:/Science/BIODataSvc/SRC/BBMP/COMPASS/"
   
   arc_wd <- paste(arc_root, year, sep = "")
   src_wd <- paste(src_root, year, sep = "")

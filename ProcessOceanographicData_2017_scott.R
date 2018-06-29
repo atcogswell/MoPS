@@ -5,108 +5,34 @@ library(oce)
 library(dplyr)
 library(magrittr)
 library(ocedata)
-#test
-# setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
-# out=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/",(as.numeric(format(Sys.Date(), "%Y"))),"/", sep=""))
-# outroot=c("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/") 
-# 
-# 
-# odf_file_list <- list.files(pattern="*^.*D.*.ODF$")
-# 
-# no_odf_files <- length(odf_file_list)
-# 
-# 
-# for (n in 1:no_odf_files) {
-#   od <- read.odf(odf_file_list[n])
-#   ctd<-read.ctd.odf(odf_file_list[n])
-#   png(paste(out,"BBMP",substr(od@metadata$date,1,10),'.png',sep=""),height=800,width=800)
-#   plot.new()
-#   par(oma=c(0,0,2,0))
-#   par(mfrow=c(2,2)) # four panels, filled in reading order
-#   plot(ctd,which=1,keepNA=T)
-#   plot(ctd,which=2)
-#   plot(ctd,which=3)
-#   par(mar=c(3.6,3.4,3.5,2))
-#   plot(ctd@data$fluorometer,ctd@data$pressure, ylim=rev(range(ctd@data$pressure)), type="l",col="green", xlab="Fluorescence [mg/m^3]", ylab="",col.lab="green")
-#   axis(1, labels = T, col.ticks = "green",col.axis = 'green')
-#   par(new=T)
-#   min_oxy=0
-#   #min_oxy=round(min(ctd@data$oxygen,na.rm=T),0)-1
-#   max_oxy=round(max(ctd@data$oxygen,na.rm=T),0)
-#   if(max_oxy>0) plot(ctd@data$oxygen,ctd@data$pressure, ylim=rev(range(ctd@data$pressure)), type="l",col="black", axes=F, xlab="", ylab="Pressure [dbar]") else (mtext("Oxygen was not collected.")) 
-#   title("Oxygen [ml/l]", line=2, font.main=1, cex.main=1)
-#   Axis(side=3, x=ctd@data$oxygen, at=c(1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10))
-#   #plot(ctd,which=0)
-#   title(paste("Compass Buoy Station CTD Profile",  od@metadata$date,sep=": "),outer=TRUE,cex=1.4) # title for overall plot (filename, here)
-#   dev.off()
-# }
-# 
-# 
-# 
-# d=read.odf(odf_file_list[no_odf_files])
-# ctd<-read.ctd.odf(odf_file_list[no_odf_files])
-# png(paste(outroot,"Recent_Profile.png",sep=""),height=800,width=800)
-# plot.new()
-# par(oma=c(0,0,2,0))
-# par(mfrow=c(2,2)) # four panels, filled in reading order
-# plot(ctd,which=1, keepNA=T)
-# plot(ctd,which=2)
-# plot(ctd,which=3)
-# par(mar=c(3.6,3.4,3.5,2))
-# plot(ctd@data$fluorometer,ctd@data$pressure, ylim=rev(range(ctd@data$pressure)), type="l",col="green", xlab="Fluorescence [mg/m^3]", ylab="",col.lab="green")
-# axis(1, labels = T, col.ticks = "green",col.axis = 'green')
-# par(new=T)
-# min_oxy=0
-# #min_oxy=round(min(ctd@data$oxygen,na.rm=T),0)-1
-# max_oxy=round(max(ctd@data$oxygen,na.rm=T),0)
-# if(max_oxy>0)plot(ctd@data$oxygen,ctd@data$pressure, ylim=rev(range(ctd@data$pressure)), type="l",col="black", axes=F, xlab="", ylab="Pressure [dbar]") else (mtext("Oxygen was not collected.")) 
-# title("Oxygen [ml/l]", line=2, font.main=1, cex.main=1)
-# Axis(side=3, x=ctd@data$oxygen, at=c(1,1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10))
-# #plot(ctd,which=0)
-# title(paste("Compass Buoy Station CTD Profile",  od@metadata$date,sep=": "),outer=TRUE,cex=1.4) # title for overall plot (filename, here)
-# dev.off()
-# 
-# 
-# #### Copy Recent ODF files to directory for website ########
-# 
-# setwd(paste("//dcnsbiona01a/BIODataSvcSrc/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep=""))
-# out1=c(paste("//Svnsbiofs02/MARSHARED/Shared/Cogswell/_BIOWeb/BBMP/ODF/",(as.numeric(format(Sys.Date(), "%Y"))),"/", sep=""))
-# 
-# for (n in 1:no_odf_files) {
-#   
-#   file.copy(from = odf_file_list[n], 
-#             to = out1, 
-#             overwrite = T, 
-#             recursive=F)  
-#   
-# }
 
-##stocking plots, csv's and odf's. 
-
-source("~/MoPS/odf_file_finder_lister.R")
-source("~/MoPS/odf_plot_functions.R")
-source("~/MoPS/transfer_functions_ODF_and_CSV.R")
+source("~/AZMP/R Code/MoPS/odf_file_finder_lister.R")
+source("~/AZMP/R Code/MoPS/odf_plot_functions.R")
+source("~/AZMP/R Code/MoPS/transfer_functions_ODF_and_CSV.R")
 
 current_year <- format(Sys.Date(), "%Y") %>% as.numeric()
 
-odf_year_plots(current_year)
-transfer_files_csv(current_year)
-transfer_files_odf(current_year)
+odf_year_plots(current_year, out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP/Profile_Image_Archive/", site_code = "667")
+transfer_files_csv(current_year, out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP/CSV/", site_code = "667")
+transfer_files_odf(current_year, out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP/ODF/", site_code = "667")
 
 ###updating most recent cast plots
 
-odf_file_list_current_year <- directory_lister_wrapper(year_x = current_year, site_code_i = "667")
-odf_file_number <- directory_lister_wrapper(year_x = current_year, site_code_i = "667") %>% length()
+odf_file_list_current_year <- directory_lister_wrapper(year = current_year, site_code = "667")
+odf_file_number <- directory_lister_wrapper(year = current_year, site_code = "667") %>% length()
 
 odf_plot_function(odf_file = odf_file_number, 
                   year = current_year,
+                  out_root = "R:/Shared/Cogswell/_BIOWeb/BBMP/",
                   odf_file_list = odf_file_list_current_year, 
                   testing_plots = FALSE, 
                   recent_plot = TRUE)
 
 ### updating aggregated csv file
 
-source("~/MoPS/bulk_data_aggreation.R")
+source("~/AZMP/R Code/MoPS/bulk_data_aggregation.R")
+
+#dev.off()
 
 ###
 
@@ -138,7 +64,7 @@ years<-c(as.numeric(format(Sys.Date(), "%Y"))-1,as.numeric(format(Sys.Date(), "%
 wds<-c((paste("R:/Science/BIODataSvc/SRC/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y")))-1,sep="")),(paste("R:/Science/BIODataSvc/SRC/BBMP/COMPASS/",(as.numeric(format(Sys.Date(), "%Y"))),sep="")))
 listp=list.files(wds[1],pattern="*^.*D.*.ODF$")
 listc=list.files(wds[2],pattern="*^.*D.*.ODF$")
-list=list(listp,listc)
+lista=list(listp,listc)
 
 
 #compile ODF data for previous and current year
@@ -153,10 +79,10 @@ ind<-NULL
 
 for (i in 1:length(years)) {
   
-  for (n in 1:length(list[[i]])){
-    od<-read.odf(paste(wds[i],"/",list[[i]][n],sep=""))
+  for (n in 1:length(lista[[i]])){
+    od<-read.odf(paste(wds[i],"/",lista[[i]][n],sep=""))
     dates<-od@metadata$date
-    odname<-as.data.frame(list[[i]][n])
+    odname<-as.data.frame(lista[[i]][n])
     tmp3<-cbind(odname,as.data.frame(dates))
     ind<-rbind(ind,tmp3)
     od<-as.data.frame(od@data)
@@ -227,6 +153,10 @@ for (d in c(2,5,10,60)){
   plots<-list()
   
   ##### Loop for 3 panel plot at the depth specified #####      
+  oldw <- getOption("warn")
+  options(warn=-1)
+
+  
   
   for (i in 1:3){
     
@@ -538,6 +468,8 @@ for (d in c(2,5,10,60)){
   dev.off()
   
 }
+
+options(warn=oldw)
 
 ##### Copy Archived ODF files to directory for website - run at end of year ########
 

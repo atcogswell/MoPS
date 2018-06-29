@@ -99,8 +99,8 @@ for (c in 1:nrow(mdata3)){
 
 #### create section  for Temp, Sal and SigmaT ####
 
-#import the climatology for HL2
-climhl0<-read.csv("C:\\Users\\CogswellA\\Documents\\AZMP\\Bedford Basin Monitoring Program\\HL_0_2000_2015_Climatology.csv")
+#import the climatology for BBMP
+climhl0<-read.csv("R:\\Shared\\Cogswell\\_BIOWeb\\BBMP\\HL_0_2000_2015_Climatology.csv")
 
 #Standard values for the binning similar to Roger Pettipas procedures
 #stdvals=(0 10 20 30 50 75 100 125 150 175 200 225 250 300 400 500 600 700 800 1000 1200 1500 2000 2500 3000 3500 4000 4500 5000]
@@ -272,36 +272,49 @@ for (j in 1:length(anomnames)){
   tat <- append(tat,tat_3)
   tat <- as.POSIXct(tat, tz="UTC")
   
-  plot(fsec, xtype='time', ztype="image", which=j,mar=c(2, 5, 3, 2.2), ylim=c(70,0),xlim=range(tat),showBottom=F,axes=F, ylab="", xlab="")
+  marg1 <- c(4,5,3,2.2)
+  marg2 <- c(4,5, 3, 6.38)
+  lcex <- 0.8
+  ladj <- 1.1
+  
+  plot(fsec, xtype='time', ztype="image", which=j,mar=marg1, ylim=c(70,0),xlim=range(tat),
+       showBottom=F,axes=F, ylab="", xlab="", legend="")
   tlabel <- substr(format(tat, '%b'), 1, 1)
   axis(2, at=stdvals, las=1, cex.axis=1.5)
   if (j==1|j==3) axis.POSIXct(3, at=tm, labels=F) else axis (3, at=tm,labels=F, tick=F)
   axis.POSIXct(1, at=tat, labels=tlabel, cex.axis=1.5) 
   mtext("Depth(m)",side=2, line=3, cex=1)
+  if (j==1) mtext("T°C", side=1, line=2.0,adj=1.06, cex=lcex, col="black")
+  if (j==2) mtext("Sal P.S.U.", side=1, line=2.0,adj=ladj, cex=lcex, col="black")
+  if (j==3) mtext("SigT kg/m3", side=1, line=2.0,adj=ladj, cex=lcex, col="black")
+  
   abline(v=tat[13], lty=2, col="lightgray")
   if (j==1) mtext(ys, side=3, line=1, cex=1, col="darkgray", adj=0.25)
   if (j==1) mtext(ye, side=3, line=1, cex=1, col="darkgray", adj=0.75)
   
   
   par(new=TRUE)
-  plot(fsec, xtype='time', ztype="contour", which=j, mar=c(2,5, 3, 6.38), 
+  plot(fsec, xtype='time', ztype="contour", which=j, mar=marg2, 
        showBottom=F, axes=F,ylab="", xlab="", ylim=c(70,0), xlim=range(tat),xaxt="n", legend="")
   
   
   plot(fsec, xtype='time', ztype="image", which=anomnames[j],
-       mar=c(2,5, 3, 2.2), ylim=c(70,0),xlim=range(tat),showBottom=F,
-       zbreaks=brkseq[[j]], zcol=anomramp, xlab="", ylab="", axes=F)
+       mar=marg1, ylim=c(70,0),xlim=range(tat),showBottom=F,
+       zbreaks=brkseq[[j]], zcol=anomramp, xlab="", ylab="", axes=F, legend="")
   tlabel <- substr(format(tat, '%b'), 1, 1)
   axis(2, at=stdvals, las=1, cex.axis=1.5)
   axis.POSIXct(3, at=tm, labels = F)
   axis.POSIXct(1, at=tat, labels = tlabel, cex.axis=1.5)
   abline(v=tat[13], lty=2, col="black")
+  if (j==1) mtext("Anom °C", side=1, line=1.8,adj=1.085, cex=lcex, col="black")
+  if (j==2) mtext("Anom P.S.U.", side=1, line=1.8,adj=ladj, cex=lcex, col="black")
+  if (j==3) mtext("Anom kg/m3", side=1, line=1.8,adj=ladj, cex=lcex, col="black")
   if (j==1) mtext(ys, side=3, line=1, cex=1, col="darkgray", adj=0.25)
   if (j==1) mtext(ye, side=3, line=1, cex=1, col="darkgray", adj=0.75)
   par(new=TRUE)
   plot(fsec, xtype='time', ztype="contour", which=anomnames[j], 
-       mar=c(2, 5, 3, 6.38), ylim=c(70,0), xlim=range(tat),showBottom=F, 
-       axes=F, contourLevels=brkseq[[j]], ylab="", xlab="")
+       mar=marg2, ylim=c(70,0), xlim=range(tat),showBottom=F, 
+       axes=F, contourLevels=brkseq[[j]], ylab="", xlab="", legend="")
   
   
   
